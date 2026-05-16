@@ -824,8 +824,8 @@ bool App::init() {
     controlWin_.open(ctrl.x, ctrl.y, ctrlS.x, ctrlS.y);
 
     // ── Audio & MIDI Control window — positioned next to main control ────
-    const int audioMidiW = 700;
-    const int audioMidiH = 800;
+    const int audioMidiW = 900;
+    const int audioMidiH = 1150;
     const int audioMidiX = ctrl.x + std::max(10, ctrlS.x - audioMidiW - 16);
     const int audioMidiY = ctrl.y + 10;
     audioMidiWin_.open(audioMidiX, audioMidiY, audioMidiW, audioMidiH);
@@ -1230,6 +1230,11 @@ void App::wireCallbacks() {
     audioMidiWin_.onLIFMidiTonalRootNudge = [this](int delta) { nudgeLifMidiTonalRoot(delta); };
     audioMidiWin_.onLIFMidiRangeMinNudge = [this](int delta) { nudgeLifMidiRangeMin(delta); };
     audioMidiWin_.onLIFMidiRangeMaxNudge = [this](int delta) { nudgeLifMidiRangeMax(delta); };
+
+    audioMidiWin_.onTransientAuditionToggle = [this](bool enabled) {
+        transientAuditionEnabled_ = enabled;
+        std::cout << "[Transient Audition] " << (enabled ? "enabled" : "disabled") << "\n";
+    };
 }
 
 // ── Engine helper: apply one knob value to the right engine target ────────────
@@ -2652,6 +2657,15 @@ void App::processFrame() {
     compositor_.setAudioBands(mixedBands.data(), static_cast<int>(mixedBands.size()), mixedRms);
     audioMidiWin_.setAudioBands(mixedBands.data(), static_cast<int>(mixedBands.size()), mixedRms);
 
+    // Feed transient/rhythm bands to the audio window for visualization
+    {
+        const auto& rhythmBands = rhythmDriver_.bands();
+        const float rhythmRms   = rhythmDriver_.rms();
+        audioMidiWin_.setTransientBands(rhythmBands.data(),
+                                        static_cast<int>(rhythmBands.size()),
+                                        rhythmRms);
+    }
+
     // Drive LIF simulation from all active scene LIF patch params.
     if (currentScene_ >= 0) {
         std::vector<MetalCompositor::LIFDriver> drivers;
@@ -2686,6 +2700,16 @@ void App::processFrame() {
         }
         if (lifToneEnabled_ && !audioBypassed_ && lifSceneActive) {
             lifToneSynth_.setColumnEnergies(lifBins);
+        } else if (transientAuditionEnabled_ && rhythmDriver_.enabled()) {
+            // Route transient energy to the tone synth for audible feedback.
+            // Up-sample 8 rhythm bands → 16 tone bins (duplicate each band).
+            std::array<float, 16> rhythmToneBins = {};
+            const auto& rb = rhythmDriver_.bands();
+            for (int i = 0; i < 8; ++i) {
+                rhythmToneBins[static_cast<size_t>(i * 2)]     = rb[static_cast<size_t>(i)];
+                rhythmToneBins[static_cast<size_t>(i * 2 + 1)] = rb[static_cast<size_t>(i)];
+            }
+            lifToneSynth_.setColumnEnergies(rhythmToneBins);
         } else {
             lifToneSynth_.setColumnEnergies({});
         }

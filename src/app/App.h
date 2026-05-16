@@ -180,6 +180,7 @@ private:
     bool     globalOpacityKeyHeld_    = false;  // Shift+O held → global opacity override mode
     bool     globalAudioGainKeyHeld_  = false;  // Shift+G held → global audio gain override mode
     bool     audioBypassed_ = false;  // B key toggle → bypass audio bands
+    bool     transientAuditionEnabled_ = false;  // Transient audition toggle
 
     // Returns the effective mode considering modifier keys.
     KnobMode effectiveMode() const {
