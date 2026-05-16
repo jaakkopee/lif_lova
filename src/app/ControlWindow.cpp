@@ -10,7 +10,7 @@ ControlWindow::ControlWindow() = default;
 void ControlWindow::open(int displayX, int displayY, int width, int height) {
     window_.create(sf::VideoMode({static_cast<unsigned>(width),
                                   static_cast<unsigned>(height)}),
-                   "vjay_ace - Control");
+                   "lif_lova - Control");
     window_.setPosition({displayX, displayY});
     window_.setFramerateLimit(60);
     gui_.setWindow(window_);
@@ -340,4 +340,3 @@ void ControlWindow::render(const sf::Texture& compositePreview) {
     gui_.draw();
     window_.display();
 }
-

@@ -919,9 +919,9 @@ bool App::init() {
     }
 
     // Optional startup self-test for outbound MIDI path.
-    // Enable with: VJAY_TEST_MIDI_OUT=1 ./vjay_ace
+    // Enable with: LIF_LOVA_TEST_MIDI_OUT=1 ./lif_lova
     if (midi_.isOutputOpen()) {
-        const char* midiTest = std::getenv("VJAY_TEST_MIDI_OUT");
+        const char* midiTest = std::getenv("LIF_LOVA_TEST_MIDI_OUT");
         if (midiTest && std::strcmp(midiTest, "1") == 0) {
             midi_.sendNoteOn(1, 60, 100);
             midi_.sendNoteOff(1, 60, 0);

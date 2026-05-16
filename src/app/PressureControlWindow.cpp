@@ -14,7 +14,7 @@ PressureControlWindow::PressureControlWindow() = default;
 void PressureControlWindow::open(int displayX, int displayY, int width, int height,
                                  const std::vector<std::string>& targetNames) {
     window_.create(sf::VideoMode({static_cast<unsigned>(width), static_cast<unsigned>(height)}),
-                   "vjay_ace - Pressure Control");
+                   "lif_lova - Pressure Control");
     window_.setPosition({displayX, displayY});
     window_.setFramerateLimit(60);
     gui_.setWindow(window_);

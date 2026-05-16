@@ -40,7 +40,7 @@ void MediaPickerWindow::open(int displayX, int displayY, int width, int height,
     scanRoot_ = scanRoot;
     window_.create(sf::VideoMode({static_cast<unsigned>(width),
                                   static_cast<unsigned>(height)}),
-                   "vjay_ace - Media Picker");
+                   "lif_lova - Media Picker");
     window_.setPosition({displayX, displayY});
     window_.setFramerateLimit(30);
     gui_.setWindow(window_);

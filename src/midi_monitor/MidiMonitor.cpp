@@ -74,7 +74,7 @@ static bool isLikelyLIFMessage(const std::vector<unsigned char>& msg) {
 // ── MidiMonitor ───────────────────────────────────────────────────────────────
 
 MidiMonitor::MidiMonitor()
-    : window_(sf::VideoMode({800, 600}), "MIDI Monitor - vjay_ace")
+    : window_(sf::VideoMode({800, 600}), "MIDI Monitor - lif_lova")
     , gui_(window_)
 {
     window_.setFramerateLimit(60);

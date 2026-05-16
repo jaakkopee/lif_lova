@@ -48,7 +48,7 @@ bool MetalCompositor::init() {
     NSError* err = nil;
     // Resolve shader path relative to the executable (works regardless of cwd)
     NSString* exeDir = [NSBundle mainBundle].executablePath.stringByDeletingLastPathComponent;
-    NSString* shaderPath = [exeDir stringByAppendingPathComponent:@"vjay_shaders.metal"];
+    NSString* shaderPath = [exeDir stringByAppendingPathComponent:@"lif_lova_shaders.metal"];
     NSString* src = [NSString stringWithContentsOfFile:shaderPath
         encoding:NSUTF8StringEncoding error:&err];
 

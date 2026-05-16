@@ -28,7 +28,7 @@ static std::string buildConcatFile(const std::string& dir, float targetDuration,
     outFps = static_cast<float>(files.size()) / targetDuration;
     float frameDuration = targetDuration / static_cast<float>(files.size());
 
-    std::string concatPath = dir + "/.vjay_seq.ffconcat";
+    std::string concatPath = dir + "/.lif_lova_seq.ffconcat";
     std::ofstream f(concatPath);
     if (!f) return "";
     f << "ffconcat version 1.0\n";
