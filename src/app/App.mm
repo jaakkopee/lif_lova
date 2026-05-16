@@ -138,6 +138,34 @@ static std::array<std::string, 24> pressureTargetNames() {
     };
 }
 
+struct LifMidiStyleProfile {
+    const char* name;
+    int gematria;
+};
+
+static const LifMidiStyleProfile& lifMidiStyleProfile(int styleIndex) {
+    static const LifMidiStyleProfile kPop        = {"Orpheus Black Moon", 188};
+    static const LifMidiStyleProfile kRock       = {"Ares Blood Sun", 145};
+    static const LifMidiStyleProfile kJazz       = {"Nostradamus Dream Sigil", 242};
+    static const LifMidiStyleProfile kBlues      = {"Rasputin Mad Oracle", 190};
+    static const LifMidiStyleProfile kPercussion = {"Loki Mad Clock", 109};
+
+    switch (styleIndex) {
+        case 0: return kPop;
+        case 1: return kRock;
+        case 2: return kJazz;
+        case 3: return kBlues;
+        case 4: return kPercussion;
+        default:                            return kPop;
+    }
+}
+
+static int wrap7(int value) {
+    int out = value % 7;
+    if (out < 0) out += 7;
+    return out;
+}
+
 static const std::array<ModalScale, 10>& allModalScales() {
     static const std::array<ModalScale, 10> kModes = {
         ModalScale::Ionian,
@@ -338,14 +366,7 @@ void App::resetLifMidiState() {
 }
 
 const char* App::lifMidiStyleName() const {
-    switch (lifMidiStyle_) {
-        case LifMidiStyle::Pop:        return "Pop";
-        case LifMidiStyle::Rock:       return "Rock";
-        case LifMidiStyle::Jazz:       return "Jazz";
-        case LifMidiStyle::Blues:      return "Blues";
-        case LifMidiStyle::Percussion: return "Percussion";
-        default:                       return "Pop";
-    }
+    return lifMidiStyleProfile(static_cast<int>(lifMidiStyle_)).name;
 }
 
 const char* App::lifMidiKeyName() const {
@@ -687,13 +708,19 @@ App::HarmonicFunction App::classifyLifFunction(int bin,
                                                float prevEnergy,
                                                float maxEnergy,
                                                bool feedforward) const {
+    const auto& style = lifMidiStyleProfile(static_cast<int>(lifMidiStyle_));
     const float rel = (maxEnergy > 0.001f) ? std::clamp(energy / maxEnergy, 0.0f, 1.0f) : 0.0f;
     const float contour = energy - prevEnergy;
+    const float styleBias = (static_cast<float>((style.gematria % 9) - 4)) * 0.01f; // [-0.04,+0.04]
+    const float dominantRel = std::clamp(0.82f - styleBias, 0.70f, 0.92f);
+    const float subRel = std::clamp(0.45f - styleBias * 0.5f, 0.30f, 0.60f);
+    const float dominantContour = std::clamp(0.08f - styleBias, 0.04f, 0.12f);
+    const float subContour = std::clamp(0.02f - styleBias * 0.5f, 0.00f, 0.05f);
 
     // De la Motte style reading: every harmony is heard as T, S, or D function.
-    if (bin >= 11 || rel > 0.82f || contour > 0.08f)
+    if (bin >= 11 || rel > dominantRel || contour > dominantContour)
         return HarmonicFunction::Dominant;
-    if (bin >= 6 || rel > 0.45f || (feedforward && contour > 0.02f))
+    if (bin >= 6 || rel > subRel || (feedforward && contour > subContour))
         return HarmonicFunction::Subdominant;
     return HarmonicFunction::Tonic;
 }
@@ -702,6 +729,7 @@ std::vector<int> App::lifMidiNotesForFunction(HarmonicFunction function,
                                               int bin,
                                               int baseNote,
                                               float driveNorm) const {
+    const auto& style = lifMidiStyleProfile(static_cast<int>(lifMidiStyle_));
     const auto clampNote = [](int n) { return std::clamp(n, 0, 127); };
     const auto fitToRange = [this](int note) {
         int n = std::clamp(note, 0, 127);
@@ -718,24 +746,25 @@ std::vector<int> App::lifMidiNotesForFunction(HarmonicFunction function,
 
     if (lifMidiStyle_ == LifMidiStyle::Percussion) {
         static constexpr std::array<int, 16> drumMap = {36, 38, 42, 46, 49, 51, 45, 41, 43, 44, 47, 50, 57, 59, 60, 62};
-        return {drumMap[static_cast<std::size_t>(bin % 16)]};
+        const int rotated = (bin + (style.gematria % 16)) % 16;
+        return {drumMap[static_cast<std::size_t>(rotated)]};
     }
 
     int degree = 0;
     switch (function) {
         case HarmonicFunction::Tonic: {
             static constexpr std::array<int, 4> tonicDegrees = {0, 5, 2, 0};   // I, vi, iii, I (scale degrees)
-            degree = tonicDegrees[static_cast<std::size_t>(variant)];
+            degree = wrap7(tonicDegrees[static_cast<std::size_t>(variant)] + (style.gematria % 7));
             break;
         }
         case HarmonicFunction::Subdominant: {
             static constexpr std::array<int, 4> subDegrees = {1, 3, 1, 3};     // ii / IV family
-            degree = subDegrees[static_cast<std::size_t>(variant)];
+            degree = wrap7(subDegrees[static_cast<std::size_t>(variant)] + ((style.gematria / 7) % 7));
             break;
         }
         case HarmonicFunction::Dominant: {
             static constexpr std::array<int, 4> domDegrees = {4, 6, 4, 6};      // V / vii family
-            degree = domDegrees[static_cast<std::size_t>(variant)];
+            degree = wrap7(domDegrees[static_cast<std::size_t>(variant)] + ((style.gematria / 49) % 7));
             break;
         }
     }
@@ -756,24 +785,26 @@ std::vector<int> App::lifMidiNotesForFunction(HarmonicFunction function,
 
     const int root = noteFromDegree(degree, 0);
     std::vector<int> chord;
+    const int colorStack = 6 + 2 * ((style.gematria / 3) % 3);      // 7th/9th/11th feel
+    const int extensionStack = 8 + 2 * ((style.gematria / 11) % 2); // 9th/11th feel
 
     switch (lifMidiStyle_) {
         case LifMidiStyle::Pop:
             chord = {noteFromDegree(degree, 0), noteFromDegree(degree, 2), noteFromDegree(degree, 4)};
-            if (function == HarmonicFunction::Dominant) chord.push_back(noteFromDegree(degree, 6));
-            else chord.push_back(noteFromDegree(degree, 8));
+            if (function == HarmonicFunction::Dominant) chord.push_back(noteFromDegree(degree, colorStack));
+            else chord.push_back(noteFromDegree(degree, extensionStack));
             break;
         case LifMidiStyle::Rock:
             chord = {noteFromDegree(degree, 0), noteFromDegree(degree, 4), noteFromDegree(degree, 7)};
-            if (function == HarmonicFunction::Dominant) chord.push_back(noteFromDegree(degree, 6));
+            if (function == HarmonicFunction::Dominant) chord.push_back(noteFromDegree(degree, colorStack));
             break;
         case LifMidiStyle::Jazz:
             chord = {
                 noteFromDegree(degree, 0),
                 noteFromDegree(degree, 2),
                 noteFromDegree(degree, 4),
-                noteFromDegree(degree, 6),
-                noteFromDegree(degree, 8)
+                noteFromDegree(degree, colorStack),
+                noteFromDegree(degree, extensionStack)
             };
             break;
         case LifMidiStyle::Blues:
@@ -781,10 +812,10 @@ std::vector<int> App::lifMidiNotesForFunction(HarmonicFunction function,
                 noteFromDegree(degree, 0),
                 noteFromDegree(degree, 2),
                 noteFromDegree(degree, 4),
-                noteFromDegree(degree, 6)
+                noteFromDegree(degree, colorStack)
             };
             if (function == HarmonicFunction::Dominant)
-                chord.push_back(clampNote(root + 6)); // blues b5 color tone
+                chord.push_back(clampNote(root + 6 + ((style.gematria / 5) % 2))); // b5/#5 pivot
             break;
         case LifMidiStyle::Percussion:
             chord = {root};

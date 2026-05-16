@@ -229,7 +229,7 @@ void AudioMidiControlWindow::buildGui(int width) {
     gui_.add(lifMidiStatusLabel_);
     y += 20 + ELEM_GAP;
 
-    lifMidiStyleBtn_ = tgui::Button::create("LIF MIDI Style: Pop");
+    lifMidiStyleBtn_ = tgui::Button::create("LIF MIDI Style: Orpheus Black Moon");
     lifMidiStyleBtn_->setPosition(PAD, y);
     lifMidiStyleBtn_->setSize(colW, 28);
     lifMidiStyleBtn_->onPress([this] { if (onLIFMidiStyleCycle) onLIFMidiStyleCycle(); });
