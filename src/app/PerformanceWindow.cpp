@@ -6,7 +6,7 @@ PerformanceWindow::PerformanceWindow() = default;
 void PerformanceWindow::open(int displayX, int displayY, int width, int height) {
     window_.create(sf::VideoMode({static_cast<unsigned>(width),
                                   static_cast<unsigned>(height)}),
-                   "vjay_ace - Output");
+                   "lif_lova - Output");
     window_.setPosition({displayX, displayY});
     window_.setFramerateLimit(60);
     window_.setVerticalSyncEnabled(true);

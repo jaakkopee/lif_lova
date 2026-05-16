@@ -30,7 +30,7 @@ pkg_check_modules(SWSCALE  REQUIRED libswscale)
 # ────────────────────────────────────────────────────────────────────────────
 # Common helper: link flags shared between app targets
 # ────────────────────────────────────────────────────────────────────────────
-set(VJAY_LINK_LIBS
+set(LIF_LOVA_LINK_LIBS
     SFML::Graphics SFML::Window SFML::System SFML::Audio
     TGUI::TGUI
     ${RTMIDI_LIBRARIES}
@@ -52,7 +52,7 @@ set(VJAY_LINK_LIBS
     "-framework Accelerate"
 )
 
-set(VJAY_INCLUDE_DIRS
+set(LIF_LOVA_INCLUDE_DIRS
     src
     ${RTMIDI_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
@@ -98,26 +98,26 @@ add_executable(lif_lova
     src/app/FxPatch.cpp
 )
 
-target_include_directories(lif_lova PRIVATE ${VJAY_INCLUDE_DIRS})
+target_include_directories(lif_lova PRIVATE ${LIF_LOVA_INCLUDE_DIRS})
 target_link_directories(lif_lova PRIVATE
     ${RTMIDI_LIBRARY_DIRS}
     ${AVCODEC_LIBRARY_DIRS}
     ${AVFORMAT_LIBRARY_DIRS}
 )
-target_link_libraries(lif_lova PRIVATE ${VJAY_LINK_LIBS})
+target_link_libraries(lif_lova PRIVATE ${LIF_LOVA_LINK_LIBS})
 target_compile_options(lif_lova PRIVATE
     ${RTMIDI_CFLAGS_OTHER}
     -fobjc-arc
 )
 
 # Copy Metal shader next to the executable whenever it changes
-set(METAL_SRC ${CMAKE_SOURCE_DIR}/src/app/shaders/vjay_shaders.metal)
-set(METAL_DST ${CMAKE_BINARY_DIR}/vjay_shaders.metal)
+set(METAL_SRC ${CMAKE_SOURCE_DIR}/src/app/shaders/lif_lova_shaders.metal)
+set(METAL_DST ${CMAKE_BINARY_DIR}/lif_lova_shaders.metal)
 add_custom_command(
     OUTPUT  ${METAL_DST}
     COMMAND ${CMAKE_COMMAND} -E copy ${METAL_SRC} ${METAL_DST}
     DEPENDS ${METAL_SRC}
-    COMMENT "Copying vjay_shaders.metal to build dir"
+    COMMENT "Copying lif_lova_shaders.metal to build dir"
 )
 add_custom_target(copy_metal_shader ALL DEPENDS ${METAL_DST})
 add_dependencies(lif_lova copy_metal_shader)

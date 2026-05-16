@@ -1,5 +1,5 @@
-// vjay_shaders.metal
-// Master shader file for vjay_ace.
+// lif_lova_shaders.metal
+// Master shader file for lif_lova.
 // Combines ported MachinaVFX kernels + new kernels for the VJ layer compositor.
 // All kernels follow the MachinaVFX Params convention:
 //   constant Params& params [[buffer(0)]]  →  int_params[16], float_params[16]
