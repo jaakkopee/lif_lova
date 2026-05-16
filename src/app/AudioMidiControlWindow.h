@@ -186,7 +186,7 @@ private:
 
     tgui::Button::Ptr audioBypPassBtn_;
 
-    void buildGui(int width, int height);
+    void buildGui(int width);
     void drawPressureMeter();
     void drawAudioMeter();
     void drawAudioLeds();

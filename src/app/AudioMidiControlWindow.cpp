@@ -12,7 +12,7 @@ void AudioMidiControlWindow::open(int displayX, int displayY, int width, int hei
     window_.setPosition({displayX, displayY});
     window_.setFramerateLimit(60);
     gui_.setWindow(window_);
-    buildGui(width, height);
+    buildGui(width);
 }
 
 bool AudioMidiControlWindow::isOpen() const { return window_.isOpen(); }
@@ -22,8 +22,7 @@ const tgui::Color BG_DARK   {16,  16,  20 };
 const tgui::Color TEXT_DIM  {150, 165, 195};
 const tgui::Color TEXT_VAL  {215, 225, 255};
 
-void AudioMidiControlWindow::buildGui(int width, int height) {
-    (void)height;
+void AudioMidiControlWindow::buildGui(int width) {
     const int PAD = 18;
     const int colW = width - PAD * 2;
 
@@ -546,8 +545,10 @@ bool AudioMidiControlWindow::handleEvents() {
 void AudioMidiControlWindow::update() {
     // Append one column to the rolling buffer each frame
     std::array<float, ROLLING_ROWS> col = {};
-    for (int i = 0; i < 8; ++i)  col[static_cast<size_t>(i)]     = audioBands_[static_cast<size_t>(i)];
-    for (int i = 0; i < 8; ++i)  col[static_cast<size_t>(8 + i)] = transientBands_[static_cast<size_t>(i)];
+    for (int i = 0; i < 8; ++i) {
+        col[static_cast<size_t>(i)]     = audioBands_[static_cast<size_t>(i)];
+        col[static_cast<size_t>(8 + i)] = transientBands_[static_cast<size_t>(i)];
+    }
     rollingBuf_.push_back(col);
     while (static_cast<int>(rollingBuf_.size()) > ROLLING_MAX_COLS)
         rollingBuf_.pop_front();
