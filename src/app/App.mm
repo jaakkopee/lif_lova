@@ -117,6 +117,115 @@ static std::array<std::string, 24> pressureTargetNames() {
     };
 }
 
+static const std::array<ModalScale, 10>& allModalScales() {
+    static const std::array<ModalScale, 10> kModes = {
+        ModalScale::Ionian,
+        ModalScale::Dorian,
+        ModalScale::Phrygian,
+        ModalScale::Lydian,
+        ModalScale::Mixolydian,
+        ModalScale::Aeolian,
+        ModalScale::Locrian,
+        ModalScale::IonianPlus4,
+        ModalScale::DorianPlus4,
+        ModalScale::AeolianPlus7,
+    };
+    return kModes;
+}
+
+static bool isCustomModalScale(ModalScale scale) {
+    return scale == ModalScale::IonianPlus4
+        || scale == ModalScale::DorianPlus4
+        || scale == ModalScale::AeolianPlus7;
+}
+
+static int customModeSlot(ModalScale scale) {
+    switch (scale) {
+        case ModalScale::IonianPlus4: return 0;
+        case ModalScale::DorianPlus4: return 1;
+        case ModalScale::AeolianPlus7: return 2;
+        default: return -1;
+    }
+}
+
+static std::array<std::array<int, 7>, 3> defaultCustomModeIntervals() {
+    return {{{0, 2, 4, 6, 7, 9, 11},
+             {0, 2, 3, 6, 7, 9, 10},
+             {0, 2, 3, 5, 7, 8, 11}}};
+}
+
+static std::array<std::array<int, 7>, 3> g_customModeIntervals = defaultCustomModeIntervals();
+
+static int modalScaleOrderIndex(ModalScale scale) {
+    const auto& modes = allModalScales();
+    for (int i = 0; i < static_cast<int>(modes.size()); ++i)
+        if (modes[static_cast<size_t>(i)] == scale)
+            return i;
+    return 0;
+}
+
+static std::array<int, 7> modalIntervals(ModalScale scale) {
+    if (isCustomModalScale(scale)) {
+        const int slot = customModeSlot(scale);
+        if (slot >= 0)
+            return g_customModeIntervals[static_cast<size_t>(slot)];
+    }
+    switch (scale) {
+        case ModalScale::Ionian:     return {0, 2, 4, 5, 7, 9, 11};
+        case ModalScale::Dorian:     return {0, 2, 3, 5, 7, 9, 10};
+        case ModalScale::Phrygian:   return {0, 1, 3, 5, 7, 8, 10};
+        case ModalScale::Lydian:     return {0, 2, 4, 6, 7, 9, 11};
+        case ModalScale::Mixolydian: return {0, 2, 4, 5, 7, 9, 10};
+        case ModalScale::Aeolian:    return {0, 2, 3, 5, 7, 8, 10};
+        case ModalScale::Locrian:    return {0, 1, 3, 5, 6, 8, 10};
+        default:                     return {0, 2, 3, 5, 7, 9, 10};
+    }
+}
+
+static uint16_t modalPitchClassMask(int tonicSemitone, ModalScale scale) {
+    tonicSemitone = ((tonicSemitone % 12) + 12) % 12;
+    const auto intervals = modalIntervals(scale);
+    uint16_t mask = 0;
+    for (int d : intervals) {
+        const int pc = (tonicSemitone + d) % 12;
+        mask |= static_cast<uint16_t>(1u << pc);
+    }
+    return mask;
+}
+
+static int overlapCount12(uint16_t a, uint16_t b) {
+    uint16_t v = static_cast<uint16_t>(a & b);
+    int count = 0;
+    for (int i = 0; i < 12; ++i)
+        count += (v >> i) & 1u;
+    return count;
+}
+
+static ModalScale resolveTransportedModalScale(int prevKeySemitone,
+                                               ModalScale prevScale,
+                                               int newKeySemitone,
+                                               ModalScale fallback) {
+    const uint16_t prevMask = modalPitchClassMask(prevKeySemitone, prevScale);
+    int bestScore = -1;
+    int bestTie = 999;
+    ModalScale best = fallback;
+
+    const int prevIdx = modalScaleOrderIndex(prevScale);
+    const auto& modes = allModalScales();
+    for (int i = 0; i < static_cast<int>(modes.size()); ++i) {
+        const auto candidate = modes[static_cast<size_t>(i)];
+        const uint16_t candidateMask = modalPitchClassMask(newKeySemitone, candidate);
+        const int score = overlapCount12(prevMask, candidateMask);
+        const int tie = std::abs(i - prevIdx);
+        if (score > bestScore || (score == bestScore && tie < bestTie)) {
+            bestScore = score;
+            bestTie = tie;
+            best = candidate;
+        }
+    }
+    return best;
+}
+
 int App::lifNeuronCountFromNorm(float v) {
     static constexpr int kCounts[4] = {512, 1024, 2048, 4096};
     int idx = std::clamp(static_cast<int>(v * 4.0f), 0, 3);
@@ -188,6 +297,27 @@ void App::refreshLifMidiUi() {
     audioMidiWin_.setLifMidiStatus(lifMidiEnabled_,
                                    (lifMidiStyle_ == LifMidiStyle::Percussion) ? 10 : 1,
                                    lifMidiRangeMin_);
+    refreshLifMidiModeEditorUi();
+}
+
+void App::refreshLifMidiModeEditorUi() {
+    if (currentScene_ < 0) {
+        audioMidiWin_.setLifMidiModeEditor("Mode Edit: no scene", false);
+        return;
+    }
+    const ModalScale scale = scenes_[currentScene_].modalScale;
+    const bool editable = isCustomModalScale(scale);
+    if (!editable) {
+        audioMidiWin_.setLifMidiModeEditor("Mode Edit: built-in mode", false);
+        return;
+    }
+
+    lifMidiModeEditDegree_ = std::clamp(lifMidiModeEditDegree_, 0, 6);
+    const auto ints = modalIntervals(scale);
+    const int d = lifMidiModeEditDegree_;
+    char buf[96];
+    std::snprintf(buf, sizeof(buf), "Mode Edit: deg %d = %d st", d + 1, ints[static_cast<size_t>(d)]);
+    audioMidiWin_.setLifMidiModeEditor(buf, true);
 }
 
 const char* App::lifMidiModalScaleName() const {
@@ -206,6 +336,9 @@ const char* App::lifMidiModalScaleNameForScene(int sceneIdx) const {
         case ModalScale::Mixolydian: return "Mixolydian";
         case ModalScale::Aeolian:    return "Aeolian";
         case ModalScale::Locrian:    return "Locrian";
+        case ModalScale::IonianPlus4:return "Ionian +4";
+        case ModalScale::DorianPlus4:return "Dorian +4";
+        case ModalScale::AeolianPlus7:return "Aeolian +7";
         default:                          return "Dorian";
     }
 }
@@ -255,18 +388,58 @@ void App::cycleLifMidiModalScale() {
     if (currentScene_ < 0) return;
     resetLifMidiState();
     ModalScale& scale = scenes_[currentScene_].modalScale;
-    switch (scale) {
-        case ModalScale::Ionian:     scale = ModalScale::Dorian; break;
-        case ModalScale::Dorian:     scale = ModalScale::Phrygian; break;
-        case ModalScale::Phrygian:   scale = ModalScale::Lydian; break;
-        case ModalScale::Lydian:     scale = ModalScale::Mixolydian; break;
-        case ModalScale::Mixolydian: scale = ModalScale::Aeolian; break;
-        case ModalScale::Aeolian:    scale = ModalScale::Locrian; break;
-        case ModalScale::Locrian:    scale = ModalScale::Ionian; break;
-        default:                     scale = ModalScale::Dorian; break;
-    }
+    const auto& modes = allModalScales();
+    int idx = modalScaleOrderIndex(scale);
+    idx = (idx + 1) % static_cast<int>(modes.size());
+    scale = modes[static_cast<size_t>(idx)];
+    lifMidiModeUserSet_[currentScene_] = 1;
     refreshLifMidiUi();
     std::cout << "[LIF MIDI] modal scale=" << lifMidiModalScaleName() << std::endl;
+    saveState();
+}
+
+void App::nudgeLifMidiModeEditDegree(int delta) {
+    if (currentScene_ < 0 || delta == 0) return;
+    lifMidiModeEditDegree_ = std::clamp(lifMidiModeEditDegree_ + delta, 0, 6);
+    refreshLifMidiModeEditorUi();
+}
+
+void App::nudgeLifMidiModeEditSemitone(int delta) {
+    if (currentScene_ < 0 || delta == 0) return;
+    ModalScale scale = scenes_[currentScene_].modalScale;
+    const int slot = customModeSlot(scale);
+    if (slot < 0) {
+        refreshLifMidiModeEditorUi();
+        return;
+    }
+    const int degree = std::clamp(lifMidiModeEditDegree_, 0, 6);
+    auto& mode = g_customModeIntervals[static_cast<size_t>(slot)];
+    int candidate = std::clamp(mode[static_cast<size_t>(degree)] + delta, 0, 11);
+
+    // Keep degree ordering non-decreasing to avoid malformed scales.
+    if (degree > 0)
+        candidate = std::max(candidate, mode[static_cast<size_t>(degree - 1)]);
+    if (degree < 6)
+        candidate = std::min(candidate, mode[static_cast<size_t>(degree + 1)]);
+
+    mode[static_cast<size_t>(degree)] = candidate;
+    lifMidiModeUserSet_[currentScene_] = 1;
+    refreshLifMidiModeEditorUi();
+    saveState();
+}
+
+void App::resetLifMidiModeEdits() {
+    if (currentScene_ < 0) return;
+    ModalScale scale = scenes_[currentScene_].modalScale;
+    const int slot = customModeSlot(scale);
+    if (slot < 0) {
+        refreshLifMidiModeEditorUi();
+        return;
+    }
+
+    g_customModeIntervals = defaultCustomModeIntervals();
+    lifMidiModeUserSet_[currentScene_] = 1;
+    refreshLifMidiModeEditorUi();
     saveState();
 }
 
@@ -328,20 +501,9 @@ std::vector<int> App::lifMidiNotesForFunction(HarmonicFunction function,
         }
     }
 
-    const std::array<int, 7> intervals = [&]() {
-        ModalScale scale = (currentScene_ >= 0 && currentScene_ < NUM_SCENES)
-            ? scenes_[currentScene_].modalScale : ModalScale::Dorian;
-        switch (scale) {
-            case ModalScale::Ionian:     return std::array<int, 7>{0, 2, 4, 5, 7, 9, 11};
-            case ModalScale::Dorian:     return std::array<int, 7>{0, 2, 3, 5, 7, 9, 10};
-            case ModalScale::Phrygian:   return std::array<int, 7>{0, 1, 3, 5, 7, 8, 10};
-            case ModalScale::Lydian:     return std::array<int, 7>{0, 2, 4, 6, 7, 9, 11};
-            case ModalScale::Mixolydian: return std::array<int, 7>{0, 2, 4, 5, 7, 9, 10};
-            case ModalScale::Aeolian:    return std::array<int, 7>{0, 2, 3, 5, 7, 8, 10};
-            case ModalScale::Locrian:    return std::array<int, 7>{0, 1, 3, 5, 6, 8, 10};
-            default:                     return std::array<int, 7>{0, 2, 3, 5, 7, 9, 10};
-        }
-    }();
+    const ModalScale scale = (currentScene_ >= 0 && currentScene_ < NUM_SCENES)
+        ? scenes_[currentScene_].modalScale : ModalScale::Dorian;
+    const std::array<int, 7> intervals = modalIntervals(scale);
     auto noteFromDegree = [&](int rootDegree, int thirdStackOffset) {
         const int totalDegree = rootDegree + thirdStackOffset;
         const int scaleDegree = ((totalDegree % 7) + 7) % 7;
@@ -814,6 +976,9 @@ void App::wireCallbacks() {
     audioMidiWin_.onLIFMidiToggle = [this]() { toggleLifMidi(); };
     audioMidiWin_.onLIFMidiStyleCycle = [this]() { cycleLifMidiStyle(); };
     audioMidiWin_.onLIFMidiModeCycle = [this]() { cycleLifMidiModalScale(); };
+    audioMidiWin_.onLIFMidiModeEditDegreeNudge = [this](int delta) { nudgeLifMidiModeEditDegree(delta); };
+    audioMidiWin_.onLIFMidiModeEditSemitoneNudge = [this](int delta) { nudgeLifMidiModeEditSemitone(delta); };
+    audioMidiWin_.onLIFMidiModeEditReset = [this]() { resetLifMidiModeEdits(); };
     audioMidiWin_.onLIFMidiKeyNudge = [this](int delta) { nudgeLifMidiKey(delta); };
     audioMidiWin_.onLIFMidiRangeMinNudge = [this](int delta) { nudgeLifMidiRangeMin(delta); };
     audioMidiWin_.onLIFMidiRangeMaxNudge = [this](int delta) { nudgeLifMidiRangeMax(delta); };
@@ -1542,17 +1707,32 @@ void App::updatePanZoomAnimation(float deltaTime) {
 void App::onSceneSelect(int sceneIdx) {
     if (sceneIdx < 0 || sceneIdx >= NUM_SCENES) return;
 
+    const int prevScene = currentScene_;
+    const int prevKeySemitone = lifMidiKeySemitone_;
+    const ModalScale prevScale =
+        (prevScene >= 0 && prevScene < NUM_SCENES) ? scenes_[prevScene].modalScale : scenes_[sceneIdx].modalScale;
+
     // Set LIF MIDI key to match the root note of the triggering scene pad.
     // Scene pads are mapped to MIDI notes starting at C2 (36), each pad is a semitone.
     // 0 = C, 1 = C#, ..., 11 = B
     int midiNote = NOTE_SCENE_BASE + sceneIdx;
-    int key = midiNote % 12;
-    lifMidiKeySemitone_ = key;
+    lifMidiKeySemitone_ = ((midiNote % 12) + 12) % 12;
+
+    currentScene_ = sceneIdx;
+
+    // Auto mode transport is the default: keep the pitch-class collection
+    // as consistent as possible when the scene root note changes.
+    if (!lifMidiModeUserSet_[sceneIdx]) {
+        scenes_[sceneIdx].modalScale = resolveTransportedModalScale(
+            prevKeySemitone,
+            prevScale,
+            lifMidiKeySemitone_,
+            scenes_[sceneIdx].modalScale);
+    }
+
     refreshLifMidiUi();
     resetLifMidiState();
 
-    const int prevScene = currentScene_;
-    currentScene_ = sceneIdx;
     const Scene& sc = SCENES[sceneIdx];
     const auto fx = enforcedSceneFx(sc);
 
@@ -1787,7 +1967,7 @@ void App::saveState() const {
         if (!f) { std::cerr << "[App] Could not open temp state file for writing\n"; return; }
         // Write magic + version for future-proofing
         const uint32_t magic = 0x56414345; // 'VACE'
-        const uint32_t ver   = 14;
+        const uint32_t ver   = 16;
         f.write(reinterpret_cast<const char*>(&magic), 4);
         f.write(reinterpret_cast<const char*>(&ver),   4);
         // Write all scene states (knobs + image paths)
@@ -1818,6 +1998,9 @@ void App::saveState() const {
             for (float a : ps.amount)
                 f.write(reinterpret_cast<const char*>(&a), sizeof(float));
         }
+        for (const auto& mode : g_customModeIntervals)
+            for (int v : mode)
+                f.write(reinterpret_cast<const char*>(&v), sizeof(int));
         f.write(reinterpret_cast<const char*>(&currentScene_), sizeof(int));
         if (!f) { std::cerr << "[App] State write error — temp file may be incomplete\n"; return; }
     } // ofstream closes + flushes here
@@ -1866,6 +2049,9 @@ void App::loadState() {
     // v11: per-scene pressure mapping settings (21 targets)
     // v12: pressure mapping includes opacity targets (24 targets)
     // v13: persists LIF MIDI modal scale selection
+    // v14: per-scene modal scale in scene payload
+    // v15: custom modal scales (extended ModalScale enum)
+    // v16: persists editable custom mode intervals
     const bool isV3 = (ver == 3);
     const bool isV4 = (ver == 4);
     const bool isV5 = (ver == 5);
@@ -1877,12 +2063,15 @@ void App::loadState() {
     const bool isV11 = (ver == 11);
     const bool isV12 = (ver == 12);
     const bool isV13 = (ver == 13);
-    if (!isV3 && !isV4 && !isV5 && !isV6 && !isV7 && !isV8 && !isV9 && !isV10 && !isV11 && !isV12 && !isV13) {
+    const bool isV16Plus = (ver >= 16);
+    const bool isV14Plus = (ver >= 14);
+    if (!isV3 && !isV4 && !isV5 && !isV6 && !isV7 && !isV8 && !isV9 && !isV10 && !isV11 && !isV12 && !isV13 && !isV14Plus) {
         std::cerr << "[App] Ignoring incompatible state file\n";
         return;
     }
     // Older saves have 14 or 16 scenes. v10+ saves all NUM_SCENES.
-    const int savedSceneCount = (isV10 || isV11 || isV12 || isV13) ? NUM_SCENES : (isV6 || isV7 || isV8 || isV9) ? 16 : 14;
+    const int savedSceneCount = (isV10 || isV11 || isV12 || isV13 || isV14Plus) ? NUM_SCENES : (isV6 || isV7 || isV8 || isV9) ? 16 : 14;
+    lifMidiModeUserSet_.fill(0);
     for (int si = 0; si < savedSceneCount && si < NUM_SCENES; ++si) {
         auto& s = scenes_[si];
         // v3=3 modes, v4=4, v5/v6=5, v7=6
@@ -1916,8 +2105,9 @@ void App::loadState() {
             if (!f.read(reinterpret_cast<char*>(&modalScale), sizeof(int))) return;
             modalScale = std::clamp(modalScale,
                                     static_cast<int>(ModalScale::Ionian),
-                                    static_cast<int>(ModalScale::Locrian));
+                                    static_cast<int>(ModalScale::AeolianPlus7));
             s.modalScale = static_cast<ModalScale>(modalScale);
+            lifMidiModeUserSet_[si] = 1;
         }
         if (isV11 || isV12 || isV13) {
             const int savedPressureTargets = isV11 ? 21 : NUM_PRESSURE_TARGETS;
@@ -1939,12 +2129,27 @@ void App::loadState() {
         if (f.read(reinterpret_cast<char*>(&modalScale), sizeof(int))) {
             modalScale = std::clamp(modalScale,
                                     static_cast<int>(ModalScale::Ionian),
-                                    static_cast<int>(ModalScale::Locrian));
+                                    static_cast<int>(ModalScale::AeolianPlus7));
             for (int si = 0; si < savedSceneCount && si < NUM_SCENES; ++si) {
                 scenes_[si].modalScale = static_cast<ModalScale>(modalScale);
+                lifMidiModeUserSet_[si] = 1;
             }
         }
     }
+
+    g_customModeIntervals = defaultCustomModeIntervals();
+    if (isV16Plus) {
+        for (auto& mode : g_customModeIntervals) {
+            for (int& v : mode) {
+                if (!f.read(reinterpret_cast<char*>(&v), sizeof(int))) return;
+                v = std::clamp(v, 0, 11);
+            }
+            // Keep monotonic ascending degrees after load.
+            for (int i = 1; i < 7; ++i)
+                mode[static_cast<size_t>(i)] = std::max(mode[static_cast<size_t>(i)], mode[static_cast<size_t>(i - 1)]);
+        }
+    }
+
     int savedScene = -1;
     if (f.read(reinterpret_cast<char*>(&savedScene), sizeof(int))) {
         if (savedScene >= 0 && savedScene < NUM_SCENES)

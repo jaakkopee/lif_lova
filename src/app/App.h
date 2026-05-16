@@ -25,6 +25,9 @@ enum class ModalScale {
     Mixolydian,
     Aeolian,
     Locrian,
+    IonianPlus4,
+    DorianPlus4,
+    AeolianPlus7,
 };
 
 // ── FxPatch (stub base for future per-patch state) ───────────────────────────
@@ -120,8 +123,14 @@ private:
         int lifMidiKeySemitone_ = 0;   // 0=C, 1=C#, ... 11=B
         int lifMidiRangeMin_ = 36;
         int lifMidiRangeMax_ = 96;
+        int lifMidiModeEditDegree_ = 0;
+        std::array<uint8_t, NUM_SCENES> lifMidiModeUserSet_ = {};
         void cycleLifMidiStyle();
         void cycleLifMidiModalScale();
+        void nudgeLifMidiModeEditDegree(int delta);
+        void nudgeLifMidiModeEditSemitone(int delta);
+        void resetLifMidiModeEdits();
+        void refreshLifMidiModeEditorUi();
         const char* lifMidiStyleName() const;
         const char* lifMidiModalScaleName() const;
         const char* lifMidiModalScaleNameForScene(int sceneIdx) const;

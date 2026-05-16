@@ -86,15 +86,66 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     });
     gui_.add(lifMidiModeBtn_);
 
+    lifMidiModeEditLabel_ = tgui::Label::create("Mode Edit: n/a");
+    lifMidiModeEditLabel_->setPosition(14, 234);
+    lifMidiModeEditLabel_->setTextSize(11);
+    lifMidiModeEditLabel_->getRenderer()->setTextColor(TEXT_DIM);
+    gui_.add(lifMidiModeEditLabel_);
+
+    lifMidiModeDegDownBtn_ = tgui::Button::create("Deg-");
+    lifMidiModeDegDownBtn_->setPosition(14, 252);
+    lifMidiModeDegDownBtn_->setSize(42, 20);
+    lifMidiModeDegDownBtn_->onPress([this] {
+        if (onLIFMidiModeEditDegreeNudge)
+            onLIFMidiModeEditDegreeNudge(-1);
+    });
+    gui_.add(lifMidiModeDegDownBtn_);
+
+    lifMidiModeDegUpBtn_ = tgui::Button::create("Deg+");
+    lifMidiModeDegUpBtn_->setPosition(60, 252);
+    lifMidiModeDegUpBtn_->setSize(42, 20);
+    lifMidiModeDegUpBtn_->onPress([this] {
+        if (onLIFMidiModeEditDegreeNudge)
+            onLIFMidiModeEditDegreeNudge(1);
+    });
+    gui_.add(lifMidiModeDegUpBtn_);
+
+    lifMidiModeSemiDownBtn_ = tgui::Button::create("Sem-");
+    lifMidiModeSemiDownBtn_->setPosition(106, 252);
+    lifMidiModeSemiDownBtn_->setSize(44, 20);
+    lifMidiModeSemiDownBtn_->onPress([this] {
+        if (onLIFMidiModeEditSemitoneNudge)
+            onLIFMidiModeEditSemitoneNudge(-1);
+    });
+    gui_.add(lifMidiModeSemiDownBtn_);
+
+    lifMidiModeSemiUpBtn_ = tgui::Button::create("Sem+");
+    lifMidiModeSemiUpBtn_->setPosition(154, 252);
+    lifMidiModeSemiUpBtn_->setSize(44, 20);
+    lifMidiModeSemiUpBtn_->onPress([this] {
+        if (onLIFMidiModeEditSemitoneNudge)
+            onLIFMidiModeEditSemitoneNudge(1);
+    });
+    gui_.add(lifMidiModeSemiUpBtn_);
+
+    lifMidiModeResetBtn_ = tgui::Button::create("Reset");
+    lifMidiModeResetBtn_->setPosition(202, 252);
+    lifMidiModeResetBtn_->setSize(54, 20);
+    lifMidiModeResetBtn_->onPress([this] {
+        if (onLIFMidiModeEditReset)
+            onLIFMidiModeEditReset();
+    });
+    gui_.add(lifMidiModeResetBtn_);
+
     // ── LIF Tone volume controls ────────────────────────────────────────
     auto lifToneLabel = tgui::Label::create("LIF Tone Synth");
-    lifToneLabel->setPosition(14, 234);
+    lifToneLabel->setPosition(14, 278);
     lifToneLabel->setTextSize(13);
     lifToneLabel->getRenderer()->setTextColor(tgui::Color(255, 210, 80));
     gui_.add(lifToneLabel);
 
     lifToneToggleBtn_ = tgui::Button::create("Enable LIF Tone (K)");
-    lifToneToggleBtn_->setPosition(14, 254);
+    lifToneToggleBtn_->setPosition(14, 298);
     lifToneToggleBtn_->setSize(leftColW, 22);
     lifToneToggleBtn_->onPress([this] {
         if (onLIFToneToggle)
@@ -103,13 +154,13 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     gui_.add(lifToneToggleBtn_);
 
     lifToneVolLabel_ = tgui::Label::create("Tone Vol: 85%");
-    lifToneVolLabel_->setPosition(14, 280);
+    lifToneVolLabel_->setPosition(14, 324);
     lifToneVolLabel_->setTextSize(11);
     lifToneVolLabel_->getRenderer()->setTextColor(TEXT_DIM);
     gui_.add(lifToneVolLabel_);
 
     lifToneVolDownBtn_ = tgui::Button::create("Vol -");
-    lifToneVolDownBtn_->setPosition(14, 298);
+    lifToneVolDownBtn_->setPosition(14, 342);
     lifToneVolDownBtn_->setSize(70, 22);
     lifToneVolDownBtn_->onPress([this] {
         if (onLIFToneVolumeNudge)
@@ -118,7 +169,7 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     gui_.add(lifToneVolDownBtn_);
 
     lifToneVolUpBtn_ = tgui::Button::create("Vol +");
-    lifToneVolUpBtn_->setPosition(90, 298);
+    lifToneVolUpBtn_->setPosition(90, 342);
     lifToneVolUpBtn_->setSize(70, 22);
     lifToneVolUpBtn_->onPress([this] {
         if (onLIFToneVolumeNudge)
@@ -128,7 +179,7 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
 
     // ── Audio bypass toggle ─────────────────────────────────────────────
     audioBypPassBtn_ = tgui::Button::create("Audio Bypass (B)");
-    audioBypPassBtn_->setPosition(14, 326);
+    audioBypPassBtn_->setPosition(14, 370);
     audioBypPassBtn_->setSize(leftColW, 22);
     audioBypPassBtn_->getRenderer()->setBackgroundColor(tgui::Color(60, 40, 40));
     audioBypPassBtn_->onPress([this] {
@@ -146,7 +197,7 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
 
     // ── MIDI Settings dropdown section ──────────────────────────────────
     midiSettingsBtn_ = tgui::Button::create("MIDI Settings ▼");
-    midiSettingsBtn_->setPosition(14, 354);
+    midiSettingsBtn_->setPosition(14, 398);
     midiSettingsBtn_->setSize(leftColW, 24);
     midiSettingsBtn_->onPress([this] {
         midiSettingsExpanded_ = !midiSettingsExpanded_;
@@ -158,7 +209,7 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     gui_.add(midiSettingsBtn_);
 
     midiSettingsPanel_ = tgui::Panel::create({static_cast<float>(leftColW), 230.0f});
-    midiSettingsPanel_->setPosition(14, 380);
+    midiSettingsPanel_->setPosition(14, 424);
     midiSettingsPanel_->getRenderer()->setBackgroundColor(tgui::Color(24, 24, 32));
     midiSettingsPanel_->setVisible(false);
     gui_.add(midiSettingsPanel_);
@@ -340,6 +391,16 @@ void AudioMidiControlWindow::setLifMidiStyle(const std::string& styleName) {
 
 void AudioMidiControlWindow::setLifMidiMode(const std::string& modeName) {
     lifMidiModeBtn_->setText("LIF MIDI Mode: " + modeName);
+}
+
+void AudioMidiControlWindow::setLifMidiModeEditor(const std::string& statusText, bool editable) {
+    if (lifMidiModeEditLabel_)
+        lifMidiModeEditLabel_->setText(statusText);
+    if (lifMidiModeDegDownBtn_) lifMidiModeDegDownBtn_->setEnabled(editable);
+    if (lifMidiModeDegUpBtn_) lifMidiModeDegUpBtn_->setEnabled(editable);
+    if (lifMidiModeSemiDownBtn_) lifMidiModeSemiDownBtn_->setEnabled(editable);
+    if (lifMidiModeSemiUpBtn_) lifMidiModeSemiUpBtn_->setEnabled(editable);
+    if (lifMidiModeResetBtn_) lifMidiModeResetBtn_->setEnabled(editable);
 }
 
 void AudioMidiControlWindow::setLifMidiKey(const std::string& keyName) {

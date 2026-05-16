@@ -39,6 +39,7 @@ public:
 
     // Update the LIF modal scale label.
     void setLifMidiMode(const std::string& modeName);
+    void setLifMidiModeEditor(const std::string& statusText, bool editable);
 
     // Update LIF MIDI key and note range labels.
     void setLifMidiKey(const std::string& keyName);
@@ -60,6 +61,9 @@ public:
     std::function<void(int delta)> onLIFMidiKeyNudge;
     std::function<void(int delta)> onLIFMidiRangeMinNudge;
     std::function<void(int delta)> onLIFMidiRangeMaxNudge;
+    std::function<void(int delta)> onLIFMidiModeEditDegreeNudge;
+    std::function<void(int delta)> onLIFMidiModeEditSemitoneNudge;
+    std::function<void()> onLIFMidiModeEditReset;
     std::function<void()> onLIFToneToggle;
     std::function<void(float delta)> onLIFToneTempoNudge;
     std::function<void(float deltaHz)> onLIFToneMinFreqNudge;
@@ -88,6 +92,12 @@ private:
     tgui::Label::Ptr lifMidiStatusLabel_;
     tgui::Button::Ptr lifMidiStyleBtn_;
     tgui::Button::Ptr lifMidiModeBtn_;
+    tgui::Label::Ptr lifMidiModeEditLabel_;
+    tgui::Button::Ptr lifMidiModeDegDownBtn_;
+    tgui::Button::Ptr lifMidiModeDegUpBtn_;
+    tgui::Button::Ptr lifMidiModeSemiDownBtn_;
+    tgui::Button::Ptr lifMidiModeSemiUpBtn_;
+    tgui::Button::Ptr lifMidiModeResetBtn_;
     tgui::Label::Ptr lifMidiKeyLabel_;
     tgui::Button::Ptr lifMidiKeyDownBtn_;
     tgui::Button::Ptr lifMidiKeyUpBtn_;

@@ -8,6 +8,11 @@
 
 namespace fs = std::filesystem;
 
+namespace {
+constexpr std::size_t kMaxScannedEntriesPerRoot = 50000;
+constexpr std::size_t kMaxMediaFilesListed = 1200;
+}
+
 // Image/video extensions considered valid media
 static bool isMediaFile(const fs::path& p) {
     static const std::vector<std::string> exts = {
@@ -151,13 +156,28 @@ void MediaPickerWindow::scanDirectory() {
     try {
         for (const auto& root : roots) {
             if (!fs::exists(root) || !fs::is_directory(root)) continue;
+            std::size_t scannedEntries = 0;
             for (const auto& entry : fs::recursive_directory_iterator(root,
                     fs::directory_options::skip_permission_denied)) {
+                ++scannedEntries;
+                if (scannedEntries > kMaxScannedEntriesPerRoot) {
+                    std::cout << "[MediaPicker] Scan capped at " << kMaxScannedEntriesPerRoot
+                              << " filesystem entries in root: " << root.string() << "\n";
+                    break;
+                }
                 if (!entry.is_regular_file() || !isMediaFile(entry.path())) continue;
                 const std::string path = entry.path().string();
-                if (seen.insert(path).second)
+                if (seen.insert(path).second) {
                     fileList_.push_back(path);
+                    if (fileList_.size() >= kMaxMediaFilesListed) {
+                        std::cout << "[MediaPicker] Listing capped at " << kMaxMediaFilesListed
+                                  << " media files\n";
+                        break;
+                    }
+                }
             }
+            if (fileList_.size() >= kMaxMediaFilesListed)
+                break;
         }
     } catch (const std::exception& e) {
         std::cerr << "[MediaPicker] Scan error: " << e.what() << "\n";
