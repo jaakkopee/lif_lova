@@ -1,0 +1,183 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.3cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+
+\title{Interpretable Neuro-Functional Music AI:\\
+\large A Position Paper on the \textit{lif\_lova} LIF Architecture}
+\author{Draft for Workshop Submission}
+\date{\today}
+
+\begin{document}
+\maketitle
+\onehalfspacing
+
+\begin{abstract}
+This position paper argues that the current \textit{lif\_lova} architecture represents a productive
+alternative to mainstream black-box music generation. Instead of treating composition as token
+prediction, it combines interpretable neural dynamics (leaky integrate-and-fire network states)
+with explicit music-theoretical constraints (functional harmony, modality, register, and style-conditioned
+voicing). We frame this as an \emph{interpretable neuro-functional paradigm}: post-symbolic in state formation,
+symbolic in harmonic decision, and performative in real-time control. We outline why this architecture is
+relevant to contemporary musicology and music AI, identify current limitations, and propose a concrete
+research agenda with measurable evaluation criteria for interactive musical systems.
+\end{abstract}
+
+\section{Thesis}
+
+The central claim is that \textit{lif\_lova} should be understood as an \emph{instrumental AI system},
+not merely a generative model. Its value lies in three properties that are often separated in current research:
+\begin{enumerate}[label=\arabic*.]
+    \item \textbf{Causal transparency}: the pathway from signal to note is inspectable.
+    \item \textbf{Music-theoretical intelligibility}: harmonic behavior is articulated through explicit functional and modal logic.
+    \item \textbf{Performative responsiveness}: system behavior is directly controllable in live contexts.
+\end{enumerate}
+
+This makes the architecture especially relevant to computational musicology, live electronic performance,
+and practice-based AI research.
+
+\section{Context in Music AI Research}
+
+Recent foundation-model approaches to music generation have improved stylistic plausibility and long-context
+prediction. However, they commonly face recurring limitations in artistic research settings:
+\begin{itemize}
+    \item low interpretability of generation decisions,
+    \item weak causal controllability during performance,
+    \item heavy dependence on large copyrighted corpora,
+    \item and unclear mapping between model internals and established music-theoretical constructs.
+\end{itemize}
+
+By contrast, \textit{lif\_lova} uses compact, designed dynamics rather than large corpus pretraining.
+The system offers explicit intermediate representations (activity bins, harmonic function assignment,
+modal pitch filtering, style-conditioned voicing), making analytical and pedagogical use feasible.
+
+\section{Musicological Relevance}
+
+\subsection{Function as Process}
+
+In many symbolic systems, tonic/subdominant/dominant labels are imposed externally as static templates.
+In \textit{lif\_lova}, harmonic function is inferred from evolving neural energy distributions and local contour.
+This aligns with process-based musicological readings where function is enacted over time,
+not merely declared by chord symbols.
+
+\subsection{Modal Grammar with Dynamic Agency}
+
+The architecture constrains pitch material by per-scene modal selection (Ionian through Locrian),
+while timing, density, and articulation remain state-dependent. This realizes a productive split between:
+\begin{itemize}
+    \item \emph{grammar} (mode, key center, note-range framing), and
+    \item \emph{agency} (network-driven activation and release).
+\end{itemize}
+
+\subsection{Topology as Form-Generating Constraint}
+
+Network topology (ring, fully connected, feedforward, sparse random, small-world) acts as a latent formal parameter.
+Each topology shapes recurrence, burst behavior, and continuity, thereby influencing perceived phrase and texture.
+From a musicological perspective, topology can be treated as a model of form-bearing tendency.
+
+\section{Why This Matters Beyond One System}
+
+The architecture models a broader design pattern:
+\begin{center}
+\textbf{continuous dynamics} $\rightarrow$ \textbf{interpretable musical state} $\rightarrow$ \textbf{performable output}
+\end{center}
+
+This pattern may be preferable for creative AI tools where authorial control, accountability,
+and communicable analysis are as important as novelty.
+
+\section{Current Limitations}
+
+Despite its strengths, the present architecture has identifiable research gaps:
+\begin{enumerate}[label=\arabic*.]
+    \item \textbf{Limited long-horizon memory}: behavior is strong at short and meso timescales but less explicit at phrase-scale planning.
+    \item \textbf{Crisp functional boundaries}: hard or near-hard functional transitions may reduce nuanced ambiguity.
+    \item \textbf{Discrete style states}: style modes are categorical rather than continuous manifolds.
+    \item \textbf{Evaluation gap}: current success criteria are mostly experiential and engineering-centric.
+\end{enumerate}
+
+\section{Research Agenda}
+
+\subsection{A. Multi-timescale Formal Memory}
+
+Introduce slow control states (for example cadence pressure, repetition debt,
+tension trajectory) that evolve over tens of seconds or minutes.
+This would support longer formal arcs without abandoning local responsiveness.
+
+\subsection{B. Probabilistic Functional Inference}
+
+Replace single-label function assignment with a distribution over T/S/D classes,
+then smooth in time with confidence-aware hysteresis.
+This enables analytically meaningful functional ambiguity and gradual reinterpretation.
+
+\subsection{C. Continuous Style Manifolds}
+
+Generalize style presets into interpolable voicing spaces.
+Instead of switching Pop/Rock/Jazz/Blues as discrete categories,
+performers could navigate trajectories between them.
+
+\subsection{D. Co-Adaptive Session Learning}
+
+Add a lightweight online adaptation layer to tune density, register preference,
+and articulation thresholds based on performer interaction,
+while keeping the harmonic rule core transparent.
+
+\section{Evaluation Protocol for Interactive Music AI}
+
+We propose a mixed-method protocol that combines quantitative telemetry and qualitative judgment.
+
+\subsection{Metrics}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+Dimension & Example operationalization \\
+\midrule
+Controllability & Parameter perturbation causes predictable output shifts \\
+Harmonic intelligibility & Expert ratings of functional clarity and modal consistency \\
+Temporal coherence & Segment-level continuity and phrase-shape stability \\
+Expressive range & Coverage of density, register, and articulation states \\
+Repeatability vs novelty & Controlled reruns with bounded divergence \\
+Performer fit & Time-to-intent and correction burden in live sessions \\
+\bottomrule
+\end{tabular}
+\caption{Core dimensions for evaluating instrumental AI systems.}
+\end{table}
+
+\subsection{Study Design}
+
+\begin{enumerate}[label=\arabic*.]
+    \item Recruit expert users (improvisers/composers) and technically proficient users.
+    \item Compare three conditions: fixed-rule baseline, current \textit{lif\_lova}, and enhanced variant.
+    \item Collect synchronized logs (control changes, topology, note events, audio descriptors).
+    \item Run post-session annotation interviews with timeline replay.
+    \item Triangulate metrics with expert panel listening.
+\end{enumerate}
+
+\section{Position Statement}
+
+The field should treat interpretable, performable hybrid systems as first-class music AI research objects,
+not as transitional artifacts between symbolic systems and large generative models.
+\textit{lif\_lova} demonstrates that explicit musical knowledge and neural dynamics can be co-compositional,
+yielding systems that are analyzable, steerable, and artistically credible.
+
+\section{Conclusion}
+
+The current \textit{lif\_lova} LIF architecture is already a compelling contribution to modern music AI discourse:
+it embodies an alternative research trajectory centered on transparency, theory-informed behavior,
+and live musical agency. The next step is not to replace this architecture with opaque end-to-end generation,
+but to deepen it through multi-timescale memory, probabilistic harmonic reasoning,
+continuous stylistic control, and rigorous interactive evaluation.
+
+\section*{Suggested Citation Placeholder}
+
+Author(s). \emph{Interpretable Neuro-Functional Music AI: A Position Paper on the lif\_lova LIF Architecture}.
+Workshop draft, 2026.
+
+\end{document}
