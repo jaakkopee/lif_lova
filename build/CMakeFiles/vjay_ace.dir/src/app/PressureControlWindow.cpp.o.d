@@ -1,6 +1,6 @@
 CMakeFiles/vjay_ace.dir/src/app/PressureControlWindow.cpp.o: \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/PressureControlWindow.cpp \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/PressureControlWindow.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/PressureControlWindow.cpp \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/PressureControlWindow.h \
   /opt/homebrew/opt/sfml/include/SFML/Graphics.hpp \
   /opt/homebrew/opt/sfml/include/SFML/Graphics/BlendMode.hpp \
   /opt/homebrew/opt/sfml/include/SFML/Graphics/Export.hpp \

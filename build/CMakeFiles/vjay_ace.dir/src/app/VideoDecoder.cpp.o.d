@@ -1,6 +1,6 @@
 CMakeFiles/vjay_ace.dir/src/app/VideoDecoder.cpp.o: \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/VideoDecoder.cpp \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/VideoDecoder.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/VideoDecoder.cpp \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/VideoDecoder.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/max.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h \

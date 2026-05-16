@@ -1,0 +1,39 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/lif_lova.dir/src/app/App.mm.o"
+  "CMakeFiles/lif_lova.dir/src/app/App.mm.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/AudioAnalyzer.mm.o"
+  "CMakeFiles/lif_lova.dir/src/app/AudioAnalyzer.mm.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o"
+  "CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o"
+  "CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o"
+  "CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o"
+  "CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/LIFToneSynth.cpp.o"
+  "CMakeFiles/lif_lova.dir/src/app/LIFToneSynth.cpp.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o"
+  "CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.o"
+  "CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.o"
+  "CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o"
+  "CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.o"
+  "CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o"
+  "CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o"
+  "CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/main.mm.o"
+  "CMakeFiles/lif_lova.dir/src/app/main.mm.o.d"
+  "lif_lova"
+  "lif_lova.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX OBJCXX)
+  include(CMakeFiles/lif_lova.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

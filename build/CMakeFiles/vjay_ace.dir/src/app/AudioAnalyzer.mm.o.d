@@ -1,6 +1,6 @@
 CMakeFiles/vjay_ace.dir/src/app/AudioAnalyzer.mm.o: \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/AudioAnalyzer.mm \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/AudioAnalyzer.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/AudioAnalyzer.mm \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/AudioAnalyzer.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/equal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h \

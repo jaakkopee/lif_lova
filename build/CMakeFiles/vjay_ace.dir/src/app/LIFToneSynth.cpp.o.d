@@ -1,6 +1,6 @@
 CMakeFiles/vjay_ace.dir/src/app/LIFToneSynth.cpp.o: \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/LIFToneSynth.cpp \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/LIFToneSynth.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/LIFToneSynth.cpp \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/LIFToneSynth.h \
   /opt/homebrew/opt/sfml/include/SFML/Audio/SoundStream.hpp \
   /opt/homebrew/opt/sfml/include/SFML/Audio/Export.hpp \
   /opt/homebrew/opt/sfml/include/SFML/Config.hpp \

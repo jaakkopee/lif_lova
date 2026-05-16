@@ -1,7 +1,7 @@
 CMakeFiles/vjay_ace.dir/src/app/MetalCompositor.mm.o: \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/MetalCompositor.mm \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/MetalCompositor.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/Constants.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/MetalCompositor.mm \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/MetalCompositor.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/Constants.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/equal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h \
@@ -803,7 +803,7 @@ CMakeFiles/vjay_ace.dir/src/app/MetalCompositor.mm.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__utility/scope_guard.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string_view \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__fwd/string_view.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/LIFNetwork.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/LIFNetwork.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLDefines.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/os/availability.h \

@@ -45,6 +45,23 @@ static bool isLIFPatch(FxPatchId patch) {
     return patch == FxPatchId::LIFModulate || patch == FxPatchId::LIFReplace;
 }
 
+static std::array<FxPatchId, NUM_FX_LAYERS> enforcedSceneFx(const Scene& sc) {
+    std::array<FxPatchId, NUM_FX_LAYERS> fx = {sc.fx[0], sc.fx[1], sc.fx[2]};
+
+    int lifCount = 0;
+    for (int slot = 0; slot < NUM_FX_LAYERS; ++slot) {
+        if (!isLIFPatch(fx[slot])) continue;
+        ++lifCount;
+        if (lifCount > 2)
+            fx[slot] = FxPatchId::Passthrough;
+    }
+
+    if (lifCount == 0)
+        fx[NUM_FX_LAYERS - 1] = FxPatchId::LIFModulate;
+
+    return fx;
+}
+
 static int topologyIndexFromNorm(float value) {
     return std::clamp(static_cast<int>(value * 5.0f), 0, 4);
 }
@@ -123,7 +140,8 @@ App::~App() {
 bool App::sceneUsesLIF(int sceneIdx) const {
     if (sceneIdx < 0 || sceneIdx >= NUM_SCENES) return false;
     const Scene& sc = SCENES[sceneIdx];
-    for (FxPatchId patch : sc.fx)
+    const auto fx = enforcedSceneFx(sc);
+    for (FxPatchId patch : fx)
         if (isLIFPatch(patch)) return true;
     return false;
 }
@@ -902,9 +920,10 @@ void App::ensureSceneLIFDefaults(int idx) {
 
     SceneState& s = scenes_[idx];
     const Scene& sc = SCENES[idx];
+    const auto fx = enforcedSceneFx(sc);
     if (s.lifNeuronCount <= 0) {
         int lifPatchCount = 0;
-        for (FxPatchId patch : sc.fx)
+        for (FxPatchId patch : fx)
             if (isLIFPatch(patch))
                 ++lifPatchCount;
         s.lifNeuronCount = (lifPatchCount >= 2) ? 2048 : 1024;
@@ -913,7 +932,7 @@ void App::ensureSceneLIFDefaults(int idx) {
     if (s.lifTopologyIndex < 0) {
         int fxMi = static_cast<int>(KnobMode::FxParam);
         for (int slot = 0; slot < NUM_FX_LAYERS; ++slot) {
-            if (!isLIFPatch(sc.fx[slot])) continue;
+            if (!isLIFPatch(fx[slot])) continue;
             float stored = s.knobs[fxMi][slot * 2 + 1];
             float source = (stored >= 0.0f) ? stored : sc.params[slot][1];
             s.lifTopologyIndex = topologyIndexFromNorm(source);
@@ -1530,14 +1549,15 @@ void App::onSceneSelect(int sceneIdx) {
     const int prevScene = currentScene_;
     currentScene_ = sceneIdx;
     const Scene& sc = SCENES[sceneIdx];
+    const auto fx = enforcedSceneFx(sc);
 
     compositor_.resetFeedbackBuffers();
 
     // 1. Apply the scene's FX patch selection.
     for (int slot = 0; slot < NUM_FX_LAYERS; ++slot) {
-        fxPatches_[slot].id = sc.fx[slot];
-        compositor_.setFxPatch(slot, sc.fx[slot]);
-        layers_.setFxPatch(slot * 2 + 1, sc.fx[slot]);
+        fxPatches_[slot].id = fx[slot];
+        compositor_.setFxPatch(slot, fx[slot]);
+        layers_.setFxPatch(slot * 2 + 1, fx[slot]);
     }
     controlWin_.setSceneName(sc.name);
     mediaPickerWin_.setSceneName(sc.name);
@@ -1911,10 +1931,11 @@ void App::loadState() {
     // Apply the last-active scene to the engine
     if (currentScene_ >= 0) {
         const Scene& sc = SCENES[currentScene_];
+        const auto fx = enforcedSceneFx(sc);
         for (int slot = 0; slot < NUM_FX_LAYERS; ++slot) {
-            fxPatches_[slot].id = sc.fx[slot];
-            compositor_.setFxPatch(slot, sc.fx[slot]);
-            layers_.setFxPatch(slot * 2 + 1, sc.fx[slot]);
+            fxPatches_[slot].id = fx[slot];
+            compositor_.setFxPatch(slot, fx[slot]);
+            layers_.setFxPatch(slot * 2 + 1, fx[slot]);
         }
         controlWin_.setSceneName(sc.name);
         mediaPickerWin_.setSceneName(sc.name);

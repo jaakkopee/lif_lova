@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(vjay_ace VERSION 0.1.0 LANGUAGES CXX OBJCXX)
+project(lif_lova VERSION 0.1.0 LANGUAGES CXX OBJCXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -28,7 +28,7 @@ pkg_check_modules(AVUTIL   REQUIRED libavutil)
 pkg_check_modules(SWSCALE  REQUIRED libswscale)
 
 # ────────────────────────────────────────────────────────────────────────────
-# Common helper: link flags shared between vjay targets
+# Common helper: link flags shared between app targets
 # ────────────────────────────────────────────────────────────────────────────
 set(VJAY_LINK_LIBS
     SFML::Graphics SFML::Window SFML::System SFML::Audio
@@ -77,8 +77,8 @@ target_link_libraries(midi_monitor PRIVATE
 )
 target_compile_options(midi_monitor PRIVATE ${RTMIDI_CFLAGS_OTHER})
 
-# ── vjay_ace main app ─────────────────────────────────────────────────────────
-add_executable(vjay_ace
+# ── lif_lova main app ────────────────────────────────────────────────────────
+add_executable(lif_lova
     src/app/main.mm
     src/app/App.mm
     src/app/AudioAnalyzer.mm
@@ -96,14 +96,14 @@ add_executable(vjay_ace
     src/app/FxPatch.cpp
 )
 
-target_include_directories(vjay_ace PRIVATE ${VJAY_INCLUDE_DIRS})
-target_link_directories(vjay_ace PRIVATE
+target_include_directories(lif_lova PRIVATE ${VJAY_INCLUDE_DIRS})
+target_link_directories(lif_lova PRIVATE
     ${RTMIDI_LIBRARY_DIRS}
     ${AVCODEC_LIBRARY_DIRS}
     ${AVFORMAT_LIBRARY_DIRS}
 )
-target_link_libraries(vjay_ace PRIVATE ${VJAY_LINK_LIBS})
-target_compile_options(vjay_ace PRIVATE
+target_link_libraries(lif_lova PRIVATE ${VJAY_LINK_LIBS})
+target_compile_options(lif_lova PRIVATE
     ${RTMIDI_CFLAGS_OTHER}
     -fobjc-arc
 )
@@ -118,4 +118,4 @@ add_custom_command(
     COMMENT "Copying vjay_shaders.metal to build dir"
 )
 add_custom_target(copy_metal_shader ALL DEPENDS ${METAL_DST})
-add_dependencies(vjay_ace copy_metal_shader)
+add_dependencies(lif_lova copy_metal_shader)

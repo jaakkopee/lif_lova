@@ -1,6 +1,6 @@
 CMakeFiles/vjay_ace.dir/src/app/CapsLockDetector.mm.o: \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/CapsLockDetector.mm \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/CapsLockDetector.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/CapsLockDetector.mm \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/CapsLockDetector.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h \

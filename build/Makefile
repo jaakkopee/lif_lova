@@ -57,10 +57,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/jaakkop/Documents/koodii/vjay_ace
+CMAKE_SOURCE_DIR = /Users/jaakkop/Documents/koodii/lif_lova
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/jaakkop/Documents/koodii/vjay_ace/build
+CMAKE_BINARY_DIR = /Users/jaakkop/Documents/koodii/lif_lova/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles /Users/jaakkop/Documents/koodii/vjay_ace/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles /Users/jaakkop/Documents/koodii/lif_lova/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -130,17 +130,17 @@ midi_monitor/fast:
 .PHONY : midi_monitor/fast
 
 #=============================================================================
-# Target rules for targets named vjay_ace
+# Target rules for targets named lif_lova
 
 # Build rule for target.
-vjay_ace: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 vjay_ace
-.PHONY : vjay_ace
+lif_lova: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 lif_lova
+.PHONY : lif_lova
 
 # fast build rule for target.
-vjay_ace/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/build
-.PHONY : vjay_ace/fast
+lif_lova/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/build
+.PHONY : lif_lova/fast
 
 #=============================================================================
 # Target rules for targets named copy_metal_shader
@@ -160,7 +160,7 @@ src/app/App.o: src/app/App.mm.o
 
 # target to build an object file
 src/app/App.mm.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/App.mm.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/App.mm.o
 .PHONY : src/app/App.mm.o
 
 src/app/AudioAnalyzer.o: src/app/AudioAnalyzer.mm.o
@@ -168,7 +168,7 @@ src/app/AudioAnalyzer.o: src/app/AudioAnalyzer.mm.o
 
 # target to build an object file
 src/app/AudioAnalyzer.mm.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/AudioAnalyzer.mm.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/AudioAnalyzer.mm.o
 .PHONY : src/app/AudioAnalyzer.mm.o
 
 src/app/CapsLockDetector.o: src/app/CapsLockDetector.mm.o
@@ -176,7 +176,7 @@ src/app/CapsLockDetector.o: src/app/CapsLockDetector.mm.o
 
 # target to build an object file
 src/app/CapsLockDetector.mm.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/CapsLockDetector.mm.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o
 .PHONY : src/app/CapsLockDetector.mm.o
 
 src/app/ControlWindow.o: src/app/ControlWindow.cpp.o
@@ -184,7 +184,7 @@ src/app/ControlWindow.o: src/app/ControlWindow.cpp.o
 
 # target to build an object file
 src/app/ControlWindow.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/ControlWindow.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o
 .PHONY : src/app/ControlWindow.cpp.o
 
 src/app/ControlWindow.i: src/app/ControlWindow.cpp.i
@@ -192,7 +192,7 @@ src/app/ControlWindow.i: src/app/ControlWindow.cpp.i
 
 # target to preprocess a source file
 src/app/ControlWindow.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/ControlWindow.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.i
 .PHONY : src/app/ControlWindow.cpp.i
 
 src/app/ControlWindow.s: src/app/ControlWindow.cpp.s
@@ -200,7 +200,7 @@ src/app/ControlWindow.s: src/app/ControlWindow.cpp.s
 
 # target to generate assembly for a file
 src/app/ControlWindow.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/ControlWindow.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.s
 .PHONY : src/app/ControlWindow.cpp.s
 
 src/app/FxPatch.o: src/app/FxPatch.cpp.o
@@ -208,7 +208,7 @@ src/app/FxPatch.o: src/app/FxPatch.cpp.o
 
 # target to build an object file
 src/app/FxPatch.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/FxPatch.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o
 .PHONY : src/app/FxPatch.cpp.o
 
 src/app/FxPatch.i: src/app/FxPatch.cpp.i
@@ -216,7 +216,7 @@ src/app/FxPatch.i: src/app/FxPatch.cpp.i
 
 # target to preprocess a source file
 src/app/FxPatch.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/FxPatch.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.i
 .PHONY : src/app/FxPatch.cpp.i
 
 src/app/FxPatch.s: src/app/FxPatch.cpp.s
@@ -224,7 +224,7 @@ src/app/FxPatch.s: src/app/FxPatch.cpp.s
 
 # target to generate assembly for a file
 src/app/FxPatch.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/FxPatch.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.s
 .PHONY : src/app/FxPatch.cpp.s
 
 src/app/LIFNetwork.o: src/app/LIFNetwork.mm.o
@@ -232,7 +232,7 @@ src/app/LIFNetwork.o: src/app/LIFNetwork.mm.o
 
 # target to build an object file
 src/app/LIFNetwork.mm.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/LIFNetwork.mm.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o
 .PHONY : src/app/LIFNetwork.mm.o
 
 src/app/LIFToneSynth.o: src/app/LIFToneSynth.cpp.o
@@ -240,7 +240,7 @@ src/app/LIFToneSynth.o: src/app/LIFToneSynth.cpp.o
 
 # target to build an object file
 src/app/LIFToneSynth.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/LIFToneSynth.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/LIFToneSynth.cpp.o
 .PHONY : src/app/LIFToneSynth.cpp.o
 
 src/app/LIFToneSynth.i: src/app/LIFToneSynth.cpp.i
@@ -248,7 +248,7 @@ src/app/LIFToneSynth.i: src/app/LIFToneSynth.cpp.i
 
 # target to preprocess a source file
 src/app/LIFToneSynth.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/LIFToneSynth.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/LIFToneSynth.cpp.i
 .PHONY : src/app/LIFToneSynth.cpp.i
 
 src/app/LIFToneSynth.s: src/app/LIFToneSynth.cpp.s
@@ -256,7 +256,7 @@ src/app/LIFToneSynth.s: src/app/LIFToneSynth.cpp.s
 
 # target to generate assembly for a file
 src/app/LIFToneSynth.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/LIFToneSynth.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/LIFToneSynth.cpp.s
 .PHONY : src/app/LIFToneSynth.cpp.s
 
 src/app/LayerManager.o: src/app/LayerManager.cpp.o
@@ -264,7 +264,7 @@ src/app/LayerManager.o: src/app/LayerManager.cpp.o
 
 # target to build an object file
 src/app/LayerManager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/LayerManager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o
 .PHONY : src/app/LayerManager.cpp.o
 
 src/app/LayerManager.i: src/app/LayerManager.cpp.i
@@ -272,7 +272,7 @@ src/app/LayerManager.i: src/app/LayerManager.cpp.i
 
 # target to preprocess a source file
 src/app/LayerManager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/LayerManager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.i
 .PHONY : src/app/LayerManager.cpp.i
 
 src/app/LayerManager.s: src/app/LayerManager.cpp.s
@@ -280,7 +280,7 @@ src/app/LayerManager.s: src/app/LayerManager.cpp.s
 
 # target to generate assembly for a file
 src/app/LayerManager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/LayerManager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.s
 .PHONY : src/app/LayerManager.cpp.s
 
 src/app/MediaPickerWindow.o: src/app/MediaPickerWindow.mm.o
@@ -288,7 +288,7 @@ src/app/MediaPickerWindow.o: src/app/MediaPickerWindow.mm.o
 
 # target to build an object file
 src/app/MediaPickerWindow.mm.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/MediaPickerWindow.mm.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.o
 .PHONY : src/app/MediaPickerWindow.mm.o
 
 src/app/MetalCompositor.o: src/app/MetalCompositor.mm.o
@@ -296,7 +296,7 @@ src/app/MetalCompositor.o: src/app/MetalCompositor.mm.o
 
 # target to build an object file
 src/app/MetalCompositor.mm.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/MetalCompositor.mm.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.o
 .PHONY : src/app/MetalCompositor.mm.o
 
 src/app/MidiRouter.o: src/app/MidiRouter.cpp.o
@@ -304,7 +304,7 @@ src/app/MidiRouter.o: src/app/MidiRouter.cpp.o
 
 # target to build an object file
 src/app/MidiRouter.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/MidiRouter.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o
 .PHONY : src/app/MidiRouter.cpp.o
 
 src/app/MidiRouter.i: src/app/MidiRouter.cpp.i
@@ -312,7 +312,7 @@ src/app/MidiRouter.i: src/app/MidiRouter.cpp.i
 
 # target to preprocess a source file
 src/app/MidiRouter.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/MidiRouter.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.i
 .PHONY : src/app/MidiRouter.cpp.i
 
 src/app/MidiRouter.s: src/app/MidiRouter.cpp.s
@@ -320,7 +320,7 @@ src/app/MidiRouter.s: src/app/MidiRouter.cpp.s
 
 # target to generate assembly for a file
 src/app/MidiRouter.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/MidiRouter.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.s
 .PHONY : src/app/MidiRouter.cpp.s
 
 src/app/PerformanceWindow.o: src/app/PerformanceWindow.cpp.o
@@ -328,7 +328,7 @@ src/app/PerformanceWindow.o: src/app/PerformanceWindow.cpp.o
 
 # target to build an object file
 src/app/PerformanceWindow.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/PerformanceWindow.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.o
 .PHONY : src/app/PerformanceWindow.cpp.o
 
 src/app/PerformanceWindow.i: src/app/PerformanceWindow.cpp.i
@@ -336,7 +336,7 @@ src/app/PerformanceWindow.i: src/app/PerformanceWindow.cpp.i
 
 # target to preprocess a source file
 src/app/PerformanceWindow.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/PerformanceWindow.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.i
 .PHONY : src/app/PerformanceWindow.cpp.i
 
 src/app/PerformanceWindow.s: src/app/PerformanceWindow.cpp.s
@@ -344,7 +344,7 @@ src/app/PerformanceWindow.s: src/app/PerformanceWindow.cpp.s
 
 # target to generate assembly for a file
 src/app/PerformanceWindow.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/PerformanceWindow.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.s
 .PHONY : src/app/PerformanceWindow.cpp.s
 
 src/app/PressureControlWindow.o: src/app/PressureControlWindow.cpp.o
@@ -352,7 +352,7 @@ src/app/PressureControlWindow.o: src/app/PressureControlWindow.cpp.o
 
 # target to build an object file
 src/app/PressureControlWindow.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/PressureControlWindow.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o
 .PHONY : src/app/PressureControlWindow.cpp.o
 
 src/app/PressureControlWindow.i: src/app/PressureControlWindow.cpp.i
@@ -360,7 +360,7 @@ src/app/PressureControlWindow.i: src/app/PressureControlWindow.cpp.i
 
 # target to preprocess a source file
 src/app/PressureControlWindow.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/PressureControlWindow.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.i
 .PHONY : src/app/PressureControlWindow.cpp.i
 
 src/app/PressureControlWindow.s: src/app/PressureControlWindow.cpp.s
@@ -368,7 +368,7 @@ src/app/PressureControlWindow.s: src/app/PressureControlWindow.cpp.s
 
 # target to generate assembly for a file
 src/app/PressureControlWindow.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/PressureControlWindow.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.s
 .PHONY : src/app/PressureControlWindow.cpp.s
 
 src/app/VideoDecoder.o: src/app/VideoDecoder.cpp.o
@@ -376,7 +376,7 @@ src/app/VideoDecoder.o: src/app/VideoDecoder.cpp.o
 
 # target to build an object file
 src/app/VideoDecoder.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/VideoDecoder.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o
 .PHONY : src/app/VideoDecoder.cpp.o
 
 src/app/VideoDecoder.i: src/app/VideoDecoder.cpp.i
@@ -384,7 +384,7 @@ src/app/VideoDecoder.i: src/app/VideoDecoder.cpp.i
 
 # target to preprocess a source file
 src/app/VideoDecoder.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/VideoDecoder.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.i
 .PHONY : src/app/VideoDecoder.cpp.i
 
 src/app/VideoDecoder.s: src/app/VideoDecoder.cpp.s
@@ -392,7 +392,7 @@ src/app/VideoDecoder.s: src/app/VideoDecoder.cpp.s
 
 # target to generate assembly for a file
 src/app/VideoDecoder.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/VideoDecoder.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.s
 .PHONY : src/app/VideoDecoder.cpp.s
 
 src/app/main.o: src/app/main.mm.o
@@ -400,7 +400,7 @@ src/app/main.o: src/app/main.mm.o
 
 # target to build an object file
 src/app/main.mm.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/src/app/main.mm.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/main.mm.o
 .PHONY : src/app/main.mm.o
 
 src/midi_monitor/MidiMonitor.o: src/midi_monitor/MidiMonitor.cpp.o
@@ -460,8 +460,8 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... copy_metal_shader"
+	@echo "... lif_lova"
 	@echo "... midi_monitor"
-	@echo "... vjay_ace"
 	@echo "... src/app/App.o"
 	@echo "... src/app/AudioAnalyzer.o"
 	@echo "... src/app/CapsLockDetector.o"

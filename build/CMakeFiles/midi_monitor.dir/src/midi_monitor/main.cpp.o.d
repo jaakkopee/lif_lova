@@ -1,6 +1,6 @@
 CMakeFiles/midi_monitor.dir/src/midi_monitor/main.cpp.o: \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/midi_monitor/main.cpp \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/midi_monitor/MidiMonitor.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/midi_monitor/main.cpp \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/midi_monitor/MidiMonitor.h \
   /opt/homebrew/Cellar/rtmidi/6.0.0/include/rtmidi/RtMidi.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/exception \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config \

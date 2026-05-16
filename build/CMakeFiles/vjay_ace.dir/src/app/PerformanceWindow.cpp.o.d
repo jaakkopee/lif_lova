@@ -1,7 +1,7 @@
 CMakeFiles/vjay_ace.dir/src/app/PerformanceWindow.cpp.o: \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/PerformanceWindow.cpp \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/PerformanceWindow.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/Constants.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/PerformanceWindow.cpp \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/PerformanceWindow.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/Constants.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/equal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h \

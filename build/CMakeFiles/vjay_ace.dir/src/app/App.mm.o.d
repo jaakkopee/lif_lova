@@ -1,7 +1,7 @@
 CMakeFiles/vjay_ace.dir/src/app/App.mm.o: \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/App.mm \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/App.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/Constants.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/App.mm \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/App.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/Constants.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/equal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h \
@@ -803,7 +803,7 @@ CMakeFiles/vjay_ace.dir/src/app/App.mm.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__utility/scope_guard.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string_view \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__fwd/string_view.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/LayerManager.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/LayerManager.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/vector \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/comparison.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__fwd/vector.h \
@@ -902,7 +902,7 @@ CMakeFiles/vjay_ace.dir/src/app/App.mm.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale_dir/wbuffer_convert.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale_dir/wstring_convert.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/cstdarg \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/MidiRouter.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/MidiRouter.h \
   /opt/homebrew/Cellar/rtmidi/6.0.0/include/rtmidi/RtMidi.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/istream \
@@ -983,8 +983,8 @@ CMakeFiles/vjay_ace.dir/src/app/App.mm.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stack \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/print \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/unistd.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/MetalCompositor.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/LIFNetwork.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/MetalCompositor.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/LIFNetwork.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLDefines.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/os/availability.h \
@@ -1681,7 +1681,7 @@ CMakeFiles/vjay_ace.dir/src/app/App.mm.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/MTL4Archive.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/MTL4BinaryFunctionDescriptor.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/MTL4LinkingDescriptor.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/ControlWindow.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/ControlWindow.h \
   /opt/homebrew/opt/sfml/include/SFML/Graphics.hpp \
   /opt/homebrew/opt/sfml/include/SFML/Graphics/BlendMode.hpp \
   /opt/homebrew/opt/sfml/include/SFML/Graphics/Export.hpp \
@@ -1973,10 +1973,10 @@ CMakeFiles/vjay_ace.dir/src/app/App.mm.o: \
   /opt/homebrew/opt/tgui/include/TGUI/Backend/Renderer/SFML-Graphics/CanvasSFML.hpp \
   /opt/homebrew/opt/tgui/include/TGUI/Widgets/CanvasBase.hpp \
   /opt/homebrew/opt/tgui/include/TGUI/Backend/Font/SFML-Graphics/BackendFontSFML.hpp \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/PressureControlWindow.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/PerformanceWindow.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/MediaPickerWindow.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/AudioAnalyzer.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/PressureControlWindow.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/PerformanceWindow.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/MediaPickerWindow.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/AudioAnalyzer.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/thread.h \
@@ -1987,7 +1987,7 @@ CMakeFiles/vjay_ace.dir/src/app/App.mm.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__stop_token/atomic_unique_lock.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__stop_token/intrusive_list_view.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__stop_token/stop_token.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/LIFToneSynth.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/LIFToneSynth.h \
   /opt/homebrew/opt/sfml/include/SFML/Audio/SoundStream.hpp \
   /opt/homebrew/opt/sfml/include/SFML/Audio/Export.hpp \
   /opt/homebrew/opt/sfml/include/SFML/Audio/SoundChannel.hpp \

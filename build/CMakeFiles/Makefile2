@@ -54,23 +54,23 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/jaakkop/Documents/koodii/vjay_ace
+CMAKE_SOURCE_DIR = /Users/jaakkop/Documents/koodii/lif_lova
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/jaakkop/Documents/koodii/vjay_ace/build
+CMAKE_BINARY_DIR = /Users/jaakkop/Documents/koodii/lif_lova/build
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
 all: CMakeFiles/midi_monitor.dir/all
-all: CMakeFiles/vjay_ace.dir/all
+all: CMakeFiles/lif_lova.dir/all
 all: CMakeFiles/copy_metal_shader.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
 codegen: CMakeFiles/midi_monitor.dir/codegen
-codegen: CMakeFiles/vjay_ace.dir/codegen
+codegen: CMakeFiles/lif_lova.dir/codegen
 codegen: CMakeFiles/copy_metal_shader.dir/codegen
 .PHONY : codegen
 
@@ -80,7 +80,7 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/midi_monitor.dir/clean
-clean: CMakeFiles/vjay_ace.dir/clean
+clean: CMakeFiles/lif_lova.dir/clean
 clean: CMakeFiles/copy_metal_shader.dir/clean
 .PHONY : clean
 
@@ -91,14 +91,14 @@ clean: CMakeFiles/copy_metal_shader.dir/clean
 CMakeFiles/midi_monitor.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/midi_monitor.dir/build.make CMakeFiles/midi_monitor.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/midi_monitor.dir/build.make CMakeFiles/midi_monitor.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles --progress-num=2,3,4 "Built target midi_monitor"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=18,19,20 "Built target midi_monitor"
 .PHONY : CMakeFiles/midi_monitor.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/midi_monitor.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/midi_monitor.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles 0
 .PHONY : CMakeFiles/midi_monitor.dir/rule
 
 # Convenience name for target.
@@ -108,7 +108,7 @@ midi_monitor: CMakeFiles/midi_monitor.dir/rule
 # codegen rule for target.
 CMakeFiles/midi_monitor.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/midi_monitor.dir/build.make CMakeFiles/midi_monitor.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles --progress-num=2,3,4 "Finished codegen for target midi_monitor"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=18,19,20 "Finished codegen for target midi_monitor"
 .PHONY : CMakeFiles/midi_monitor.dir/codegen
 
 # clean rule for target.
@@ -117,36 +117,36 @@ CMakeFiles/midi_monitor.dir/clean:
 .PHONY : CMakeFiles/midi_monitor.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/vjay_ace.dir
+# Target rules for target CMakeFiles/lif_lova.dir
 
 # All Build rule for target.
-CMakeFiles/vjay_ace.dir/all: CMakeFiles/copy_metal_shader.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles --progress-num=5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 "Built target vjay_ace"
-.PHONY : CMakeFiles/vjay_ace.dir/all
+CMakeFiles/lif_lova.dir/all: CMakeFiles/copy_metal_shader.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17 "Built target lif_lova"
+.PHONY : CMakeFiles/lif_lova.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/vjay_ace.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles 17
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/vjay_ace.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles 0
-.PHONY : CMakeFiles/vjay_ace.dir/rule
+CMakeFiles/lif_lova.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles 17
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/lif_lova.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles 0
+.PHONY : CMakeFiles/lif_lova.dir/rule
 
 # Convenience name for target.
-vjay_ace: CMakeFiles/vjay_ace.dir/rule
-.PHONY : vjay_ace
+lif_lova: CMakeFiles/lif_lova.dir/rule
+.PHONY : lif_lova
 
 # codegen rule for target.
-CMakeFiles/vjay_ace.dir/codegen: CMakeFiles/copy_metal_shader.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles --progress-num=5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 "Finished codegen for target vjay_ace"
-.PHONY : CMakeFiles/vjay_ace.dir/codegen
+CMakeFiles/lif_lova.dir/codegen: CMakeFiles/copy_metal_shader.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17 "Finished codegen for target lif_lova"
+.PHONY : CMakeFiles/lif_lova.dir/codegen
 
 # clean rule for target.
-CMakeFiles/vjay_ace.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/vjay_ace.dir/build.make CMakeFiles/vjay_ace.dir/clean
-.PHONY : CMakeFiles/vjay_ace.dir/clean
+CMakeFiles/lif_lova.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/clean
+.PHONY : CMakeFiles/lif_lova.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/copy_metal_shader.dir
@@ -155,14 +155,14 @@ CMakeFiles/vjay_ace.dir/clean:
 CMakeFiles/copy_metal_shader.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/copy_metal_shader.dir/build.make CMakeFiles/copy_metal_shader.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/copy_metal_shader.dir/build.make CMakeFiles/copy_metal_shader.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles --progress-num=1 "Built target copy_metal_shader"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=1 "Built target copy_metal_shader"
 .PHONY : CMakeFiles/copy_metal_shader.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/copy_metal_shader.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles 1
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/copy_metal_shader.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles 0
 .PHONY : CMakeFiles/copy_metal_shader.dir/rule
 
 # Convenience name for target.
@@ -172,7 +172,7 @@ copy_metal_shader: CMakeFiles/copy_metal_shader.dir/rule
 # codegen rule for target.
 CMakeFiles/copy_metal_shader.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/copy_metal_shader.dir/build.make CMakeFiles/copy_metal_shader.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles --progress-num=1 "Finished codegen for target copy_metal_shader"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=1 "Finished codegen for target copy_metal_shader"
 .PHONY : CMakeFiles/copy_metal_shader.dir/codegen
 
 # clean rule for target.

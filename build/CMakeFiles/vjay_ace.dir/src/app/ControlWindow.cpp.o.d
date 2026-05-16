@@ -1,11 +1,11 @@
 CMakeFiles/vjay_ace.dir/src/app/ControlWindow.cpp.o: \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/ControlWindow.cpp \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/ControlWindow.cpp \
   /opt/homebrew/opt/sfml/include/SFML/Window/Keyboard.hpp \
   /opt/homebrew/opt/sfml/include/SFML/Window/Export.hpp \
   /opt/homebrew/opt/sfml/include/SFML/Config.hpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/TargetConditionals.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/ControlWindow.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/Constants.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/ControlWindow.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/Constants.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/equal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h \
@@ -1275,4 +1275,4 @@ CMakeFiles/vjay_ace.dir/src/app/ControlWindow.cpp.o: \
   /opt/homebrew/opt/tgui/include/TGUI/Backend/Renderer/SFML-Graphics/CanvasSFML.hpp \
   /opt/homebrew/opt/tgui/include/TGUI/Widgets/CanvasBase.hpp \
   /opt/homebrew/opt/tgui/include/TGUI/Backend/Font/SFML-Graphics/BackendFontSFML.hpp \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/CapsLockDetector.h
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/CapsLockDetector.h

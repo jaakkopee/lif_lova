@@ -1,5 +1,5 @@
-/Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles/midi_monitor.dir
-/Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles/vjay_ace.dir
-/Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles/copy_metal_shader.dir
-/Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles/edit_cache.dir
-/Users/jaakkop/Documents/koodii/vjay_ace/build/CMakeFiles/rebuild_cache.dir
+/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles/midi_monitor.dir
+/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles/lif_lova.dir
+/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles/copy_metal_shader.dir
+/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles/edit_cache.dir
+/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles/rebuild_cache.dir

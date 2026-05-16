@@ -1,7 +1,7 @@
 CMakeFiles/vjay_ace.dir/src/app/LayerManager.cpp.o: \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/LayerManager.cpp \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/LayerManager.h \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/Constants.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/LayerManager.cpp \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/LayerManager.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/Constants.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/equal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h \
@@ -901,7 +901,7 @@ CMakeFiles/vjay_ace.dir/src/app/LayerManager.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale_dir/wbuffer_convert.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale_dir/wstring_convert.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/cstdarg \
-  /Users/jaakkop/Documents/koodii/vjay_ace/src/app/VideoDecoder.h \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/VideoDecoder.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/filesystem \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__filesystem/copy_options.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__filesystem/directory_entry.h \

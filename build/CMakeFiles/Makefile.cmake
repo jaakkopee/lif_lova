@@ -7,7 +7,7 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 # The top level Makefile was generated from the following files:
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
-  "/Users/jaakkop/Documents/koodii/vjay_ace/CMakeLists.txt"
+  "/Users/jaakkop/Documents/koodii/lif_lova/CMakeLists.txt"
   "CMakeFiles/4.3.1/CMakeCXXCompiler.cmake"
   "CMakeFiles/4.3.1/CMakeOBJCXXCompiler.cmake"
   "CMakeFiles/4.3.1/CMakeSystem.cmake"
@@ -80,6 +80,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/midi_monitor.dir/DependInfo.cmake"
-  "CMakeFiles/vjay_ace.dir/DependInfo.cmake"
+  "CMakeFiles/lif_lova.dir/DependInfo.cmake"
   "CMakeFiles/copy_metal_shader.dir/DependInfo.cmake"
   )
