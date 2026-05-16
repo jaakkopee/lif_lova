@@ -711,7 +711,7 @@ App::HarmonicFunction App::classifyLifFunction(int bin,
     const auto& style = lifMidiStyleProfile(static_cast<int>(lifMidiStyle_));
     const float rel = (maxEnergy > 0.001f) ? std::clamp(energy / maxEnergy, 0.0f, 1.0f) : 0.0f;
     const float contour = energy - prevEnergy;
-    const float styleBias = (static_cast<float>((style.gematria % 9) - 4)) * 0.01f; // [-0.04,+0.04]
+    const float styleBias = (static_cast<float>((style.gematria % 9) - 4)) * 0.01f; // 9 discrete values in [-0.04,+0.04]
     const float dominantRel = std::clamp(0.82f - styleBias, 0.70f, 0.92f);
     const float subRel = std::clamp(0.45f - styleBias * 0.5f, 0.30f, 0.60f);
     const float dominantContour = std::clamp(0.08f - styleBias, 0.04f, 0.12f);
@@ -785,8 +785,8 @@ std::vector<int> App::lifMidiNotesForFunction(HarmonicFunction function,
 
     const int root = noteFromDegree(degree, 0);
     std::vector<int> chord;
-    const int colorStack = 6 + 2 * ((style.gematria / 3) % 3);      // 7th/9th/11th feel
-    const int extensionStack = 8 + 2 * ((style.gematria / 11) % 2); // 9th/11th feel
+    const int colorStack = 6 + 2 * ((style.gematria / 3) % 3);      // tertian stack height: 6/8/10
+    const int extensionStack = 8 + 2 * ((style.gematria / 11) % 2); // tertian stack height: 8/10
 
     switch (lifMidiStyle_) {
         case LifMidiStyle::Pop:
