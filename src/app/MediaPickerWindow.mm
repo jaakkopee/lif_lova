@@ -45,7 +45,8 @@ void MediaPickerWindow::open(int displayX, int displayY, int width, int height,
     window_.setFramerateLimit(30);
     gui_.setWindow(window_);
     buildGui(width, height);
-    scanDirectory();
+    // Keep startup responsive: do a fast top-level scan only.
+    scanDirectory(false);
     rebuildFileList();
 }
 
@@ -114,6 +115,17 @@ void MediaPickerWindow::buildGui(int width, int height) {
     });
     gui_.add(browseButton_);
 
+    // Deep scan is opt-in because recursive scans can stall startup on large trees.
+    deepScanButton_ = tgui::Button::create("Deep Scan");
+    deepScanButton_->setPosition(140, height - FOOTER_H + 8);
+    deepScanButton_->setSize(120, 34);
+    deepScanButton_->setTextSize(13);
+    deepScanButton_->onPress([this]{
+        scanDirectory(true);
+        rebuildFileList();
+    });
+    gui_.add(deepScanButton_);
+
     // Highlight the default active slot
     selectSlot(0);
 }
@@ -138,7 +150,7 @@ void MediaPickerWindow::selectSlot(int idx) {
 
 // ── Directory scan ────────────────────────────────────────────────────────────
 
-void MediaPickerWindow::scanDirectory() {
+void MediaPickerWindow::scanDirectory(bool recursive) {
     fileList_.clear();
     if (scanRoot_.empty()) return;
 
@@ -146,7 +158,7 @@ void MediaPickerWindow::scanDirectory() {
     roots.push_back(fs::path(scanRoot_));
 
     // Also include project-local images directory when scanRoot points to
-    // the stash folder (e.g. <project>/Heikki_stash).
+    // a media directory with a sibling images folder.
     const fs::path stashRoot(scanRoot_);
     const fs::path imagesSibling = stashRoot.parent_path() / "images";
     if (fs::exists(imagesSibling) && fs::is_directory(imagesSibling))
@@ -157,22 +169,44 @@ void MediaPickerWindow::scanDirectory() {
         for (const auto& root : roots) {
             if (!fs::exists(root) || !fs::is_directory(root)) continue;
             std::size_t scannedEntries = 0;
-            for (const auto& entry : fs::recursive_directory_iterator(root,
-                    fs::directory_options::skip_permission_denied)) {
-                ++scannedEntries;
-                if (scannedEntries > kMaxScannedEntriesPerRoot) {
-                    std::cout << "[MediaPicker] Scan capped at " << kMaxScannedEntriesPerRoot
-                              << " filesystem entries in root: " << root.string() << "\n";
-                    break;
-                }
-                if (!entry.is_regular_file() || !isMediaFile(entry.path())) continue;
-                const std::string path = entry.path().string();
-                if (seen.insert(path).second) {
-                    fileList_.push_back(path);
-                    if (fileList_.size() >= kMaxMediaFilesListed) {
-                        std::cout << "[MediaPicker] Listing capped at " << kMaxMediaFilesListed
-                                  << " media files\n";
+            if (recursive) {
+                for (const auto& entry : fs::recursive_directory_iterator(root,
+                        fs::directory_options::skip_permission_denied)) {
+                    ++scannedEntries;
+                    if (scannedEntries > kMaxScannedEntriesPerRoot) {
+                        std::cout << "[MediaPicker] Recursive scan capped at " << kMaxScannedEntriesPerRoot
+                                  << " filesystem entries in root: " << root.string() << "\n";
                         break;
+                    }
+                    if (!entry.is_regular_file() || !isMediaFile(entry.path())) continue;
+                    const std::string path = entry.path().string();
+                    if (seen.insert(path).second) {
+                        fileList_.push_back(path);
+                        if (fileList_.size() >= kMaxMediaFilesListed) {
+                            std::cout << "[MediaPicker] Listing capped at " << kMaxMediaFilesListed
+                                      << " media files\n";
+                            break;
+                        }
+                    }
+                }
+            } else {
+                for (const auto& entry : fs::directory_iterator(root,
+                        fs::directory_options::skip_permission_denied)) {
+                    ++scannedEntries;
+                    if (scannedEntries > kMaxScannedEntriesPerRoot) {
+                        std::cout << "[MediaPicker] Top-level scan capped at " << kMaxScannedEntriesPerRoot
+                                  << " entries in root: " << root.string() << "\n";
+                        break;
+                    }
+                    if (!entry.is_regular_file() || !isMediaFile(entry.path())) continue;
+                    const std::string path = entry.path().string();
+                    if (seen.insert(path).second) {
+                        fileList_.push_back(path);
+                        if (fileList_.size() >= kMaxMediaFilesListed) {
+                            std::cout << "[MediaPicker] Listing capped at " << kMaxMediaFilesListed
+                                      << " media files\n";
+                            break;
+                        }
                     }
                 }
             }

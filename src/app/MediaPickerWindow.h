@@ -62,13 +62,14 @@ private:
     std::array<tgui::Button::Ptr, NUM_SRC_LAYERS> slotButtons_;
     tgui::ScrollablePanel::Ptr filePanel_;
     tgui::Button::Ptr     browseButton_;
+    tgui::Button::Ptr     deepScanButton_;
 
     static constexpr int HEADER_H   = 110;
     static constexpr int FOOTER_H   = 50;
     static constexpr int ROW_HEIGHT = 32;
 
     void buildGui(int width, int height);
-    void scanDirectory();
+    void scanDirectory(bool recursive);
     void rebuildFileList();
     void selectSlot(int idx);
 

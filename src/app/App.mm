@@ -81,6 +81,27 @@ static const char* topologyIndexToName(int index) {
     return names[std::clamp(index, 0, 4)];
 }
 
+static std::filesystem::path executableImagesRoot() {
+    NSString* exeDir = [NSBundle mainBundle].executablePath.stringByDeletingLastPathComponent;
+    return std::filesystem::path(exeDir.UTF8String).parent_path() / "images";
+}
+
+static std::string resolveMediaPathForLoad(const std::string& originalPath) {
+    if (originalPath.empty()) return originalPath;
+
+    std::error_code ec;
+    const std::filesystem::path asGiven(originalPath);
+    if (std::filesystem::exists(asGiven, ec) && std::filesystem::is_regular_file(asGiven, ec))
+        return asGiven.string();
+
+    // Backward-compatible fallback: recover by basename from repo-local images/.
+    const std::filesystem::path fallback = executableImagesRoot() / asGiven.filename();
+    if (std::filesystem::exists(fallback, ec) && std::filesystem::is_regular_file(fallback, ec))
+        return fallback.string();
+
+    return originalPath;
+}
+
 static int findPortIndexByNameContains(const std::vector<std::string>& names,
                                        const std::string& needle) {
     std::string needleLower = needle;
@@ -583,7 +604,9 @@ bool App::init() {
     // ── Audio & MIDI Control window — positioned next to main control ────
     const int audioMidiW = 280;
     const int audioMidiH = 650;
-    audioMidiWin_.open(ctrl.x + ctrlS.x + 10, ctrl.y, audioMidiW, audioMidiH);
+    const int audioMidiX = ctrl.x + std::max(10, ctrlS.x - audioMidiW - 16);
+    const int audioMidiY = ctrl.y + 10;
+    audioMidiWin_.open(audioMidiX, audioMidiY, audioMidiW, audioMidiH);
 
     auto perf  = screenOrigin(1);   // Second display
     auto perfS = screenSize(1);
@@ -598,14 +621,7 @@ bool App::init() {
     const std::string stashRoot = []{
         std::error_code ec;
 
-        if (const char* home = getenv("HOME")) {
-            const std::string stashCandidate = std::string(home) + "/Documents/koodii/vjay_ace/Heikki_stash";
-            if (std::filesystem::exists(stashCandidate, ec) && std::filesystem::is_directory(stashCandidate, ec))
-                return stashCandidate;
-        }
-
-        NSString* exeDir = [NSBundle mainBundle].executablePath.stringByDeletingLastPathComponent;
-        const std::filesystem::path imagesCandidate = std::filesystem::path(exeDir.UTF8String).parent_path() / "images";
+        const std::filesystem::path imagesCandidate = executableImagesRoot();
         if (std::filesystem::exists(imagesCandidate, ec) && std::filesystem::is_directory(imagesCandidate, ec))
             return imagesCandidate.string();
 
@@ -1046,6 +1062,13 @@ void App::ensureSceneTransformDefaults(int idx) {
         if (s.knobs[zoomMi][evenKnob] < 0.0f)
             s.knobs[zoomMi][evenKnob] = 0.5f;
 
+        // Migration guard: older state formats can carry non-neutral zoom
+        // values without zoom version metadata. Treat those as uninitialized.
+        if (s.zoomVersion[slot] == 0)
+            s.knobs[zoomMi][evenKnob] = 0.5f;
+        if (s.zoomVersion[slot] == 0)
+            s.zoomVersion[slot] = globalZoomVersion_[slot];
+
         const int xKnob = slot * 2;
         const int yKnob = xKnob + 1;
         if (s.knobs[panMi][xKnob] < 0.0f)
@@ -1066,6 +1089,13 @@ void App::ensureSceneOpacityDefaults(int idx) {
         const float defaultOpacity = (idx == 0) ? 0.0f : 1.0f;
         if (s.knobs[layerMi][knob] < 0.0f)
             s.knobs[layerMi][knob] = defaultOpacity;
+
+        // Migration guard: older state payloads can contain 0.0 opacities for
+        // untouched scenes, which makes media appear to "not load". For non-fade
+        // scenes, treat version-0 values as uninitialized and restore visibility.
+        if (idx != 0 && s.opacityVersion[slot] == 0)
+            s.knobs[layerMi][knob] = 1.0f;
+
         if (s.opacityVersion[slot] == 0)
             s.opacityVersion[slot] = globalOpacityVersion_[slot];
     }
@@ -1756,12 +1786,28 @@ void App::onSceneSelect(int sceneIdx) {
     // Load this scene's image files into the 3 source layers.
     // Changed paths are crossfaded; unchanged paths are still reloaded to reset playback.
     for (int slot = 0; slot < NUM_SRC_LAYERS; ++slot) {
-        const std::string& path = scenes_[sceneIdx].imgPaths[slot];
+        std::string path = resolveMediaPathForLoad(scenes_[sceneIdx].imgPaths[slot]);
+        if (path != scenes_[sceneIdx].imgPaths[slot])
+            scenes_[sceneIdx].imgPaths[slot] = path;
         const std::string prevPath =
             (prevScene >= 0 && prevScene < NUM_SCENES) ? scenes_[prevScene].imgPaths[slot] : std::string();
         const bool changed = (path != prevPath);
         if (!path.empty()) {
             if (changed) {
+                // New media should start neutral: centered, 1.0x zoom, fully visible.
+                const int rotateMi = static_cast<int>(KnobMode::ImgRotate);
+                const int zoomMi = static_cast<int>(KnobMode::ImgZoom);
+                const int panMi = static_cast<int>(KnobMode::ImgPan);
+                const int layerMi = static_cast<int>(KnobMode::LayerLevel);
+                const int evenKnob = slot * 2;
+                scenes_[sceneIdx].knobs[rotateMi][evenKnob] = 0.0f;
+                scenes_[sceneIdx].knobs[zoomMi][evenKnob] = 0.5f;
+                scenes_[sceneIdx].knobs[panMi][evenKnob] = 0.5f;
+                scenes_[sceneIdx].knobs[panMi][evenKnob + 1] = 0.5f;
+                scenes_[sceneIdx].knobs[layerMi][evenKnob] = 1.0f;
+                scenes_[sceneIdx].zoomVersion[slot] = globalZoomVersion_[slot];
+                scenes_[sceneIdx].opacityVersion[slot] = globalOpacityVersion_[slot];
+
                 // Scene-triggered image swaps use image-load crossfade (local F or global I override).
                 compositor_.setCrossfadeSpeed(slot, 0.1f + effectiveImageCrossfadeNorm(sceneIdx, slot) * 7.9f);
                 compositor_.beginCrossfade(slot);
@@ -1929,11 +1975,35 @@ void App::onImageSelected(int slotIdx, const std::string& path) {
     if (slotIdx < 0 || slotIdx >= NUM_SRC_LAYERS) return;
     if (currentScene_ < 0)
         onSceneSelect(0);
+
+    // Fade to Black is a dedicated empty scene; ignore media assignments there.
+    if (currentScene_ == 0) {
+        scenes_[currentScene_].imgPaths[slotIdx].clear();
+        std::cout << "[MediaPicker] Ignored assignment in Fade to Black scene\n";
+        saveState();
+        return;
+    }
+
+    const std::string resolvedPath = resolveMediaPathForLoad(path);
     const int layerIdx = slotIdx * 2;
-    const bool samePathAsLoaded = (layers_.state(layerIdx).mediaPath == path);
+    const bool samePathAsLoaded = (layers_.state(layerIdx).mediaPath == resolvedPath);
 
     if (currentScene_ >= 0) {
-        scenes_[currentScene_].imgPaths[slotIdx] = path;
+        scenes_[currentScene_].imgPaths[slotIdx] = resolvedPath;
+        // A newly assigned media file should appear centered and visible by default.
+        const int rotateMi = static_cast<int>(KnobMode::ImgRotate);
+        const int zoomMi = static_cast<int>(KnobMode::ImgZoom);
+        const int panMi = static_cast<int>(KnobMode::ImgPan);
+        const int layerMi = static_cast<int>(KnobMode::LayerLevel);
+        const int evenKnob = slotIdx * 2;
+        scenes_[currentScene_].knobs[rotateMi][evenKnob] = 0.0f;
+        scenes_[currentScene_].knobs[zoomMi][evenKnob] = 0.5f;
+        scenes_[currentScene_].knobs[panMi][evenKnob] = 0.5f;
+        scenes_[currentScene_].knobs[panMi][evenKnob + 1] = 0.5f;
+        scenes_[currentScene_].knobs[layerMi][evenKnob] = 1.0f;
+        scenes_[currentScene_].zoomVersion[slotIdx] = globalZoomVersion_[slotIdx];
+        scenes_[currentScene_].opacityVersion[slotIdx] = globalOpacityVersion_[slotIdx];
+
         compositor_.setCrossfadeSpeed(slotIdx,
                                       0.1f + effectiveImageCrossfadeNorm(currentScene_, slotIdx) * 7.9f);
     }
@@ -1942,7 +2012,19 @@ void App::onImageSelected(int slotIdx, const std::string& path) {
     if (!samePathAsLoaded)
         compositor_.beginCrossfade(slotIdx);  // capture current frame before new image uploads
 
-    layers_.loadMedia(layerIdx, path);
+    if (!layers_.loadMedia(layerIdx, resolvedPath)) {
+        std::cerr << "[MediaPicker] Failed to load media for scene=" << currentScene_
+                  << " slot=" << slotIdx << " path=" << resolvedPath << "\n";
+        return;
+    }
+
+    // Apply neutral transform/opacity immediately for this slot.
+    applyKnob(slotIdx * 2, 0.0f, KnobMode::ImgRotate);
+    applyKnob(slotIdx * 2, 0.5f, KnobMode::ImgZoom);
+    applyKnob(slotIdx * 2, 0.5f, KnobMode::ImgPan);
+    applyKnob(slotIdx * 2 + 1, 0.5f, KnobMode::ImgPan);
+    applyKnob(slotIdx * 2, 1.0f, KnobMode::LayerLevel);
+
     saveState();  // persist immediately — don't rely on clean exit
 }
 
@@ -2122,6 +2204,9 @@ void App::loadState() {
                 if (i < NUM_PRESSURE_TARGETS) pressureSceneState_[si].amount[i] = a;
             }
         }
+
+        // Ensure visibility defaults are valid immediately after load.
+        ensureSceneOpacityDefaults(si);
     }
     // For v13 and earlier, load the global modal scale into all scenes
     if (isV13) {
@@ -2175,7 +2260,9 @@ void App::loadState() {
         mediaPickerWin_.setSceneName(sc.name);
         // Load persisted images
         for (int slot = 0; slot < NUM_SRC_LAYERS; ++slot) {
-            const std::string& path = scenes_[currentScene_].imgPaths[slot];
+            std::string path = resolveMediaPathForLoad(scenes_[currentScene_].imgPaths[slot]);
+            if (path != scenes_[currentScene_].imgPaths[slot])
+                scenes_[currentScene_].imgPaths[slot] = path;
             if (!path.empty()) {
                 layers_.loadMedia(slot * 2, path);
             }
@@ -2382,11 +2469,14 @@ void App::run() {
     while (controlWin_.isOpen() && perfWin_.isOpen()) {
         if (!controlWin_.handleEvents()) break;
         if (!perfWin_.handleEvents())    break;
+        if (audioMidiWin_.isOpen()) audioMidiWin_.handleEvents();
         if (mediaPickerWin_.isOpen()) mediaPickerWin_.handleEvents();
         if (pressureWin_.isOpen()) pressureWin_.handleEvents();
         controlWin_.update();
+        if (audioMidiWin_.isOpen()) audioMidiWin_.update();
         processFrame();
         controlWin_.render(compositeTex_);
+        if (audioMidiWin_.isOpen()) audioMidiWin_.render();
         if (mediaPickerWin_.isOpen()) mediaPickerWin_.render();
         if (pressureWin_.isOpen()) pressureWin_.render();
     }
@@ -2395,6 +2485,7 @@ void App::run() {
     std::cerr << "[App] Shutdown save completed\n";
     lifToneSynth_.stopStream();
     controlWin_.close();
+    audioMidiWin_.close();
     perfWin_.close();
     pressureWin_.close();
 }
