@@ -1994,6 +1994,7 @@ CMakeFiles/lif_lova.dir/src/app/App.mm.o: \
   /opt/homebrew/opt/sfml/include/SFML/Audio/SoundChannel.hpp \
   /opt/homebrew/opt/sfml/include/SFML/Audio/SoundSource.hpp \
   /opt/homebrew/opt/sfml/include/SFML/Audio/AudioResource.hpp \
+  /Users/jaakkop/Documents/koodii/lif_lova/src/app/RhythmTransientDriver.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/AppKit.framework/Headers/AppKit.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/AppKit.framework/Headers/AppKitDefines.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/AppKit.framework/Headers/AppKitErrors.h \

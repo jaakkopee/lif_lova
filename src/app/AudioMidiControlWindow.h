@@ -49,6 +49,16 @@ public:
 
     // Update the LIF tone volume label.
     void setLifToneVolume(float volume);
+    void setRhythmStatus(bool enabled,
+                         const std::string& mixModeName,
+                         const std::string& patternName,
+                         float bpm,
+                         float intensity,
+                         bool quantizedPending);
+    void setRhythmLaneScaffold(const std::array<std::string, 3>& names,
+                               const std::array<uint8_t, 3>& enabled,
+                               const std::array<int, 3>& pulses,
+                               const std::array<float, 3>& gains);
 
     // Update MIDI port lists and active selection indexes.
     void setMidiPortLists(const std::vector<std::string>& inPorts,
@@ -73,6 +83,14 @@ public:
     std::function<void(float deltaHz)> onLIFToneMinFreqNudge;
     std::function<void(float deltaHz)> onLIFToneMaxFreqNudge;
     std::function<void(float delta)> onLIFToneVolumeNudge;
+    std::function<void()> onRhythmToggle;
+    std::function<void()> onRhythmMixCycle;
+    std::function<void()> onRhythmPatternCycle;
+    std::function<void(float delta)> onRhythmBpmNudge;
+    std::function<void(float delta)> onRhythmIntensityNudge;
+    std::function<void(int laneIdx)> onRhythmLaneToggle;
+    std::function<void(int laneIdx, int delta)> onRhythmLanePulseNudge;
+    std::function<void(int laneIdx, float delta)> onRhythmLaneGainNudge;
     std::function<void(bool bypassed)> onBKey;
 
     // Runtime MIDI port selection callbacks (selected port name).
@@ -91,6 +109,19 @@ private:
     tgui::CanvasSFML::Ptr audioMeterCanvas_;
     tgui::CanvasSFML::Ptr pressureMeterCanvas_;
     tgui::Label::Ptr pressureLabel_;
+
+    tgui::Button::Ptr rhythmToggleBtn_;
+    tgui::Button::Ptr rhythmMixBtn_;
+    tgui::Button::Ptr rhythmPatternBtn_;
+    tgui::Button::Ptr rhythmBpmDownBtn_;
+    tgui::Button::Ptr rhythmBpmUpBtn_;
+    tgui::Button::Ptr rhythmIntDownBtn_;
+    tgui::Button::Ptr rhythmIntUpBtn_;
+    std::array<tgui::Button::Ptr, 3> rhythmLaneBtns_;
+    std::array<tgui::Button::Ptr, 3> rhythmLanePulseDownBtns_;
+    std::array<tgui::Button::Ptr, 3> rhythmLanePulseUpBtns_;
+    std::array<tgui::Button::Ptr, 3> rhythmLaneGainDownBtns_;
+    std::array<tgui::Button::Ptr, 3> rhythmLaneGainUpBtns_;
 
     tgui::Button::Ptr lifMidiToggleBtn_;
     tgui::Label::Ptr lifMidiStatusLabel_;

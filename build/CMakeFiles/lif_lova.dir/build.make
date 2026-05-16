@@ -128,10 +128,24 @@ CMakeFiles/lif_lova.dir/src/app/LIFToneSynth.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/lif_lova.dir/src/app/LIFToneSynth.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jaakkop/Documents/koodii/lif_lova/src/app/LIFToneSynth.cpp -o CMakeFiles/lif_lova.dir/src/app/LIFToneSynth.cpp.s
 
+CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.o: CMakeFiles/lif_lova.dir/flags.make
+CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/RhythmTransientDriver.cpp
+CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.o -MF CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.o.d -o CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/RhythmTransientDriver.cpp
+
+CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jaakkop/Documents/koodii/lif_lova/src/app/RhythmTransientDriver.cpp > CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.i
+
+CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jaakkop/Documents/koodii/lif_lova/src/app/RhythmTransientDriver.cpp -o CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.s
+
 CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o: CMakeFiles/lif_lova.dir/flags.make
 CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/LIFNetwork.mm
 CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building OBJCXX object CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building OBJCXX object CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o"
 	/usr/bin/c++ $(OBJCXX_DEFINES) $(OBJCXX_INCLUDES) -x objective-c++ $(OBJCXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o -MF CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o.d -o CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/LIFNetwork.mm
 
 CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.i: cmake_force
@@ -145,7 +159,7 @@ CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.s: cmake_force
 CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o: CMakeFiles/lif_lova.dir/flags.make
 CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/MidiRouter.cpp
 CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o -MF CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o.d -o CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/MidiRouter.cpp
 
 CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.i: cmake_force
@@ -159,7 +173,7 @@ CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.s: cmake_force
 CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o: CMakeFiles/lif_lova.dir/flags.make
 CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/LayerManager.cpp
 CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o -MF CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o.d -o CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/LayerManager.cpp
 
 CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.i: cmake_force
@@ -173,7 +187,7 @@ CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.s: cmake_force
 CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o: CMakeFiles/lif_lova.dir/flags.make
 CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/VideoDecoder.cpp
 CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o -MF CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o.d -o CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/VideoDecoder.cpp
 
 CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.i: cmake_force
@@ -187,7 +201,7 @@ CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.s: cmake_force
 CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.o: CMakeFiles/lif_lova.dir/flags.make
 CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/MetalCompositor.mm
 CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building OBJCXX object CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building OBJCXX object CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.o"
 	/usr/bin/c++ $(OBJCXX_DEFINES) $(OBJCXX_INCLUDES) -x objective-c++ $(OBJCXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.o -MF CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.o.d -o CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/MetalCompositor.mm
 
 CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.i: cmake_force
@@ -201,7 +215,7 @@ CMakeFiles/lif_lova.dir/src/app/MetalCompositor.mm.s: cmake_force
 CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o: CMakeFiles/lif_lova.dir/flags.make
 CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/ControlWindow.cpp
 CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o -MF CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o.d -o CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/ControlWindow.cpp
 
 CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.i: cmake_force
@@ -215,7 +229,7 @@ CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.s: cmake_force
 CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o: CMakeFiles/lif_lova.dir/flags.make
 CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/AudioMidiControlWindow.cpp
 CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o -MF CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o.d -o CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/AudioMidiControlWindow.cpp
 
 CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.i: cmake_force
@@ -229,7 +243,7 @@ CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.s: cmake_force
 CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o: CMakeFiles/lif_lova.dir/flags.make
 CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/PressureControlWindow.cpp
 CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o -MF CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o.d -o CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/PressureControlWindow.cpp
 
 CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.i: cmake_force
@@ -243,7 +257,7 @@ CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.s: cmake_force
 CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o: CMakeFiles/lif_lova.dir/flags.make
 CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/CapsLockDetector.mm
 CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building OBJCXX object CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building OBJCXX object CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o"
 	/usr/bin/c++ $(OBJCXX_DEFINES) $(OBJCXX_INCLUDES) -x objective-c++ $(OBJCXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o -MF CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o.d -o CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/CapsLockDetector.mm
 
 CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.i: cmake_force
@@ -257,7 +271,7 @@ CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.s: cmake_force
 CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.o: CMakeFiles/lif_lova.dir/flags.make
 CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/PerformanceWindow.cpp
 CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.o -MF CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.o.d -o CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/PerformanceWindow.cpp
 
 CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.i: cmake_force
@@ -271,7 +285,7 @@ CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.s: cmake_force
 CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.o: CMakeFiles/lif_lova.dir/flags.make
 CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/MediaPickerWindow.mm
 CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building OBJCXX object CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building OBJCXX object CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.o"
 	/usr/bin/c++ $(OBJCXX_DEFINES) $(OBJCXX_INCLUDES) -x objective-c++ $(OBJCXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.o -MF CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.o.d -o CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/MediaPickerWindow.mm
 
 CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.i: cmake_force
@@ -285,7 +299,7 @@ CMakeFiles/lif_lova.dir/src/app/MediaPickerWindow.mm.s: cmake_force
 CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o: CMakeFiles/lif_lova.dir/flags.make
 CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o: /Users/jaakkop/Documents/koodii/lif_lova/src/app/FxPatch.cpp
 CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o: CMakeFiles/lif_lova.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o -MF CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o.d -o CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o -c /Users/jaakkop/Documents/koodii/lif_lova/src/app/FxPatch.cpp
 
 CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.i: cmake_force
@@ -302,6 +316,7 @@ lif_lova_OBJECTS = \
 "CMakeFiles/lif_lova.dir/src/app/App.mm.o" \
 "CMakeFiles/lif_lova.dir/src/app/AudioAnalyzer.mm.o" \
 "CMakeFiles/lif_lova.dir/src/app/LIFToneSynth.cpp.o" \
+"CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.o" \
 "CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o" \
 "CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o" \
 "CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o" \
@@ -322,6 +337,7 @@ lif_lova: CMakeFiles/lif_lova.dir/src/app/main.mm.o
 lif_lova: CMakeFiles/lif_lova.dir/src/app/App.mm.o
 lif_lova: CMakeFiles/lif_lova.dir/src/app/AudioAnalyzer.mm.o
 lif_lova: CMakeFiles/lif_lova.dir/src/app/LIFToneSynth.cpp.o
+lif_lova: CMakeFiles/lif_lova.dir/src/app/RhythmTransientDriver.cpp.o
 lif_lova: CMakeFiles/lif_lova.dir/src/app/LIFNetwork.mm.o
 lif_lova: CMakeFiles/lif_lova.dir/src/app/MidiRouter.cpp.o
 lif_lova: CMakeFiles/lif_lova.dir/src/app/LayerManager.cpp.o
@@ -397,7 +413,7 @@ lif_lova: /opt/homebrew/opt/opencv/lib/libopencv_photo.4.13.0.dylib
 lif_lova: /opt/homebrew/opt/opencv/lib/libopencv_imgproc.4.13.0.dylib
 lif_lova: /opt/homebrew/opt/opencv/lib/libopencv_core.4.13.0.dylib
 lif_lova: CMakeFiles/lif_lova.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable lif_lova"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking CXX executable lif_lova"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/lif_lova.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -89,6 +89,7 @@ bool MidiRouter::openPort(int index) {
         midiIn_->ignoreTypes(false, false, false);
         midiIn_->setCallback(&MidiRouter::rtCallback, this);
         learnedKnobCcs_.fill(-1);
+        sceneNoteDown_.fill(0);
         return true;
     } catch (RtMidiError& e) {
         std::cerr << "[MidiRouter] " << e.getMessage() << "\n";
@@ -101,6 +102,7 @@ void MidiRouter::closePort() {
         midiIn_->cancelCallback();
         midiIn_->closePort();
     }
+    sceneNoteDown_.fill(0);
 }
 
 bool MidiRouter::isOpen() const { return midiIn_->isPortOpen(); }
@@ -159,11 +161,19 @@ void MidiRouter::processEvent(const std::vector<unsigned char>& msg) {
         return;
     }
 
-    // ── Scene select ─────────────────────────────────────────────────────
-    if (ev.type == MidiEvent::Type::NoteOn) {
+    // ── Scene select (edge-triggered) ───────────────────────────────────
+    if (ev.type == MidiEvent::Type::NoteOn || ev.type == MidiEvent::Type::NoteOff) {
         int sceneIdx = 0;
         if (noteToScene(ev.note, sceneIdx)) {
-            if (onSceneSelect) onSceneSelect(sceneIdx);
+            const int note = std::clamp(ev.note, 0, 127);
+            if (ev.type == MidiEvent::Type::NoteOn) {
+                if (!sceneNoteDown_[static_cast<size_t>(note)]) {
+                    sceneNoteDown_[static_cast<size_t>(note)] = 1;
+                    if (onSceneSelect) onSceneSelect(sceneIdx);
+                }
+            } else {
+                sceneNoteDown_[static_cast<size_t>(note)] = 0;
+            }
             return;
         }
     }

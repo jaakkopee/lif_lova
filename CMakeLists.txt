@@ -83,6 +83,7 @@ add_executable(lif_lova
     src/app/App.mm
     src/app/AudioAnalyzer.mm
     src/app/LIFToneSynth.cpp
+    src/app/RhythmTransientDriver.cpp
     src/app/LIFNetwork.mm
     src/app/MidiRouter.cpp
     src/app/LayerManager.cpp

@@ -10,6 +10,7 @@
 #include "MediaPickerWindow.h"
 #include "AudioAnalyzer.h"
 #include "LIFToneSynth.h"
+#include "RhythmTransientDriver.h"
 #include <vector>
 #include <memory>
 #include <cstdint>
@@ -153,6 +154,7 @@ private:
     MetalCompositor   compositor_;
     AudioAnalyzer     audio_;
     LIFToneSynth      lifToneSynth_;
+    RhythmTransientDriver rhythmDriver_;
     ControlWindow     controlWin_;
     AudioMidiControlWindow audioMidiWin_;
     PressureControlWindow pressureWin_;
@@ -257,6 +259,15 @@ private:
     std::array<int, 16>  lifMidiCooldownFrames_ = {};
         // MIDI output toggle for LIF networks
         void toggleLifMidi();
+    void cycleRhythmPattern();
+    void cycleRhythmMixMode();
+    void toggleRhythmDriver();
+    void nudgeRhythmBpm(float delta);
+    void nudgeRhythmIntensity(float delta);
+    void toggleRhythmLane(int laneIdx);
+    void nudgeRhythmLanePulses(int laneIdx, int delta);
+    void nudgeRhythmLaneGain(int laneIdx, float delta);
+    void refreshRhythmUi();
     float                lifToneScanTempo_ = 0.22f;
     float                lifToneMinFreqHz_ = 80.0f;
     float                lifToneMaxFreqHz_ = 1600.0f;

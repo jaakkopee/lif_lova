@@ -280,15 +280,6 @@ pkgcfg_lib_RTMIDI_rtmidi:FILEPATH=/opt/homebrew/Cellar/rtmidi/6.0.0/lib/librtmid
 //Path to a library.
 pkgcfg_lib_SWSCALE_swscale:FILEPATH=/opt/homebrew/Cellar/ffmpeg/8.1/lib/libswscale.dylib
 
-//Value Computed by CMake
-vjay_ace_BINARY_DIR:STATIC=/Users/jaakkop/Documents/koodii/lif_lova/build
-
-//Value Computed by CMake
-vjay_ace_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-vjay_ace_SOURCE_DIR:STATIC=/Users/jaakkop/Documents/koodii/lif_lova
-
 
 ########################
 # INTERNAL cache entries

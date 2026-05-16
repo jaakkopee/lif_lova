@@ -43,6 +43,36 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     audioLabel->getRenderer()->setTextColor(TEXT_DIM);
     gui_.add(audioLabel);
 
+    rhythmToggleBtn_ = tgui::Button::create("Rhythm Off");
+    rhythmToggleBtn_->setPosition(108, 48);
+    rhythmToggleBtn_->setSize(76, 18);
+    rhythmToggleBtn_->setTextSize(11);
+    rhythmToggleBtn_->onPress([this] {
+        if (onRhythmToggle)
+            onRhythmToggle();
+    });
+    gui_.add(rhythmToggleBtn_);
+
+    rhythmMixBtn_ = tgui::Button::create("Mix: Audio");
+    rhythmMixBtn_->setPosition(188, 48);
+    rhythmMixBtn_->setSize(74, 18);
+    rhythmMixBtn_->setTextSize(11);
+    rhythmMixBtn_->onPress([this] {
+        if (onRhythmMixCycle)
+            onRhythmMixCycle();
+    });
+    gui_.add(rhythmMixBtn_);
+
+    rhythmPatternBtn_ = tgui::Button::create("Pat: Metronome");
+    rhythmPatternBtn_->setPosition(108, 88);
+    rhythmPatternBtn_->setSize(154, 18);
+    rhythmPatternBtn_->setTextSize(11);
+    rhythmPatternBtn_->onPress([this] {
+        if (onRhythmPatternCycle)
+            onRhythmPatternCycle();
+    });
+    gui_.add(rhythmPatternBtn_);
+
     audioMeterCanvas_ = tgui::CanvasSFML::create({static_cast<float>(leftColW), 40.0f});
     audioMeterCanvas_->setPosition(14, 68);
     gui_.add(audioMeterCanvas_);
@@ -208,8 +238,8 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     });
     gui_.add(midiSettingsBtn_);
 
-    midiSettingsPanel_ = tgui::Panel::create({static_cast<float>(leftColW), 260.0f});
-    midiSettingsPanel_->setPosition(14, 448);
+    midiSettingsPanel_ = tgui::Panel::create({static_cast<float>(leftColW), 600.0f});
+    midiSettingsPanel_->setPosition(14, 464);
     midiSettingsPanel_->getRenderer()->setBackgroundColor(tgui::Color(24, 24, 32));
     midiSettingsPanel_->setVisible(false);
     gui_.add(midiSettingsPanel_);
@@ -312,14 +342,126 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     // Mirror the same shared pointer so both locations trigger identical behavior.
     lifMidiModeToggleBtn_ = modeSourceBtn;
 
+    auto rhythmLabel = tgui::Label::create("Rhythm:");
+    rhythmLabel->setPosition(6, 188);
+    rhythmLabel->setTextSize(11);
+    rhythmLabel->getRenderer()->setTextColor(TEXT_DIM);
+    midiSettingsPanel_->add(rhythmLabel);
+    std::cout << "[DEBUG] Added Rhythm label to MIDI Settings panel" << std::endl;
+
+    rhythmBpmDownBtn_ = tgui::Button::create("BPM-");
+    rhythmBpmDownBtn_->setPosition(6, 206);
+    rhythmBpmDownBtn_->setSize(32, 22);
+    rhythmBpmDownBtn_->onPress([this] {
+        if (onRhythmBpmNudge)
+            onRhythmBpmNudge(-2.0f);
+    });
+    midiSettingsPanel_->add(rhythmBpmDownBtn_);
+
+    rhythmBpmUpBtn_ = tgui::Button::create("BPM+");
+    rhythmBpmUpBtn_->setPosition(42, 206);
+    rhythmBpmUpBtn_->setSize(32, 22);
+    rhythmBpmUpBtn_->onPress([this] {
+        if (onRhythmBpmNudge)
+            onRhythmBpmNudge(2.0f);
+    });
+    midiSettingsPanel_->add(rhythmBpmUpBtn_);
+
+    rhythmIntDownBtn_ = tgui::Button::create("Int-");
+    rhythmIntDownBtn_->setPosition(78, 206);
+    rhythmIntDownBtn_->setSize(32, 22);
+    rhythmIntDownBtn_->onPress([this] {
+        if (onRhythmIntensityNudge)
+            onRhythmIntensityNudge(-0.05f);
+    });
+    midiSettingsPanel_->add(rhythmIntDownBtn_);
+
+    rhythmIntUpBtn_ = tgui::Button::create("Int+");
+    rhythmIntUpBtn_->setPosition(114, 206);
+    rhythmIntUpBtn_->setSize(32, 22);
+    rhythmIntUpBtn_->onPress([this] {
+        if (onRhythmIntensityNudge)
+            onRhythmIntensityNudge(0.05f);
+    });
+    midiSettingsPanel_->add(rhythmIntUpBtn_);
+
+    auto laneLabel = tgui::Label::create("Lanes: toggle / pulse / gain");
+    laneLabel->setPosition(6, 160);
+    laneLabel->setTextSize(11);
+    laneLabel->getRenderer()->setTextColor(TEXT_DIM);
+    midiSettingsPanel_->add(laneLabel);
+
+    // Improved vertical stack layout for each lane
+    const int laneCount = 3;
+    const int laneW = 160;
+    const int laneH = 36;
+    const int laneSpacing = 24;
+    const int baseY = 190;
+    for (int i = 0; i < laneCount; ++i) {
+        int laneX = 6 + i * (laneW + laneSpacing);
+        int y = baseY;
+
+        rhythmLaneBtns_[i] = tgui::Button::create("Lane");
+        rhythmLaneBtns_[i]->setPosition(laneX, y);
+        rhythmLaneBtns_[i]->setSize(laneW, laneH);
+        rhythmLaneBtns_[i]->setTextSize(13);
+        rhythmLaneBtns_[i]->onPress([this, i] {
+            if (onRhythmLaneToggle)
+                onRhythmLaneToggle(i);
+        });
+        midiSettingsPanel_->add(rhythmLaneBtns_[i]);
+        y += laneH + 4;
+
+        rhythmLanePulseDownBtns_[i] = tgui::Button::create("Pulse -");
+        rhythmLanePulseDownBtns_[i]->setPosition(laneX, y);
+        rhythmLanePulseDownBtns_[i]->setSize(laneW/2-2, laneH-6);
+        rhythmLanePulseDownBtns_[i]->setTextSize(12);
+        rhythmLanePulseDownBtns_[i]->onPress([this, i] {
+            if (onRhythmLanePulseNudge)
+                onRhythmLanePulseNudge(i, -1);
+        });
+        midiSettingsPanel_->add(rhythmLanePulseDownBtns_[i]);
+
+        rhythmLanePulseUpBtns_[i] = tgui::Button::create("Pulse +");
+        rhythmLanePulseUpBtns_[i]->setPosition(laneX + laneW/2 + 2, y);
+        rhythmLanePulseUpBtns_[i]->setSize(laneW/2-2, laneH-6);
+        rhythmLanePulseUpBtns_[i]->setTextSize(12);
+        rhythmLanePulseUpBtns_[i]->onPress([this, i] {
+            if (onRhythmLanePulseNudge)
+                onRhythmLanePulseNudge(i, 1);
+        });
+        midiSettingsPanel_->add(rhythmLanePulseUpBtns_[i]);
+        y += laneH - 2;
+
+        rhythmLaneGainDownBtns_[i] = tgui::Button::create("Gain -");
+        rhythmLaneGainDownBtns_[i]->setPosition(laneX, y);
+        rhythmLaneGainDownBtns_[i]->setSize(laneW/2-2, laneH-6);
+        rhythmLaneGainDownBtns_[i]->setTextSize(12);
+        rhythmLaneGainDownBtns_[i]->onPress([this, i] {
+            if (onRhythmLaneGainNudge)
+                onRhythmLaneGainNudge(i, -0.05f);
+        });
+        midiSettingsPanel_->add(rhythmLaneGainDownBtns_[i]);
+
+        rhythmLaneGainUpBtns_[i] = tgui::Button::create("Gain +");
+        rhythmLaneGainUpBtns_[i]->setPosition(laneX + laneW/2 + 2, y);
+        rhythmLaneGainUpBtns_[i]->setSize(laneW/2-2, laneH-6);
+        rhythmLaneGainUpBtns_[i]->setTextSize(12);
+        rhythmLaneGainUpBtns_[i]->onPress([this, i] {
+            if (onRhythmLaneGainNudge)
+                onRhythmLaneGainNudge(i, 0.05f);
+        });
+        midiSettingsPanel_->add(rhythmLaneGainUpBtns_[i]);
+    }
+
     lifMidiRangeLabel_ = tgui::Label::create("Range: 36-96");
-    lifMidiRangeLabel_->setPosition(6, 214);
+    lifMidiRangeLabel_->setPosition(6, 324);
     lifMidiRangeLabel_->setTextSize(11);
     lifMidiRangeLabel_->getRenderer()->setTextColor(TEXT_DIM);
     midiSettingsPanel_->add(lifMidiRangeLabel_);
 
     lifMidiRangeMinDownBtn_ = tgui::Button::create("Lo-");
-    lifMidiRangeMinDownBtn_->setPosition(6, 234);
+    lifMidiRangeMinDownBtn_->setPosition(6, 342);
     lifMidiRangeMinDownBtn_->setSize(32, 22);
     lifMidiRangeMinDownBtn_->onPress([this] {
         if (onLIFMidiRangeMinNudge)
@@ -328,7 +470,7 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     midiSettingsPanel_->add(lifMidiRangeMinDownBtn_);
 
     lifMidiRangeMinUpBtn_ = tgui::Button::create("Lo+");
-    lifMidiRangeMinUpBtn_->setPosition(42, 234);
+    lifMidiRangeMinUpBtn_->setPosition(42, 342);
     lifMidiRangeMinUpBtn_->setSize(32, 22);
     lifMidiRangeMinUpBtn_->onPress([this] {
         if (onLIFMidiRangeMinNudge)
@@ -337,7 +479,7 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     midiSettingsPanel_->add(lifMidiRangeMinUpBtn_);
 
     lifMidiRangeMaxDownBtn_ = tgui::Button::create("Hi-");
-    lifMidiRangeMaxDownBtn_->setPosition(78, 234);
+    lifMidiRangeMaxDownBtn_->setPosition(78, 342);
     lifMidiRangeMaxDownBtn_->setSize(32, 22);
     lifMidiRangeMaxDownBtn_->onPress([this] {
         if (onLIFMidiRangeMaxNudge)
@@ -346,7 +488,7 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     midiSettingsPanel_->add(lifMidiRangeMaxDownBtn_);
 
     lifMidiRangeMaxUpBtn_ = tgui::Button::create("Hi+");
-    lifMidiRangeMaxUpBtn_->setPosition(114, 234);
+    lifMidiRangeMaxUpBtn_->setPosition(114, 342);
     lifMidiRangeMaxUpBtn_->setSize(32, 22);
     lifMidiRangeMaxUpBtn_->onPress([this] {
         if (onLIFMidiRangeMaxNudge)
@@ -470,6 +612,40 @@ void AudioMidiControlWindow::setLifMidiRange(int minNote, int maxNote) {
 void AudioMidiControlWindow::setLifToneVolume(float volume) {
     int pct = static_cast<int>(volume * 100.0f);
     lifToneVolLabel_->setText("Tone Vol: " + std::to_string(pct) + "%");
+}
+
+void AudioMidiControlWindow::setRhythmStatus(bool enabled,
+                                             const std::string& mixModeName,
+                                             const std::string& patternName,
+                                             float bpm,
+                                             float intensity,
+                                             bool quantizedPending) {
+    if (rhythmToggleBtn_)
+        rhythmToggleBtn_->setText(enabled ? "Rhythm On" : "Rhythm Off");
+    if (rhythmMixBtn_)
+        rhythmMixBtn_->setText("Mix: " + mixModeName);
+    if (rhythmPatternBtn_) {
+        const int bpmInt = static_cast<int>(bpm + 0.5f);
+        const int pct = static_cast<int>(std::clamp(intensity, 0.0f, 1.0f) * 100.0f + 0.5f);
+        const std::string q = quantizedPending ? " Q" : "";
+        rhythmPatternBtn_->setText("Pat: " + patternName + q + " " + std::to_string(bpmInt) + " " + std::to_string(pct) + "%");
+    }
+}
+
+void AudioMidiControlWindow::setRhythmLaneScaffold(const std::array<std::string, 3>& names,
+                                                   const std::array<uint8_t, 3>& enabled,
+                                                   const std::array<int, 3>& pulses,
+                                                   const std::array<float, 3>& gains) {
+    for (int i = 0; i < 3; ++i) {
+        auto btn = rhythmLaneBtns_[static_cast<size_t>(i)];
+        if (!btn) continue;
+        const bool on = enabled[static_cast<size_t>(i)] != 0;
+        const int gainPct = static_cast<int>(std::clamp(gains[static_cast<size_t>(i)], 0.0f, 2.0f) * 100.0f + 0.5f);
+        const std::string label = names[static_cast<size_t>(i)] + " " + std::to_string(pulses[static_cast<size_t>(i)])
+                                  + " " + std::to_string(gainPct) + "%"
+                                  + (on ? " On" : " Off");
+        btn->setText(label);
+    }
 }
 
 void AudioMidiControlWindow::setMidiPortLists(const std::vector<std::string>& inPorts,

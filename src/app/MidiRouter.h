@@ -87,6 +87,7 @@ private:
     std::unique_ptr<RtMidiIn> midiIn_;
     KnobMode mode_ = KnobMode::FxParam;
     std::array<int, NUM_KNOBS> learnedKnobCcs_ = {-1, -1, -1, -1, -1, -1};
+    std::array<uint8_t, 128> sceneNoteDown_ = {};
 
     // Thread-safe ring buffer for callbacks from MIDI thread → main thread
     struct PendingEvent { std::vector<unsigned char> bytes; double deltaTime; };

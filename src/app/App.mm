@@ -373,7 +373,31 @@ void App::refreshLifMidiUi() {
     audioMidiWin_.setLifMidiStatus(lifMidiEnabled_,
                                    (lifMidiStyle_ == LifMidiStyle::Percussion) ? 10 : 1,
                                    lifMidiRangeMin_);
+    refreshRhythmUi();
     refreshLifMidiModeEditorUi();
+}
+
+void App::refreshRhythmUi() {
+    std::array<std::string, 3> laneNames = {"L1", "L2", "L3"};
+    std::array<uint8_t, 3> laneEnabled = {0, 0, 0};
+    std::array<int, 3> lanePulses = {0, 0, 0};
+    std::array<float, 3> laneGains = {0.0f, 0.0f, 0.0f};
+    const auto& lanes = rhythmDriver_.lanes();
+    for (int i = 0; i < 3; ++i) {
+        laneNames[static_cast<size_t>(i)] = lanes[static_cast<size_t>(i)].name;
+        laneEnabled[static_cast<size_t>(i)] = lanes[static_cast<size_t>(i)].enabled ? 1 : 0;
+        lanePulses[static_cast<size_t>(i)] = lanes[static_cast<size_t>(i)].pulses;
+        laneGains[static_cast<size_t>(i)] = lanes[static_cast<size_t>(i)].gain;
+    }
+
+    audioMidiWin_.setRhythmStatus(
+        rhythmDriver_.enabled(),
+        RhythmTransientDriver::mixModeName(rhythmDriver_.mixMode()),
+        RhythmTransientDriver::patternName(rhythmDriver_.pattern()),
+        rhythmDriver_.bpm(),
+        rhythmDriver_.intensity(),
+        rhythmDriver_.hasPendingPattern());
+    audioMidiWin_.setRhythmLaneScaffold(laneNames, laneEnabled, lanePulses, laneGains);
 }
 
 void App::refreshLifMidiModeEditorUi() {
@@ -488,6 +512,76 @@ void App::cycleLifMidiStyle() {
     }
     refreshLifMidiUi();
     std::cout << "[LIF MIDI] style=" << lifMidiStyleName() << std::endl;
+}
+
+void App::toggleRhythmDriver() {
+    rhythmDriver_.setEnabled(!rhythmDriver_.enabled());
+    refreshRhythmUi();
+    std::cout << "[Rhythm] " << (rhythmDriver_.enabled() ? "enabled" : "disabled") << std::endl;
+}
+
+void App::cycleRhythmMixMode() {
+    using MixMode = RhythmTransientDriver::MixMode;
+    MixMode next = MixMode::AudioOnly;
+    switch (rhythmDriver_.mixMode()) {
+        case MixMode::AudioOnly: next = MixMode::RhythmOnly; break;
+        case MixMode::RhythmOnly: next = MixMode::Hybrid; break;
+        case MixMode::Hybrid: next = MixMode::AudioOnly; break;
+    }
+    rhythmDriver_.setMixMode(next);
+    refreshRhythmUi();
+    std::cout << "[Rhythm] mix=" << RhythmTransientDriver::mixModeName(next) << std::endl;
+}
+
+void App::cycleRhythmPattern() {
+    using Pattern = RhythmTransientDriver::Pattern;
+    Pattern next = Pattern::Metronome4;
+    switch (rhythmDriver_.pattern()) {
+        case Pattern::Metronome4: next = Pattern::BackbeatRock; break;
+        case Pattern::BackbeatRock: next = Pattern::ReggaeThird; break;
+        case Pattern::ReggaeThird: next = Pattern::GamelanEnd; break;
+        case Pattern::GamelanEnd: next = Pattern::Bell12; break;
+        case Pattern::Bell12: next = Pattern::ClaveLike; break;
+        case Pattern::ClaveLike: next = Pattern::Triplet3Over4; break;
+        case Pattern::Triplet3Over4: next = Pattern::Metronome4; break;
+    }
+    rhythmDriver_.requestPattern(next, true);
+    refreshRhythmUi();
+    std::cout << "[Rhythm] queued pattern=" << RhythmTransientDriver::patternName(next) << std::endl;
+}
+
+void App::nudgeRhythmBpm(float delta) {
+    rhythmDriver_.nudgeBpm(delta);
+    refreshRhythmUi();
+    std::cout << "[Rhythm] bpm=" << rhythmDriver_.bpm() << std::endl;
+}
+
+void App::nudgeRhythmIntensity(float delta) {
+    rhythmDriver_.nudgeIntensity(delta);
+    refreshRhythmUi();
+    std::cout << "[Rhythm] intensity=" << rhythmDriver_.intensity() << std::endl;
+}
+
+void App::toggleRhythmLane(int laneIdx) {
+    rhythmDriver_.toggleLaneEnabled(laneIdx);
+    refreshRhythmUi();
+    std::cout << "[Rhythm] lane " << laneIdx << " toggled" << std::endl;
+}
+
+void App::nudgeRhythmLanePulses(int laneIdx, int delta) {
+    rhythmDriver_.nudgeLanePulses(laneIdx, delta);
+    refreshRhythmUi();
+    const auto& lanes = rhythmDriver_.lanes();
+    if (laneIdx >= 0 && laneIdx < static_cast<int>(lanes.size()))
+        std::cout << "[Rhythm] lane " << laneIdx << " pulses=" << lanes[static_cast<size_t>(laneIdx)].pulses << std::endl;
+}
+
+void App::nudgeRhythmLaneGain(int laneIdx, float delta) {
+    rhythmDriver_.nudgeLaneGain(laneIdx, delta);
+    refreshRhythmUi();
+    const auto& lanes = rhythmDriver_.lanes();
+    if (laneIdx >= 0 && laneIdx < static_cast<int>(lanes.size()))
+        std::cout << "[Rhythm] lane " << laneIdx << " gain=" << lanes[static_cast<size_t>(laneIdx)].gain << std::endl;
 }
 
 void App::cycleLifMidiModalScale() {
@@ -730,8 +824,8 @@ bool App::init() {
     controlWin_.open(ctrl.x, ctrl.y, ctrlS.x, ctrlS.y);
 
     // ── Audio & MIDI Control window — positioned next to main control ────
-    const int audioMidiW = 280;
-    const int audioMidiH = 650;
+    const int audioMidiW = 700;
+    const int audioMidiH = 800;
     const int audioMidiX = ctrl.x + std::max(10, ctrlS.x - audioMidiW - 16);
     const int audioMidiY = ctrl.y + 10;
     audioMidiWin_.open(audioMidiX, audioMidiY, audioMidiW, audioMidiH);
@@ -1112,6 +1206,14 @@ void App::wireCallbacks() {
         lifToneSynth_.setFrequencyRange(lifToneMinFreqHz_, lifToneMaxFreqHz_);
         std::cout << "[LIF Tone] range=" << lifToneMinFreqHz_ << "-" << lifToneMaxFreqHz_ << " Hz" << std::endl;
     };
+    audioMidiWin_.onRhythmToggle = [this]() { toggleRhythmDriver(); };
+    audioMidiWin_.onRhythmMixCycle = [this]() { cycleRhythmMixMode(); };
+    audioMidiWin_.onRhythmPatternCycle = [this]() { cycleRhythmPattern(); };
+    audioMidiWin_.onRhythmBpmNudge = [this](float delta) { nudgeRhythmBpm(delta); };
+    audioMidiWin_.onRhythmIntensityNudge = [this](float delta) { nudgeRhythmIntensity(delta); };
+    audioMidiWin_.onRhythmLaneToggle = [this](int laneIdx) { toggleRhythmLane(laneIdx); };
+    audioMidiWin_.onRhythmLanePulseNudge = [this](int laneIdx, int delta) { nudgeRhythmLanePulses(laneIdx, delta); };
+    audioMidiWin_.onRhythmLaneGainNudge = [this](int laneIdx, float delta) { nudgeRhythmLaneGain(laneIdx, delta); };
     mediaPickerWin_.onFileSelected = [this](int slot, const std::string& path){
         onImageSelected(slot, path);
     };
@@ -2165,7 +2267,7 @@ void App::saveState() const {
         if (!f) { std::cerr << "[App] Could not open temp state file for writing\n"; return; }
         // Write magic + version for future-proofing
         const uint32_t magic = 0x56414345; // 'VACE'
-        const uint32_t ver   = 17;
+        const uint32_t ver   = 18;
         f.write(reinterpret_cast<const char*>(&magic), 4);
         f.write(reinterpret_cast<const char*>(&ver),   4);
         // Write all scene states (knobs + image paths)
@@ -2202,6 +2304,27 @@ void App::saveState() const {
             for (int v : mode)
                 f.write(reinterpret_cast<const char*>(&v), sizeof(int));
         f.write(reinterpret_cast<const char*>(&lifMidiTonalRootSemitone_), sizeof(int));
+        {
+            const uint8_t rhythmEnabled = rhythmDriver_.enabled() ? 1u : 0u;
+            const int rhythmMixMode = static_cast<int>(rhythmDriver_.mixMode());
+            const int rhythmPattern = static_cast<int>(rhythmDriver_.pattern());
+            const float rhythmBpm = rhythmDriver_.bpm();
+            const float rhythmIntensity = rhythmDriver_.intensity();
+            f.write(reinterpret_cast<const char*>(&rhythmEnabled), sizeof(uint8_t));
+            f.write(reinterpret_cast<const char*>(&rhythmMixMode), sizeof(int));
+            f.write(reinterpret_cast<const char*>(&rhythmPattern), sizeof(int));
+            f.write(reinterpret_cast<const char*>(&rhythmBpm), sizeof(float));
+            f.write(reinterpret_cast<const char*>(&rhythmIntensity), sizeof(float));
+
+            const auto& lanes = rhythmDriver_.lanes();
+            for (int i = 0; i < RhythmTransientDriver::MAX_LANES; ++i) {
+                const auto& lane = lanes[static_cast<size_t>(i)];
+                const uint8_t laneEnabled = lane.enabled ? 1u : 0u;
+                f.write(reinterpret_cast<const char*>(&laneEnabled), sizeof(uint8_t));
+                f.write(reinterpret_cast<const char*>(&lane.pulses), sizeof(int));
+                f.write(reinterpret_cast<const char*>(&lane.gain), sizeof(float));
+            }
+        }
         f.write(reinterpret_cast<const char*>(&currentScene_), sizeof(int));
         if (!f) { std::cerr << "[App] State write error — temp file may be incomplete\n"; return; }
     } // ofstream closes + flushes here
@@ -2254,6 +2377,7 @@ void App::loadState() {
     // v15: custom modal scales (extended ModalScale enum)
     // v16: persists editable custom mode intervals
     // v17: persists per-scene mode auto/manual flag + tonal root
+    // v18: persists rhythm driver state and lane editor settings
     const bool isV3 = (ver == 3);
     const bool isV4 = (ver == 4);
     const bool isV5 = (ver == 5);
@@ -2267,6 +2391,7 @@ void App::loadState() {
     const bool isV13 = (ver == 13);
     const bool isV16Plus = (ver >= 16);
     const bool isV17Plus = (ver >= 17);
+    const bool isV18Plus = (ver >= 18);
     const bool isV14Plus = (ver >= 14);
     if (!isV3 && !isV4 && !isV5 && !isV6 && !isV7 && !isV8 && !isV9 && !isV10 && !isV11 && !isV12 && !isV13 && !isV14Plus) {
         std::cerr << "[App] Ignoring incompatible state file\n";
@@ -2369,6 +2494,44 @@ void App::loadState() {
         lifMidiTonalRootSemitone_ = ((lifMidiTonalRootSemitone_ % 12) + 12) % 12;
     }
 
+    if (isV18Plus) {
+        uint8_t rhythmEnabled = 0;
+        int rhythmMixMode = 0;
+        int rhythmPattern = 0;
+        float rhythmBpm = rhythmDriver_.bpm();
+        float rhythmIntensity = rhythmDriver_.intensity();
+        if (!f.read(reinterpret_cast<char*>(&rhythmEnabled), sizeof(uint8_t))) return;
+        if (!f.read(reinterpret_cast<char*>(&rhythmMixMode), sizeof(int))) return;
+        if (!f.read(reinterpret_cast<char*>(&rhythmPattern), sizeof(int))) return;
+        if (!f.read(reinterpret_cast<char*>(&rhythmBpm), sizeof(float))) return;
+        if (!f.read(reinterpret_cast<char*>(&rhythmIntensity), sizeof(float))) return;
+
+        rhythmDriver_.setEnabled(rhythmEnabled != 0);
+        rhythmDriver_.setMixMode(static_cast<RhythmTransientDriver::MixMode>(
+            std::clamp(rhythmMixMode,
+                       static_cast<int>(RhythmTransientDriver::MixMode::AudioOnly),
+                       static_cast<int>(RhythmTransientDriver::MixMode::Hybrid))));
+        rhythmDriver_.setPattern(static_cast<RhythmTransientDriver::Pattern>(
+            std::clamp(rhythmPattern,
+                       static_cast<int>(RhythmTransientDriver::Pattern::Metronome4),
+                       static_cast<int>(RhythmTransientDriver::Pattern::Triplet3Over4))));
+        rhythmDriver_.setBpm(rhythmBpm);
+        rhythmDriver_.setIntensity(rhythmIntensity);
+
+        for (int i = 0; i < RhythmTransientDriver::MAX_LANES; ++i) {
+            uint8_t laneEnabled = 0;
+            int lanePulses = 16;
+            float laneGain = 1.0f;
+            if (!f.read(reinterpret_cast<char*>(&laneEnabled), sizeof(uint8_t))) return;
+            if (!f.read(reinterpret_cast<char*>(&lanePulses), sizeof(int))) return;
+            if (!f.read(reinterpret_cast<char*>(&laneGain), sizeof(float))) return;
+
+            rhythmDriver_.setLaneEnabled(i, laneEnabled != 0);
+            rhythmDriver_.nudgeLanePulses(i, lanePulses - rhythmDriver_.lanes()[static_cast<size_t>(i)].pulses);
+            rhythmDriver_.nudgeLaneGain(i, laneGain - rhythmDriver_.lanes()[static_cast<size_t>(i)].gain);
+        }
+    }
+
     int savedScene = -1;
     if (f.read(reinterpret_cast<char*>(&savedScene), sizeof(int))) {
         if (savedScene >= 0 && savedScene < NUM_SCENES)
@@ -2453,17 +2616,41 @@ void App::processFrame() {
         applyPressureMappings(currentScene_);
     }
 
-    // ── Audio poll: read latest bands and push to compositor + meter ─────
+    // ── Audio + Rhythm drive mix for FX and LIF simulation ───────────────
+    std::array<float, 8> liveBands = {};
+    float liveRms = 0.0f;
     if (!audioBypassed_ && audio_.isRunning()) {
-        auto bands = audio_.bands();
-        float rms  = audio_.rms();
-        compositor_.setAudioBands(bands.data(), static_cast<int>(bands.size()), rms);
-        audioMidiWin_.setAudioBands(bands.data(), static_cast<int>(bands.size()), rms);
-    } else {
-        const float zeros[8] = {};
-        compositor_.setAudioBands(zeros, 8, 0.0f);
-        audioMidiWin_.setAudioBands(zeros, 8, 0.0f);
+        liveBands = audio_.bands();
+        liveRms = audio_.rms();
     }
+
+    rhythmDriver_.tick(1.0f / 60.0f);
+
+    std::array<float, 8> mixedBands = {};
+    float mixedRms = 0.0f;
+
+    switch (rhythmDriver_.mixMode()) {
+        case RhythmTransientDriver::MixMode::AudioOnly:
+            mixedBands = liveBands;
+            mixedRms = liveRms;
+            break;
+        case RhythmTransientDriver::MixMode::RhythmOnly:
+            if (rhythmDriver_.enabled()) {
+                mixedBands = rhythmDriver_.bands();
+                mixedRms = rhythmDriver_.rms();
+            }
+            break;
+        case RhythmTransientDriver::MixMode::Hybrid:
+            for (int i = 0; i < 8; ++i)
+                mixedBands[static_cast<size_t>(i)] = std::clamp(
+                    liveBands[static_cast<size_t>(i)] + (rhythmDriver_.enabled() ? rhythmDriver_.bands()[static_cast<size_t>(i)] : 0.0f),
+                    0.0f, 1.0f);
+            mixedRms = std::clamp(liveRms + (rhythmDriver_.enabled() ? rhythmDriver_.rms() : 0.0f), 0.0f, 1.0f);
+            break;
+    }
+
+    compositor_.setAudioBands(mixedBands.data(), static_cast<int>(mixedBands.size()), mixedRms);
+    audioMidiWin_.setAudioBands(mixedBands.data(), static_cast<int>(mixedBands.size()), mixedRms);
 
     // Drive LIF simulation from all active scene LIF patch params.
     if (currentScene_ >= 0) {
