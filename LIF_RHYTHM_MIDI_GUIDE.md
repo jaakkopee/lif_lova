@@ -174,9 +174,10 @@ For each bin:
    - contour (`energy - prevEnergy`)
    - feedforward topology flag
 3. Build notes/chords (`lifMidiNotesForFunction`) using:
-   - current key + tonal root + modal scale
-   - selected style (`Pop`, `Rock`, `Jazz`, `Blues`, `Percussion`)
-   - configured MIDI range clamp (`lifMidiRangeMin_..lifMidiRangeMax_`)
+    - current key + tonal root + modal scale
+    - selected style (`Orpheus Black Moon`, `Ares Blood Sun`, `Nostradamus Dream Sigil`, `Rasputin Mad Oracle`, `Loki Mad Clock`)
+      with style-name gematria values as harmonic offsets in modal-functional voicing
+    - configured MIDI range clamp (`lifMidiRangeMin_..lifMidiRangeMax_`)
 4. Compute velocity and send NoteOn/NoteOff.
 
 ## 6.1 Note gating thresholds (non-feedforward)
