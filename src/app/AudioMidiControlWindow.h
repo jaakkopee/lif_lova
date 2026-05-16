@@ -5,6 +5,7 @@
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/Backend/Renderer/SFML-Graphics/CanvasSFML.hpp>
 #include <array>
+#include <deque>
 #include <functional>
 #include <string>
 #include <vector>
@@ -27,6 +28,9 @@ public:
     // ── State setters ───────────────────────────────────────────────────────
     // Update audio level meter (8 bands 0-1, rms 0-1). Called each frame.
     void setAudioBands(const float* bands, int count, float rms);
+
+    // Update transient/rhythm energy bands (8 bands 0-1, rms 0-1). Called each frame.
+    void setTransientBands(const float* bands, int count, float rms);
 
     // Update channel pressure meter (0-1).
     void setPressureNorm(float norm);
@@ -93,6 +97,9 @@ public:
     std::function<void(int laneIdx, float delta)> onRhythmLaneGainNudge;
     std::function<void(bool bypassed)> onBKey;
 
+    // Transient audition toggle callback (true = audition on)
+    std::function<void(bool enabled)> onTransientAuditionToggle;
+
     // Runtime MIDI port selection callbacks (selected port name).
     std::function<void(const std::string&)> onMidiInPortChanged;
     std::function<void(const std::string&)> onMidiOutPortChanged;
@@ -106,9 +113,29 @@ private:
     float audioRms_ = 0.0f;
     float pressureNorm_ = 0.0f;
 
+    // Transient/rhythm energy bands (8 bands + RMS)
+    std::array<float, 8> transientBands_ = {};
+    float transientRms_ = 0.0f;
+
+    // Rolling history canvas: 16 rows (8 audio + 8 transient), N columns wide
+    static constexpr int ROLLING_ROWS = 16;
+    static constexpr int ROLLING_MAX_COLS = 860;
+    std::deque<std::array<float, ROLLING_ROWS>> rollingBuf_;
+
     tgui::CanvasSFML::Ptr audioMeterCanvas_;
     tgui::CanvasSFML::Ptr pressureMeterCanvas_;
     tgui::Label::Ptr pressureLabel_;
+
+    // LED circle canvases for audio and transient bands
+    tgui::CanvasSFML::Ptr audioLedCanvas_;
+    tgui::CanvasSFML::Ptr transientLedCanvas_;
+
+    // Rolling 16-row history canvas
+    tgui::CanvasSFML::Ptr rollingCanvas_;
+
+    // Transient audition toggle
+    tgui::Button::Ptr transientAuditionBtn_;
+    bool transientAuditionEnabled_ = false;
 
     tgui::Button::Ptr rhythmToggleBtn_;
     tgui::Button::Ptr rhythmMixBtn_;
@@ -159,7 +186,10 @@ private:
 
     tgui::Button::Ptr audioBypPassBtn_;
 
-    void buildGui(int width, int height);
+    void buildGui(int width);
     void drawPressureMeter();
     void drawAudioMeter();
+    void drawAudioLeds();
+    void drawTransientLeds();
+    void drawRollingCanvas();
 };
