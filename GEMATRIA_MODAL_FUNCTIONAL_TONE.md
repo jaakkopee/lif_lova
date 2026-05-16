@@ -28,6 +28,8 @@ The active context influences three stages of tonal generation:
 
 When `percussion_mode=true`, the same gematria code rotates a 16-voice drum map instead of generating harmonic voicings.
 
+`name` is the UI label shown in the app, while `phrase` is the textual source used when computing/recording gematria values; they can be the same, but do not have to be.
+
 ## JSON Context File
 
 The app loads contexts from `gematria_tonal_contexts.json`.

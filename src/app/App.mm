@@ -837,6 +837,7 @@ App::HarmonicFunction App::classifyLifFunction(int bin,
     const auto& context = gematriaContextAt(lifMidiContextIndex_);
     const float rel = (maxEnergy > 0.001f) ? std::clamp(energy / maxEnergy, 0.0f, 1.0f) : 0.0f;
     const float contour = energy - prevEnergy;
+    // 17-step modulo centered at zero -> deterministic bias in [-0.08, +0.08].
     const float gematriaBias = (static_cast<float>((context.gematriaCode % 17) - 8)) * 0.01f;
     const float contextBias = context.brightness * 0.10f;
     const float totalBias = gematriaBias + contextBias;
@@ -913,6 +914,7 @@ std::vector<int> App::lifMidiNotesForFunction(HarmonicFunction function,
 
     const int root = noteFromDegree(degree, 0);
     std::vector<int> chord;
+    // Use two co-prime divisors so gematria codes decorrelate color/extension depth.
     const int colorStack = 6 + 2 * ((context.gematriaCode / 3) % 3);      // tertian stack height: 6/8/10
     const int extensionStack = 8 + 2 * ((context.gematriaCode / 11) % 2); // tertian stack height: 8/10
     chord = {noteFromDegree(degree, 0), noteFromDegree(degree, 2), noteFromDegree(degree, 4)};

@@ -9,6 +9,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterable
 
+# English Extended cipher:
+# A..J -> 1..10, K..R -> 20..90, S..Z -> 100..800.
 ENGLISH_EXTENDED_VALUES = {
     **{chr(ord("A") + i): i + 1 for i in range(10)},
     "K": 20,
