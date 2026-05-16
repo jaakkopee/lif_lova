@@ -19,9 +19,9 @@ Each frame (`App::processFrame`):
    - LIF-to-MIDI note/chord generation.
 
 Primary code:
-- `/home/runner/work/lif_lova/lif_lova/src/app/App.mm` (frame loop, mixing, MIDI)
-- `/home/runner/work/lif_lova/lif_lova/src/app/RhythmTransientDriver.cpp` (rhythm excitation)
-- `/home/runner/work/lif_lova/lif_lova/src/app/LIFNetwork.mm` and `.../shaders/vjay_shaders.metal` (LIF simulation)
+- `src/app/App.mm` (frame loop, mixing, MIDI)
+- `src/app/RhythmTransientDriver.cpp` (rhythm excitation)
+- `src/app/LIFNetwork.mm` and `src/app/shaders/vjay_shaders.metal` (LIF simulation)
 
 ## 2) How one LIF neuron works in this project
 
@@ -122,7 +122,7 @@ So a useful approximation is:
 
 ## 4.3 Practical target ranges for reliable activation
 
-Because membrane integrates with leak/refractory and also receives luminance + recurrent synaptic input, there is no single hard threshold on `env`.  
+Because membrane integrates with leak/refractory and also receives luminance + recurrent synaptic input, there is no single hard threshold on `env`.
 In practice from current equations:
 
 - **low influence (~0.2):** aim `env` roughly `0.5+` for strong driving
@@ -224,11 +224,10 @@ If you want to verify end-to-end behavior in performance:
 ## 8) Important implementation references
 
 - Rhythm generation:
-  - `/home/runner/work/lif_lova/lif_lova/src/app/RhythmTransientDriver.cpp`
+  - `src/app/RhythmTransientDriver.cpp`
 - Audio/rhythm mixing + LIF bin -> MIDI:
-  - `/home/runner/work/lif_lova/lif_lova/src/app/App.mm`
+  - `src/app/App.mm`
 - LIF CPU-side parameterization:
-  - `/home/runner/work/lif_lova/lif_lova/src/app/LIFNetwork.mm`
+  - `src/app/LIFNetwork.mm`
 - LIF GPU update kernels:
-  - `/home/runner/work/lif_lova/lif_lova/src/app/shaders/vjay_shaders.metal`
-
+  - `src/app/shaders/vjay_shaders.metal`
