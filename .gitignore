@@ -1,1 +1,3 @@
 Heikki_stash/
+__pycache__/
+*.pyc
