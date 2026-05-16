@@ -8,6 +8,7 @@
 #include <cmath>
 #include <cctype>
 #include <cstring>
+#include <cstdlib>
 
 // ── Signal handling: save state on Ctrl-C / kill ─────────────────────────────
 static App* g_sigApp = nullptr;
@@ -138,26 +139,163 @@ static std::array<std::string, 24> pressureTargetNames() {
     };
 }
 
-struct LifMidiStyleProfile {
-    const char* name;
-    int gematria;
+struct GematriaTonalContext {
+    std::string name;
+    int gematriaCode = 111;
+    int midiChannel = 1;
+    bool percussionMode = false;
+    float density = 0.65f;
+    float brightness = 0.0f;
+    float color = 0.55f;
+    int tonicOffset = 0;
+    int subdominantOffset = 0;
+    int dominantOffset = 0;
 };
 
-static const LifMidiStyleProfile& lifMidiStyleProfile(int styleIndex) {
-    static const LifMidiStyleProfile kPop        = {"Orpheus Black Moon", 188};
-    static const LifMidiStyleProfile kRock       = {"Ares Blood Sun", 145};
-    static const LifMidiStyleProfile kJazz       = {"Nostradamus Dream Sigil", 242};
-    static const LifMidiStyleProfile kBlues      = {"Rasputin Mad Oracle", 190};
-    static const LifMidiStyleProfile kPercussion = {"Loki Mad Clock", 109};
+static GematriaTonalContext sanitizeContext(GematriaTonalContext ctx) {
+    if (ctx.name.empty()) ctx.name = "Unnamed Arcana";
+    ctx.gematriaCode = std::max(1, ctx.gematriaCode);
+    ctx.midiChannel = std::clamp(ctx.midiChannel, 1, 16);
+    ctx.density = std::clamp(ctx.density, 0.0f, 1.0f);
+    ctx.brightness = std::clamp(ctx.brightness, -1.0f, 1.0f);
+    ctx.color = std::clamp(ctx.color, 0.0f, 1.0f);
+    return ctx;
+}
 
-    switch (styleIndex) {
-        case 0: return kPop;
-        case 1: return kRock;
-        case 2: return kJazz;
-        case 3: return kBlues;
-        case 4: return kPercussion;
-        default:                            return kPop;
+static std::vector<GematriaTonalContext> defaultGematriaContexts() {
+    return {
+        sanitizeContext({"Orphic Black Moon", 506, 1, false, 0.58f, 0.08f, 0.52f, 0, 1, 2}),
+        sanitizeContext({"Aether Blood Sun", 915, 1, false, 0.50f, 0.14f, 0.44f, 1, 3, 4}),
+        sanitizeContext({"Nostradamus Dream Sigil", 1241, 1, false, 0.76f, 0.03f, 0.82f, 2, 4, 6}),
+        sanitizeContext({"Rasputin Oracle Tide", 1227, 1, false, 0.64f, -0.08f, 0.68f, 3, 2, 5}),
+        sanitizeContext({"Loki Clockwork Rune", 1350, 10, true, 0.55f, 0.22f, 0.24f, 0, 0, 0}),
+        sanitizeContext({"Seraphim Astral Archive", 1261, 2, false, 0.70f, 0.18f, 0.90f, 4, 5, 1}),
+    };
+}
+
+static std::vector<GematriaTonalContext> g_gematriaContexts = defaultGematriaContexts();
+
+static const GematriaTonalContext& gematriaContextAt(int index) {
+    if (g_gematriaContexts.empty())
+        g_gematriaContexts = defaultGematriaContexts();
+    index = std::clamp(index, 0, static_cast<int>(g_gematriaContexts.size()) - 1);
+    return g_gematriaContexts[static_cast<size_t>(index)];
+}
+
+static bool parseContextObject(NSDictionary* dict, GematriaTonalContext& out) {
+    if (!dict) return false;
+
+    GematriaTonalContext ctx;
+    id nameObj = dict[@"name"];
+    if ([nameObj isKindOfClass:[NSString class]])
+        ctx.name = [(NSString*)nameObj UTF8String];
+
+    id codeObj = dict[@"gematria_code"];
+    if ([codeObj respondsToSelector:@selector(intValue)])
+        ctx.gematriaCode = [codeObj intValue];
+
+    id channelObj = dict[@"midi_channel"];
+    if ([channelObj respondsToSelector:@selector(intValue)])
+        ctx.midiChannel = [channelObj intValue];
+
+    id percussionObj = dict[@"percussion_mode"];
+    if ([percussionObj respondsToSelector:@selector(boolValue)])
+        ctx.percussionMode = [percussionObj boolValue];
+
+    id densityObj = dict[@"density"];
+    if ([densityObj respondsToSelector:@selector(floatValue)])
+        ctx.density = [densityObj floatValue];
+
+    id brightnessObj = dict[@"brightness"];
+    if ([brightnessObj respondsToSelector:@selector(floatValue)])
+        ctx.brightness = [brightnessObj floatValue];
+
+    id colorObj = dict[@"color"];
+    if ([colorObj respondsToSelector:@selector(floatValue)])
+        ctx.color = [colorObj floatValue];
+
+    id tonicObj = dict[@"tonic_offset"];
+    if ([tonicObj respondsToSelector:@selector(intValue)])
+        ctx.tonicOffset = [tonicObj intValue];
+
+    id subObj = dict[@"subdominant_offset"];
+    if ([subObj respondsToSelector:@selector(intValue)])
+        ctx.subdominantOffset = [subObj intValue];
+
+    id domObj = dict[@"dominant_offset"];
+    if ([domObj respondsToSelector:@selector(intValue)])
+        ctx.dominantOffset = [domObj intValue];
+
+    out = sanitizeContext(ctx);
+    return true;
+}
+
+static bool loadGematriaContextsFromJson(const std::filesystem::path& path) {
+    NSString* nsPath = [NSString stringWithUTF8String:path.string().c_str()];
+    NSData* data = [NSData dataWithContentsOfFile:nsPath];
+    if (!data) return false;
+
+    NSError* error = nil;
+    id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    if (!json) return false;
+
+    NSMutableArray* entries = nil;
+    if ([json isKindOfClass:[NSArray class]]) {
+        entries = [NSMutableArray arrayWithArray:(NSArray*)json];
+    } else if ([json isKindOfClass:[NSDictionary class]]) {
+        id contextsObj = ((NSDictionary*)json)[@"contexts"];
+        if ([contextsObj isKindOfClass:[NSArray class]])
+            entries = [NSMutableArray arrayWithArray:(NSArray*)contextsObj];
     }
+    if (!entries || entries.count == 0) return false;
+
+    std::vector<GematriaTonalContext> parsed;
+    parsed.reserve(static_cast<size_t>(entries.count));
+    for (id item in entries) {
+        if (![item isKindOfClass:[NSDictionary class]]) continue;
+        GematriaTonalContext ctx;
+        if (parseContextObject((NSDictionary*)item, ctx))
+            parsed.push_back(ctx);
+    }
+    if (parsed.empty()) return false;
+
+    g_gematriaContexts = std::move(parsed);
+    std::string logPath = path.string();
+    logPath.erase(std::remove(logPath.begin(), logPath.end(), '\n'), logPath.end());
+    logPath.erase(std::remove(logPath.begin(), logPath.end(), '\r'), logPath.end());
+    if (logPath.size() > 180)
+        logPath = logPath.substr(0, 177) + "...";
+    std::cout << "[LIF MIDI] Loaded " << g_gematriaContexts.size()
+              << " gematria context(s) from " << logPath << std::endl;
+    return true;
+}
+
+static void loadGematriaContexts() {
+    std::vector<std::filesystem::path> candidates;
+    if (const char* envPath = std::getenv("LIF_LOVA_GEMATRIA_CONTEXTS")) {
+        if (*envPath) {
+            const std::string raw(envPath);
+            std::error_code ec;
+            const std::filesystem::path canonical = std::filesystem::weakly_canonical(raw, ec);
+            candidates.emplace_back(ec ? std::filesystem::path(raw) : canonical);
+        }
+    }
+
+    candidates.emplace_back(std::filesystem::current_path() / "gematria_tonal_contexts.json");
+    if (NSString* exePath = [NSBundle mainBundle].executablePath) {
+        const std::filesystem::path exeDir([exePath.stringByDeletingLastPathComponent UTF8String]);
+        candidates.emplace_back(exeDir / "gematria_tonal_contexts.json");
+        candidates.emplace_back(exeDir.parent_path() / "gematria_tonal_contexts.json");
+    }
+
+    for (const auto& path : candidates) {
+        std::error_code ec;
+        if (!std::filesystem::exists(path, ec)) continue;
+        if (loadGematriaContextsFromJson(path)) return;
+    }
+
+    g_gematriaContexts = defaultGematriaContexts();
+    std::cout << "[LIF MIDI] Using built-in gematria contexts (no JSON found)\n";
 }
 
 static int wrap7(int value) {
@@ -350,7 +488,7 @@ bool App::sceneUsesLIF(int sceneIdx) const {
 }
 
 void App::resetLifMidiState() {
-    const int fallbackChannel = (lifMidiStyle_ == LifMidiStyle::Percussion) ? 10 : 1;
+    const int fallbackChannel = gematriaContextAt(lifMidiContextIndex_).midiChannel;
     for (int bin = 0; bin < 16; ++bin) {
         if (lifMidiNoteOn_[bin]) {
             const int channel = (lifMidiActiveChannel_[bin] > 0) ? lifMidiActiveChannel_[bin] : fallbackChannel;
@@ -365,8 +503,8 @@ void App::resetLifMidiState() {
     }
 }
 
-const char* App::lifMidiStyleName() const {
-    return lifMidiStyleProfile(static_cast<int>(lifMidiStyle_)).name;
+const char* App::lifMidiContextName() const {
+    return gematriaContextAt(lifMidiContextIndex_).name.c_str();
 }
 
 const char* App::lifMidiKeyName() const {
@@ -384,7 +522,8 @@ const char* App::lifMidiTonalRootName() const {
 }
 
 void App::refreshLifMidiUi() {
-    audioMidiWin_.setLifMidiStyle(lifMidiStyleName());
+    const auto& context = gematriaContextAt(lifMidiContextIndex_);
+    audioMidiWin_.setLifMidiContext(lifMidiContextName());
     audioMidiWin_.setLifMidiMode(lifMidiModalScaleName());
     audioMidiWin_.setLifMidiModeToggleState(currentScene_ >= 0,
                                             currentScene_ >= 0 ? (lifMidiModeUserSet_[currentScene_] == 0) : true);
@@ -392,7 +531,7 @@ void App::refreshLifMidiUi() {
     audioMidiWin_.setLifMidiTonalRoot(lifMidiTonalRootName());
     audioMidiWin_.setLifMidiRange(lifMidiRangeMin_, lifMidiRangeMax_);
     audioMidiWin_.setLifMidiStatus(lifMidiEnabled_,
-                                   (lifMidiStyle_ == LifMidiStyle::Percussion) ? 10 : 1,
+                                   context.midiChannel,
                                    lifMidiRangeMin_);
     refreshRhythmUi();
     refreshLifMidiModeEditorUi();
@@ -522,17 +661,13 @@ void App::nudgeLifMidiRangeMax(int delta) {
     std::cout << "[LIF MIDI] range=" << lifMidiRangeMin_ << "-" << lifMidiRangeMax_ << std::endl;
 }
 
-void App::cycleLifMidiStyle() {
+void App::cycleLifMidiContext() {
     resetLifMidiState();
-    switch (lifMidiStyle_) {
-        case LifMidiStyle::Pop:        lifMidiStyle_ = LifMidiStyle::Rock; break;
-        case LifMidiStyle::Rock:       lifMidiStyle_ = LifMidiStyle::Jazz; break;
-        case LifMidiStyle::Jazz:       lifMidiStyle_ = LifMidiStyle::Blues; break;
-        case LifMidiStyle::Blues:      lifMidiStyle_ = LifMidiStyle::Percussion; break;
-        case LifMidiStyle::Percussion: lifMidiStyle_ = LifMidiStyle::Pop; break;
-    }
+    if (g_gematriaContexts.empty())
+        g_gematriaContexts = defaultGematriaContexts();
+    lifMidiContextIndex_ = (lifMidiContextIndex_ + 1) % static_cast<int>(g_gematriaContexts.size());
     refreshLifMidiUi();
-    std::cout << "[LIF MIDI] style=" << lifMidiStyleName() << std::endl;
+    std::cout << "[LIF MIDI] context=" << lifMidiContextName() << std::endl;
 }
 
 void App::toggleRhythmDriver() {
@@ -708,14 +843,17 @@ App::HarmonicFunction App::classifyLifFunction(int bin,
                                                float prevEnergy,
                                                float maxEnergy,
                                                bool feedforward) const {
-    const auto& style = lifMidiStyleProfile(static_cast<int>(lifMidiStyle_));
+    const auto& context = gematriaContextAt(lifMidiContextIndex_);
     const float rel = (maxEnergy > 0.001f) ? std::clamp(energy / maxEnergy, 0.0f, 1.0f) : 0.0f;
     const float contour = energy - prevEnergy;
-    const float styleBias = (static_cast<float>((style.gematria % 9) - 4)) * 0.01f; // 9 discrete values in [-0.04,+0.04]
-    const float dominantRel = std::clamp(0.82f - styleBias, 0.70f, 0.92f);
-    const float subRel = std::clamp(0.45f - styleBias * 0.5f, 0.30f, 0.60f);
-    const float dominantContour = std::clamp(0.08f - styleBias, 0.04f, 0.12f);
-    const float subContour = std::clamp(0.02f - styleBias * 0.5f, 0.00f, 0.05f);
+    // Gematria component only: 17-step modulo centered at zero and scaled by 0.01f -> [-0.08, +0.08].
+    const float gematriaBias = (static_cast<float>((context.gematriaCode % 17) - 8)) * 0.01f;
+    const float contextBias = context.brightness * 0.10f;
+    const float totalBias = gematriaBias + contextBias;
+    const float dominantRel = std::clamp(0.82f - totalBias, 0.68f, 0.94f);
+    const float subRel = std::clamp(0.45f - totalBias * 0.5f, 0.26f, 0.66f);
+    const float dominantContour = std::clamp(0.08f - totalBias, 0.03f, 0.14f);
+    const float subContour = std::clamp(0.02f - totalBias * 0.5f, 0.00f, 0.07f);
 
     // De la Motte style reading: every harmony is heard as T, S, or D function.
     if (bin >= 11 || rel > dominantRel || contour > dominantContour)
@@ -726,10 +864,10 @@ App::HarmonicFunction App::classifyLifFunction(int bin,
 }
 
 std::vector<int> App::lifMidiNotesForFunction(HarmonicFunction function,
-                                              int bin,
-                                              int baseNote,
-                                              float driveNorm) const {
-    const auto& style = lifMidiStyleProfile(static_cast<int>(lifMidiStyle_));
+                                               int bin,
+                                               int baseNote,
+                                               float driveNorm) const {
+    const auto& context = gematriaContextAt(lifMidiContextIndex_);
     const auto clampNote = [](int n) { return std::clamp(n, 0, 127); };
     const auto fitToRange = [this](int note) {
         int n = std::clamp(note, 0, 127);
@@ -744,9 +882,9 @@ std::vector<int> App::lifMidiNotesForFunction(HarmonicFunction function,
     const int octave = (bin / 4) - 1; // spreads bins over four octaves around base
     const int variant = bin % 4;
 
-    if (lifMidiStyle_ == LifMidiStyle::Percussion) {
+    if (context.percussionMode) {
         static constexpr std::array<int, 16> drumMap = {36, 38, 42, 46, 49, 51, 45, 41, 43, 44, 47, 50, 57, 59, 60, 62};
-        const int rotated = (bin + (style.gematria % 16)) % 16;
+        const int rotated = (bin + (context.gematriaCode % 16)) % 16;
         return {drumMap[static_cast<std::size_t>(rotated)]};
     }
 
@@ -754,17 +892,17 @@ std::vector<int> App::lifMidiNotesForFunction(HarmonicFunction function,
     switch (function) {
         case HarmonicFunction::Tonic: {
             static constexpr std::array<int, 4> tonicDegrees = {0, 5, 2, 0};   // I, vi, iii, I (scale degrees)
-            degree = wrap7(tonicDegrees[static_cast<std::size_t>(variant)] + (style.gematria % 7));
+            degree = wrap7(tonicDegrees[static_cast<std::size_t>(variant)] + (context.gematriaCode % 7) + context.tonicOffset);
             break;
         }
         case HarmonicFunction::Subdominant: {
             static constexpr std::array<int, 4> subDegrees = {1, 3, 1, 3};     // ii / IV family
-            degree = wrap7(subDegrees[static_cast<std::size_t>(variant)] + ((style.gematria / 7) % 7));
+            degree = wrap7(subDegrees[static_cast<std::size_t>(variant)] + ((context.gematriaCode / 7) % 7) + context.subdominantOffset);
             break;
         }
         case HarmonicFunction::Dominant: {
             static constexpr std::array<int, 4> domDegrees = {4, 6, 4, 6};      // V / vii family
-            degree = wrap7(domDegrees[static_cast<std::size_t>(variant)] + ((style.gematria / 49) % 7));
+            degree = wrap7(domDegrees[static_cast<std::size_t>(variant)] + ((context.gematriaCode / 49) % 7) + context.dominantOffset);
             break;
         }
     }
@@ -785,47 +923,23 @@ std::vector<int> App::lifMidiNotesForFunction(HarmonicFunction function,
 
     const int root = noteFromDegree(degree, 0);
     std::vector<int> chord;
-    const int colorStack = 6 + 2 * ((style.gematria / 3) % 3);      // tertian stack height: 6/8/10
-    const int extensionStack = 8 + 2 * ((style.gematria / 11) % 2); // tertian stack height: 8/10
-
-    switch (lifMidiStyle_) {
-        case LifMidiStyle::Pop:
-            chord = {noteFromDegree(degree, 0), noteFromDegree(degree, 2), noteFromDegree(degree, 4)};
-            if (function == HarmonicFunction::Dominant) chord.push_back(noteFromDegree(degree, colorStack));
-            else chord.push_back(noteFromDegree(degree, extensionStack));
-            break;
-        case LifMidiStyle::Rock:
-            chord = {noteFromDegree(degree, 0), noteFromDegree(degree, 4), noteFromDegree(degree, 7)};
-            if (function == HarmonicFunction::Dominant) chord.push_back(noteFromDegree(degree, colorStack));
-            break;
-        case LifMidiStyle::Jazz:
-            chord = {
-                noteFromDegree(degree, 0),
-                noteFromDegree(degree, 2),
-                noteFromDegree(degree, 4),
-                noteFromDegree(degree, colorStack),
-                noteFromDegree(degree, extensionStack)
-            };
-            break;
-        case LifMidiStyle::Blues:
-            chord = {
-                noteFromDegree(degree, 0),
-                noteFromDegree(degree, 2),
-                noteFromDegree(degree, 4),
-                noteFromDegree(degree, colorStack)
-            };
-            if (function == HarmonicFunction::Dominant)
-                chord.push_back(clampNote(root + 6 + ((style.gematria / 5) % 2))); // b5/#5 pivot
-            break;
-        case LifMidiStyle::Percussion:
-            chord = {root};
-            break;
-    }
+    // Use two co-prime divisors so gematria codes decorrelate color/extension depth.
+    const int colorStack = 6 + 2 * ((context.gematriaCode / 3) % 3);      // tertian stack height: 6/8/10
+    const int extensionStack = 8 + 2 * ((context.gematriaCode / 11) % 2); // tertian stack height: 8/10
+    chord = {noteFromDegree(degree, 0), noteFromDegree(degree, 2), noteFromDegree(degree, 4)};
+    if (context.density > 0.35f || function == HarmonicFunction::Dominant)
+        chord.push_back(noteFromDegree(degree, colorStack));
+    if (context.color > 0.45f)
+        chord.push_back(noteFromDegree(degree, extensionStack));
+    if (function == HarmonicFunction::Dominant && context.color > 0.62f)
+        chord.push_back(clampNote(root + 6 + ((context.gematriaCode / 5) % 2))); // b5/#5 pivot
 
     // Thin voicings at low drive, fuller voicings when activity is strong.
     const float drive = std::clamp(driveNorm, 0.0f, 1.0f);
-    if (drive < 0.40f && chord.size() > 3) chord.resize(3);
-    else if (drive < 0.65f && chord.size() > 4) chord.resize(4);
+    const float sparseGate = std::clamp(0.30f + (1.0f - context.density) * 0.25f, 0.20f, 0.55f);
+    const float mediumGate = std::clamp(0.55f + (1.0f - context.density) * 0.20f, 0.45f, 0.80f);
+    if (drive < sparseGate && chord.size() > 3) chord.resize(3);
+    else if (drive < mediumGate && chord.size() > 4) chord.resize(4);
 
     std::vector<int> deduped;
     deduped.reserve(chord.size());
@@ -964,6 +1078,10 @@ bool App::init() {
     scenePressureTargetNorm_.fill(0.0f);
     scenePressureNorm_.fill(0.0f);
     for (auto& ps : pressureSceneState_) ps.reset();
+    loadGematriaContexts();
+    if (g_gematriaContexts.empty())
+        g_gematriaContexts = defaultGematriaContexts();
+    lifMidiContextIndex_ = std::clamp(lifMidiContextIndex_, 0, static_cast<int>(g_gematriaContexts.size()) - 1);
 
     wireCallbacks();
 
@@ -1251,7 +1369,7 @@ void App::wireCallbacks() {
 
     // Keyboard shortcut: M key toggles LIF MIDI output
     audioMidiWin_.onLIFMidiToggle = [this]() { toggleLifMidi(); };
-    audioMidiWin_.onLIFMidiStyleCycle = [this]() { cycleLifMidiStyle(); };
+    audioMidiWin_.onLIFMidiContextCycle = [this]() { cycleLifMidiContext(); };
     audioMidiWin_.onLIFMidiModeCycle = [this]() { cycleLifMidiModalScale(); };
     audioMidiWin_.onLIFMidiModeToggle = [this]() { toggleLifMidiModeSource(); };
     audioMidiWin_.onLIFMidiModeEditDegreeNudge = [this](int delta) { nudgeLifMidiModeEditDegree(delta); };
@@ -2303,7 +2421,7 @@ void App::saveState() const {
         if (!f) { std::cerr << "[App] Could not open temp state file for writing\n"; return; }
         // Write magic + version for future-proofing
         const uint32_t magic = 0x56414345; // 'VACE'
-        const uint32_t ver   = 18;
+        const uint32_t ver   = 19;
         f.write(reinterpret_cast<const char*>(&magic), 4);
         f.write(reinterpret_cast<const char*>(&ver),   4);
         // Write all scene states (knobs + image paths)
@@ -2340,6 +2458,7 @@ void App::saveState() const {
             for (int v : mode)
                 f.write(reinterpret_cast<const char*>(&v), sizeof(int));
         f.write(reinterpret_cast<const char*>(&lifMidiTonalRootSemitone_), sizeof(int));
+        f.write(reinterpret_cast<const char*>(&lifMidiContextIndex_), sizeof(int));
         {
             const uint8_t rhythmEnabled = rhythmDriver_.enabled() ? 1u : 0u;
             const int rhythmMixMode = static_cast<int>(rhythmDriver_.mixMode());
@@ -2414,6 +2533,7 @@ void App::loadState() {
     // v16: persists editable custom mode intervals
     // v17: persists per-scene mode auto/manual flag + tonal root
     // v18: persists rhythm driver state and lane editor settings
+    // v19: persists active gematria context index
     const bool isV3 = (ver == 3);
     const bool isV4 = (ver == 4);
     const bool isV5 = (ver == 5);
@@ -2428,6 +2548,7 @@ void App::loadState() {
     const bool isV16Plus = (ver >= 16);
     const bool isV17Plus = (ver >= 17);
     const bool isV18Plus = (ver >= 18);
+    const bool isV19Plus = (ver >= 19);
     const bool isV14Plus = (ver >= 14);
     if (!isV3 && !isV4 && !isV5 && !isV6 && !isV7 && !isV8 && !isV9 && !isV10 && !isV11 && !isV12 && !isV13 && !isV14Plus) {
         std::cerr << "[App] Ignoring incompatible state file\n";
@@ -2530,6 +2651,10 @@ void App::loadState() {
         lifMidiTonalRootSemitone_ = ((lifMidiTonalRootSemitone_ % 12) + 12) % 12;
     }
 
+    if (isV19Plus) {
+        if (!f.read(reinterpret_cast<char*>(&lifMidiContextIndex_), sizeof(int))) return;
+    }
+
     if (isV18Plus) {
         uint8_t rhythmEnabled = 0;
         int rhythmMixMode = 0;
@@ -2577,6 +2702,10 @@ void App::loadState() {
     }
 
     // Per-scene modal scale is now loaded with each scene (see above)
+    if (g_gematriaContexts.empty())
+        g_gematriaContexts = defaultGematriaContexts();
+    lifMidiContextIndex_ = std::clamp(lifMidiContextIndex_, 0,
+                                      static_cast<int>(g_gematriaContexts.size()) - 1);
 
     refreshLifMidiUi();
 
@@ -2748,7 +2877,7 @@ void App::processFrame() {
         // ── LIF-to-MIDI output ──
         if (lifMidiEnabled_ && lifSceneActive) {
             lifMidiNoSceneWarned_ = false;
-            const int midiChannel = (lifMidiStyle_ == LifMidiStyle::Percussion) ? 10 : 1; // 1-based
+            const int midiChannel = gematriaContextAt(lifMidiContextIndex_).midiChannel; // 1-based
             const int baseNote = 60 + lifMidiKeySemitone_;
             const bool feedforward = (currentScene_ >= 0 && scenes_[currentScene_].lifTopologyIndex == 2);
 

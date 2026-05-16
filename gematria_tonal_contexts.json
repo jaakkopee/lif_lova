@@ -1,0 +1,82 @@
+{
+  "contexts": [
+    {
+      "name": "Orphic Black Moon",
+      "phrase": "Orphic Black Moon",
+      "gematria_code": 506,
+      "midi_channel": 1,
+      "percussion_mode": false,
+      "density": 0.58,
+      "brightness": 0.08,
+      "color": 0.52,
+      "tonic_offset": 0,
+      "subdominant_offset": 1,
+      "dominant_offset": 2
+    },
+    {
+      "name": "Aether Blood Sun",
+      "phrase": "Aether Blood Sun",
+      "gematria_code": 915,
+      "midi_channel": 1,
+      "percussion_mode": false,
+      "density": 0.5,
+      "brightness": 0.14,
+      "color": 0.44,
+      "tonic_offset": 1,
+      "subdominant_offset": 3,
+      "dominant_offset": 4
+    },
+    {
+      "name": "Nostradamus Dream Sigil",
+      "phrase": "Nostradamus Dream Sigil",
+      "gematria_code": 1241,
+      "midi_channel": 1,
+      "percussion_mode": false,
+      "density": 0.76,
+      "brightness": 0.03,
+      "color": 0.82,
+      "tonic_offset": 2,
+      "subdominant_offset": 4,
+      "dominant_offset": 6
+    },
+    {
+      "name": "Rasputin Oracle Tide",
+      "phrase": "Rasputin Oracle Tide",
+      "gematria_code": 1227,
+      "midi_channel": 1,
+      "percussion_mode": false,
+      "density": 0.64,
+      "brightness": -0.08,
+      "color": 0.68,
+      "tonic_offset": 3,
+      "subdominant_offset": 2,
+      "dominant_offset": 5
+    },
+    {
+      "name": "Loki Clockwork Rune",
+      "phrase": "Loki Clockwork Rune",
+      "gematria_code": 1350,
+      "midi_channel": 10,
+      "percussion_mode": true,
+      "density": 0.55,
+      "brightness": 0.22,
+      "color": 0.24,
+      "tonic_offset": 0,
+      "subdominant_offset": 0,
+      "dominant_offset": 0
+    },
+    {
+      "name": "Seraphim Astral Archive",
+      "phrase": "Seraphim Astral Archive",
+      "gematria_code": 1261,
+      "midi_channel": 2,
+      "percussion_mode": false,
+      "density": 0.7,
+      "brightness": 0.18,
+      "color": 0.9,
+      "tonic_offset": 4,
+      "subdominant_offset": 5,
+      "dominant_offset": 1
+    }
+  ]
+}

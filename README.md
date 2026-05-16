@@ -195,6 +195,20 @@ Audio data is injected into FX kernels every frame. Many effects already respond
 
 ## MIDI
 
+### Gematria tonal contexts
+
+LIF MIDI voicing is driven by JSON-based gematria tonal contexts (`gematria_tonal_contexts.json`) instead of fixed hard-coded styles.
+
+- Cycle contexts in the Audio/MIDI control window via **LIF MIDI Context**.
+- Contexts can be generated/edited with:
+
+```bash
+python3 gematria.py init-contexts --output gematria_tonal_contexts.json
+python3 gematria.py make-context --name "Hermetic Star Choir" --append
+```
+
+See [GEMATRIA_MODAL_FUNCTIONAL_TONE.md](GEMATRIA_MODAL_FUNCTIONAL_TONE.md) for full details.
+
 ### Knobs
 
 The app listens to six knob CCs:
@@ -473,6 +487,7 @@ Useful files while changing behavior:
 - [key_modifiers.md](key_modifiers.md): keyboard control reference
 - [FX_BrainStorm.md](FX_BrainStorm.md): effect ideas and notes
 - [LIF_RHYTHM_MIDI_GUIDE.md](LIF_RHYTHM_MIDI_GUIDE.md): step-by-step LIF, rhythm transient, and MIDI mapping guide
+- [GEMATRIA_MODAL_FUNCTIONAL_TONE.md](GEMATRIA_MODAL_FUNCTIONAL_TONE.md): gematria tonal context model and JSON workflow
 
 Useful build command:
 

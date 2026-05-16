@@ -38,8 +38,8 @@ public:
     // Update LIF MIDI status label and button.
     void setLifMidiStatus(bool enabled, int channel, int baseNote);
 
-    // Update the LIF MIDI voicing style label.
-    void setLifMidiStyle(const std::string& styleName);
+    // Update the LIF MIDI gematria context label.
+    void setLifMidiContext(const std::string& contextName);
 
     // Update the LIF modal scale label.
     void setLifMidiMode(const std::string& modeName);
@@ -72,7 +72,7 @@ public:
 
     // Audio/MIDI control callbacks
     std::function<void()> onLIFMidiToggle;
-    std::function<void()> onLIFMidiStyleCycle;
+    std::function<void()> onLIFMidiContextCycle;
     std::function<void()> onLIFMidiModeCycle;
     std::function<void()> onLIFMidiModeToggle;
     std::function<void(int delta)> onLIFMidiKeyNudge;
@@ -152,7 +152,7 @@ private:
 
     tgui::Button::Ptr lifMidiToggleBtn_;
     tgui::Label::Ptr lifMidiStatusLabel_;
-    tgui::Button::Ptr lifMidiStyleBtn_;
+    tgui::Button::Ptr lifMidiContextBtn_;
     tgui::Button::Ptr lifMidiModeBtn_;
     tgui::Button::Ptr lifMidiModeToggleBtn_;
     tgui::Label::Ptr lifMidiModeEditLabel_;
