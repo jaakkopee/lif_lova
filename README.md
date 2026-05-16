@@ -1,22 +1,26 @@
-# vjay_ace
+# lif_lova
 
-`vjay_ace` is a live-performance VJ compositor for macOS on Apple Silicon.
+lif_lova is a live-performance audio and MIDI generation application for music performance first, and a video jockey compositor second.
 
 It combines:
 
+- real-time LIF-driven tone generation
+- LIF-to-MIDI note/chord output for external instruments
+- live audio analysis (RMS + 8-band spectrum)
 - 3 source layers
 - 3 GPU FX slots
 - 32 scene presets
-- live audio analysis
 - MIDI scene selection and knob control
 - per-scene and global override controls for opacity, audio gain, and crossfade timing
 
-The render path is Metal-based. Control and preview windows use SFML + TGUI.
+The render path is Metal-based. Control, performance, and media windows use SFML + TGUI.
 
 ## What It Does
 
 At runtime, the app:
 
+- generates music-oriented control signals from LIF activity
+- outputs LIF-driven MIDI notes/chords for live rigs
 - loads still images or video into three source slots
 - runs one FX patch per slot on the GPU
 - composites the processed slots into a single 1920x1080 output
@@ -94,7 +98,7 @@ From the repository root:
 mkdir -p build
 cd build
 cmake ..
-cmake --build . --target vjay_ace -j$(sysctl -n hw.ncpu)
+cmake --build . --target lif_lova -j$(sysctl -n hw.ncpu)
 ```
 
 You can also build the MIDI monitor tool:
@@ -108,7 +112,7 @@ cmake --build . --target midi_monitor -j$(sysctl -n hw.ncpu)
 From the build directory:
 
 ```bash
-./vjay_ace
+./lif_lova
 ```
 
 The build copies the Metal shader file next to the executable as:
@@ -264,7 +268,7 @@ Override behavior:
 State is persisted to:
 
 ```text
-~/.vjay_ace_state
+~/.lif_lova_state
 ```
 
 ## Crossfade Behavior
@@ -472,7 +476,7 @@ Useful files while changing behavior:
 Useful build command:
 
 ```bash
-cmake --build build --target vjay_ace -j4
+cmake --build build --target lif_lova -j4
 ```
 
 ## Status

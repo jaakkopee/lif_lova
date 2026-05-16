@@ -1765,6 +1765,11 @@ void App::onImageSelected(int slotIdx, const std::string& path) {
 
 std::string App::statePath() {
     const char* home = getenv("HOME");
+    return home ? std::string(home) + "/.lif_lova_state" : "/tmp/lif_lova_state";
+}
+
+static std::string legacyStatePath() {
+    const char* home = getenv("HOME");
     return home ? std::string(home) + "/.vjay_ace_state" : "/tmp/vjay_ace_state";
 }
 
@@ -1819,7 +1824,26 @@ void App::saveState() const {
 }
 
 void App::loadState() {
-    std::ifstream f(statePath(), std::ios::binary);
+    const std::string newPath = statePath();
+    const std::string oldPath = legacyStatePath();
+
+    std::string pathToLoad = newPath;
+    {
+        std::ifstream testNew(newPath, std::ios::binary);
+        if (!testNew) {
+            std::ifstream testOld(oldPath, std::ios::binary);
+            if (!testOld) return;
+            // Try to migrate old state filename to the new app name.
+            if (std::rename(oldPath.c_str(), newPath.c_str()) == 0) {
+                pathToLoad = newPath;
+                std::cout << "[App] Migrated state file to " << newPath << std::endl;
+            } else {
+                pathToLoad = oldPath;
+            }
+        }
+    }
+
+    std::ifstream f(pathToLoad, std::ios::binary);
     if (!f) return;
     uint32_t magic = 0, ver = 0;
     if (!f.read(reinterpret_cast<char*>(&magic), 4)) return;
@@ -1950,7 +1974,7 @@ void App::loadState() {
         ensureSceneTransformDefaults(currentScene_);
         applySceneToEngine(currentScene_);
     }
-    std::cout << "[App] State restored from " << statePath() << std::endl;
+    std::cout << "[App] State restored from " << pathToLoad << std::endl;
 }
 
 // ── Per-frame ─────────────────────────────────────────────────────────────────
