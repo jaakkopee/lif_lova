@@ -367,20 +367,20 @@ Bank A (C2..D#3, scenes 0-15):
 
 | # | Name | FX 0 | FX 1 | FX 2 |
 |---|---|---|---|---|
-| 0 | Pass-Through | Passthrough | Passthrough | Passthrough |
+| 0 | Fade to Black | Passthrough | Passthrough | LIF Modulate |
 | 1 | Kaleidoscope | Kaleidoscope | Hue Cycle | LIF Modulate |
-| 2 | Rainbow | Rainbow Shift | Rainbow Shift | Rainbow Shift |
-| 3 | Pixelate | Pixelate | Hue Cycle | Passthrough |
-| 4 | Julia | Julia Fractal | Chroma Aberr | Passthrough |
-| 5 | Glitch Storm | Video Glitch | Wave Distort | Chromatic Aberr |
+| 2 | Rainbow | Rainbow Shift | Rainbow Shift | LIF Modulate |
+| 3 | Pixelate | Pixelate | Hue Cycle | LIF Modulate |
+| 4 | Julia | Julia Fractal | Chromatic Aberr | LIF Modulate |
+| 5 | Glitch Storm | Video Glitch | Wave Distort | LIF Replace |
 | 6 | Feedback Tunnel | Feedback Zoom | Hue Cycle | LIF Replace |
-| 7 | Circle Quilt | Circle Quilt | Passthrough | Passthrough |
-| 8 | CA Glow | CA Glow | CA Glow | Passthrough |
-| 9 | Bitplane | Bitplane Reactor | Passthrough | Hue Cycle |
-| 10 | Blur Haze | Blur | Blur | Passthrough |
-| 11 | Ink Rainbow | Edge Ink | Rainbow Shift | Passthrough |
-| 12 | Deep Space | Julia Fractal | Feedback Zoom | CA Glow |
-| 13 | Total Chaos | Video Glitch | Kaleidoscope | Bitplane Reactor |
+| 7 | Circle Quilt | Circle Quilt | Passthrough | LIF Modulate |
+| 8 | CA Glow | CA Glow | CA Glow | LIF Modulate |
+| 9 | Bitplane | Bitplane Reactor | Passthrough | LIF Modulate |
+| 10 | Blur Haze | Blur | Blur | LIF Modulate |
+| 11 | Ink Rainbow | Edge Ink | Rainbow Shift | LIF Modulate |
+| 12 | Deep Space | Julia Fractal | Feedback Zoom | LIF Replace |
+| 13 | Total Chaos | Video Glitch | Kaleidoscope | LIF Replace |
 | 14 | Neural Pulse | LIF Modulate | Hue Cycle | Passthrough |
 | 15 | Spike Storm | LIF Replace | Kaleidoscope | Video Glitch |
 
@@ -388,22 +388,22 @@ Bank B (E3..G4, scenes 16-31):
 
 | # | Name | FX 0 | FX 1 | FX 2 |
 |---|---|---|---|---|
-| 16 | Noise Warp Loop | Ripple | Feedback Zoom | Video Glitch |
-| 17 | Audio Kaleido Hue | Kaleidoscope | Hue Cycle | RGB Modulate |
-| 18 | Julia Glitch | Julia Fractal | Video Glitch | Scanline |
-| 19 | Physarum Echo | Scanline | Feedback Zoom | Hue Cycle |
-| 20 | Reactor Bloom | Bitplane Reactor | CA Glow | Vignette |
-| 21 | Quilt Ink | Circle Quilt | Edge Ink | Color Temp |
-| 22 | Waveform Shear | Ripple | Pixelate | Chromatic Aberr |
-| 23 | Triplet Strobe | Strobe | Kaleidoscope | Feedback Zoom |
-| 24 | Diffuse Bloom | Vignette | CA Glow | Color Temp |
-| 25 | Lens Swirl | Lens Distort | Swirl | Feedback Zoom |
-| 26 | Neon Contour | Vignette | Edge Ink | CA Glow |
-| 27 | Mirror Shatter | Kaleidoscope | Pixelate | Lens Distort |
-| 28 | Diffuse Reactor | Bitplane Reactor | Blur | Swirl |
-| 29 | Fractal Displacer | Julia Fractal | Lens Distort | Feedback Zoom |
-| 30 | Psy Modulator | RGB Modulate | Hue Cycle | Video Glitch |
-| 31 | Shadow Morph | Edge Ink | Blur | Strobe |
+| 16 | Noise Warp Loop | Ripple | Feedback Zoom | LIF Modulate |
+| 17 | Audio Kaleido Hue | Kaleidoscope | Hue Cycle | LIF Modulate |
+| 18 | Julia Glitch | Julia Fractal | Video Glitch | LIF Replace |
+| 19 | Physarum Echo | Scanline | Feedback Zoom | LIF Modulate |
+| 20 | Reactor Bloom | Bitplane Reactor | CA Glow | LIF Replace |
+| 21 | Quilt Ink | Circle Quilt | Edge Ink | LIF Modulate |
+| 22 | Waveform Shear | Ripple | Pixelate | LIF Modulate |
+| 23 | Triplet Strobe | Strobe | Kaleidoscope | LIF Replace |
+| 24 | Diffuse Bloom | Vignette | CA Glow | LIF Modulate |
+| 25 | Lens Swirl | Lens Distort | Swirl | LIF Modulate |
+| 26 | Neon Contour | Vignette | Edge Ink | LIF Modulate |
+| 27 | Mirror Shatter | Kaleidoscope | Pixelate | LIF Replace |
+| 28 | Diffuse Reactor | Bitplane Reactor | Blur | LIF Replace |
+| 29 | Fractal Displacer | Julia Fractal | Lens Distort | LIF Replace |
+| 30 | Psy Modulator | RGB Modulate | Hue Cycle | LIF Replace |
+| 31 | Shadow Morph | Edge Ink | Blur | LIF Replace |
 
 ## Project Structure
 
