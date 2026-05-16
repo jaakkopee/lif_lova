@@ -89,6 +89,7 @@ add_executable(lif_lova
     src/app/VideoDecoder.cpp
     src/app/MetalCompositor.mm
     src/app/ControlWindow.cpp
+    src/app/AudioMidiControlWindow.cpp
     src/app/PressureControlWindow.cpp
     src/app/CapsLockDetector.mm
     src/app/PerformanceWindow.cpp

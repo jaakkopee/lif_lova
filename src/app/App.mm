@@ -181,13 +181,13 @@ const char* App::lifMidiKeyName() const {
 }
 
 void App::refreshLifMidiUi() {
-    controlWin_.setLifMidiStyle(lifMidiStyleName());
-    controlWin_.setLifMidiMode(lifMidiModalScaleName());
-    controlWin_.setLifMidiKey(lifMidiKeyName());
-    controlWin_.setLifMidiRange(lifMidiRangeMin_, lifMidiRangeMax_);
-    controlWin_.setLifMidiStatus(lifMidiEnabled_,
-                                 (lifMidiStyle_ == LifMidiStyle::Percussion) ? 10 : 1,
-                                 lifMidiRangeMin_);
+    audioMidiWin_.setLifMidiStyle(lifMidiStyleName());
+    audioMidiWin_.setLifMidiMode(lifMidiModalScaleName());
+    audioMidiWin_.setLifMidiKey(lifMidiKeyName());
+    audioMidiWin_.setLifMidiRange(lifMidiRangeMin_, lifMidiRangeMax_);
+    audioMidiWin_.setLifMidiStatus(lifMidiEnabled_,
+                                   (lifMidiStyle_ == LifMidiStyle::Percussion) ? 10 : 1,
+                                   lifMidiRangeMin_);
 }
 
 const char* App::lifMidiModalScaleName() const {
@@ -418,6 +418,11 @@ bool App::init() {
     auto ctrlS = screenSize(0);
     controlWin_.open(ctrl.x, ctrl.y, ctrlS.x, ctrlS.y);
 
+    // ── Audio & MIDI Control window — positioned next to main control ────
+    const int audioMidiW = 280;
+    const int audioMidiH = 650;
+    audioMidiWin_.open(ctrl.x + ctrlS.x + 10, ctrl.y, audioMidiW, audioMidiH);
+
     auto perf  = screenOrigin(1);   // Second display
     auto perfS = screenSize(1);
     if (perfS.x == 0) {            // Fallback: no second screen — use a window
@@ -493,8 +498,8 @@ bool App::init() {
         }
     }
 
-    controlWin_.setMidiPortLists(ports, selectedInPort, outPorts, selectedOutPort);
-    controlWin_.onMidiInPortChanged = [this](const std::string& name) {
+    audioMidiWin_.setMidiPortLists(ports, selectedInPort, outPorts, selectedOutPort);
+    audioMidiWin_.onMidiInPortChanged = [this](const std::string& name) {
         auto names = midi_.portNames();
         int idx = findPortIndexByExactName(names, name);
         if (idx < 0) idx = findPortIndexByNameContains(names, name);
@@ -502,7 +507,7 @@ bool App::init() {
             std::cout << "[App] MIDI IN switched: " << names[idx] << "\n";
         }
     };
-    controlWin_.onMidiOutPortChanged = [this](const std::string& name) {
+    audioMidiWin_.onMidiOutPortChanged = [this](const std::string& name) {
         auto names = midi_.outputPortNames();
         int idx = findPortIndexByExactName(names, name);
         if (idx < 0) idx = findPortIndexByNameContains(names, name);
@@ -542,7 +547,7 @@ bool App::init() {
         controlWin_.setKnobParamName(i, defaultNames[i]);
     controlWin_.setKnobMode(knobMode_);
     refreshLifMidiUi();
-    controlWin_.setLifToneVolume(lifToneVolume_);
+    audioMidiWin_.setLifToneVolume(lifToneVolume_);
     refreshKnobDisplay();
     if (currentScene_ >= 0) refreshKnobParamNames();
     if (currentScene_ >= 0) {
@@ -550,7 +555,7 @@ bool App::init() {
         pressureWin_.setTargetStates(
             std::vector<uint8_t>(pressureSceneState_[currentScene_].enabled.begin(), pressureSceneState_[currentScene_].enabled.end()),
             std::vector<float>(pressureSceneState_[currentScene_].amount.begin(), pressureSceneState_[currentScene_].amount.end()));
-        controlWin_.setPressureNorm(scenePressureNorm_[currentScene_]);
+        audioMidiWin_.setPressureNorm(scenePressureNorm_[currentScene_]);
     }
 
     return true;
@@ -766,7 +771,7 @@ void App::wireCallbacks() {
         globalZoomKeyHeld_ = pressed;
         refreshModifierDisplay();
     };
-    controlWin_.onBKey = [this](bool bypassed) {
+    audioMidiWin_.onBKey = [this](bool bypassed) {
         audioBypassed_ = bypassed;
         lifToneSynth_.setBypass(bypassed);
         // Zero out bands in compositor immediately when bypass toggles on
@@ -775,28 +780,28 @@ void App::wireCallbacks() {
             compositor_.setAudioBands(zeros, 8, 0.0f);
         }
     };
-    controlWin_.onLIFToneToggle = [this]() {
+    audioMidiWin_.onLIFToneToggle = [this]() {
         lifToneEnabled_ = !lifToneEnabled_;
         if (!lifToneEnabled_)
             lifToneSynth_.setColumnEnergies({});
         std::cout << "[LIF Tone] " << (lifToneEnabled_ ? "enabled" : "disabled") << std::endl;
     };
-    controlWin_.onLIFToneVolumeNudge = [this](float delta) {
+    audioMidiWin_.onLIFToneVolumeNudge = [this](float delta) {
         lifToneVolume_ = std::clamp(lifToneVolume_ + delta, 0.0f, 100.0f);
         lifToneSynth_.setOutputVolume(lifToneVolume_);
-        controlWin_.setLifToneVolume(lifToneVolume_);
+        audioMidiWin_.setLifToneVolume(lifToneVolume_);
         std::cout << "[LIF Tone] volume=" << lifToneVolume_ << "%" << std::endl;
     };
-    controlWin_.onLIFToneTempoNudge = [this](float delta) {
+    audioMidiWin_.onLIFToneTempoNudge = [this](float delta) {
         lifToneScanTempo_ = std::clamp(lifToneScanTempo_ + delta, 0.01f, 4.0f);
         std::cout << "[LIF Tone] tempo=" << lifToneScanTempo_ << " cycles/s" << std::endl;
     };
-    controlWin_.onLIFToneMinFreqNudge = [this](float deltaHz) {
+    audioMidiWin_.onLIFToneMinFreqNudge = [this](float deltaHz) {
         lifToneMinFreqHz_ = std::clamp(lifToneMinFreqHz_ + deltaHz, 20.0f, lifToneMaxFreqHz_ - 10.0f);
         lifToneSynth_.setFrequencyRange(lifToneMinFreqHz_, lifToneMaxFreqHz_);
         std::cout << "[LIF Tone] range=" << lifToneMinFreqHz_ << "-" << lifToneMaxFreqHz_ << " Hz" << std::endl;
     };
-    controlWin_.onLIFToneMaxFreqNudge = [this](float deltaHz) {
+    audioMidiWin_.onLIFToneMaxFreqNudge = [this](float deltaHz) {
         lifToneMaxFreqHz_ = std::clamp(lifToneMaxFreqHz_ + deltaHz, lifToneMinFreqHz_ + 10.0f, 12000.0f);
         lifToneSynth_.setFrequencyRange(lifToneMinFreqHz_, lifToneMaxFreqHz_);
         std::cout << "[LIF Tone] range=" << lifToneMinFreqHz_ << "-" << lifToneMaxFreqHz_ << " Hz" << std::endl;
@@ -806,12 +811,12 @@ void App::wireCallbacks() {
     };
 
     // Keyboard shortcut: M key toggles LIF MIDI output
-    controlWin_.onLIFMidiToggle = [this]() { toggleLifMidi(); };
-    controlWin_.onLIFMidiStyleCycle = [this]() { cycleLifMidiStyle(); };
-    controlWin_.onLIFMidiModeCycle = [this]() { cycleLifMidiModalScale(); };
-    controlWin_.onLIFMidiKeyNudge = [this](int delta) { nudgeLifMidiKey(delta); };
-    controlWin_.onLIFMidiRangeMinNudge = [this](int delta) { nudgeLifMidiRangeMin(delta); };
-    controlWin_.onLIFMidiRangeMaxNudge = [this](int delta) { nudgeLifMidiRangeMax(delta); };
+    audioMidiWin_.onLIFMidiToggle = [this]() { toggleLifMidi(); };
+    audioMidiWin_.onLIFMidiStyleCycle = [this]() { cycleLifMidiStyle(); };
+    audioMidiWin_.onLIFMidiModeCycle = [this]() { cycleLifMidiModalScale(); };
+    audioMidiWin_.onLIFMidiKeyNudge = [this](int delta) { nudgeLifMidiKey(delta); };
+    audioMidiWin_.onLIFMidiRangeMinNudge = [this](int delta) { nudgeLifMidiRangeMin(delta); };
+    audioMidiWin_.onLIFMidiRangeMaxNudge = [this](int delta) { nudgeLifMidiRangeMax(delta); };
 }
 
 // ── Engine helper: apply one knob value to the right engine target ────────────
@@ -1565,7 +1570,7 @@ void App::onSceneSelect(int sceneIdx) {
     pressureWin_.setTargetStates(
         std::vector<uint8_t>(pressureSceneState_[sceneIdx].enabled.begin(), pressureSceneState_[sceneIdx].enabled.end()),
         std::vector<float>(pressureSceneState_[sceneIdx].amount.begin(), pressureSceneState_[sceneIdx].amount.end()));
-    controlWin_.setPressureNorm(scenePressureNorm_[sceneIdx]);
+    audioMidiWin_.setPressureNorm(scenePressureNorm_[sceneIdx]);
     scenePressureTargetNorm_[sceneIdx] = scenePressureNorm_[sceneIdx];
 
     // Load this scene's image files into the 3 source layers.
@@ -2018,7 +2023,7 @@ void App::processFrame() {
             cur = std::clamp(cur + step, 0.0f, 1.0f);
         }
         scenePressureNorm_[currentScene_] = cur;
-        controlWin_.setPressureNorm(cur);
+        audioMidiWin_.setPressureNorm(cur);
         applyPressureMappings(currentScene_);
     }
 
@@ -2027,11 +2032,11 @@ void App::processFrame() {
         auto bands = audio_.bands();
         float rms  = audio_.rms();
         compositor_.setAudioBands(bands.data(), static_cast<int>(bands.size()), rms);
-        controlWin_.setAudioBands(bands.data(), static_cast<int>(bands.size()), rms);
+        audioMidiWin_.setAudioBands(bands.data(), static_cast<int>(bands.size()), rms);
     } else {
         const float zeros[8] = {};
         compositor_.setAudioBands(zeros, 8, 0.0f);
-        controlWin_.setAudioBands(zeros, 8, 0.0f);
+        audioMidiWin_.setAudioBands(zeros, 8, 0.0f);
     }
 
     // Drive LIF simulation from all active scene LIF patch params.

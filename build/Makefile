@@ -171,6 +171,30 @@ src/app/AudioAnalyzer.mm.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/AudioAnalyzer.mm.o
 .PHONY : src/app/AudioAnalyzer.mm.o
 
+src/app/AudioMidiControlWindow.o: src/app/AudioMidiControlWindow.cpp.o
+.PHONY : src/app/AudioMidiControlWindow.o
+
+# target to build an object file
+src/app/AudioMidiControlWindow.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o
+.PHONY : src/app/AudioMidiControlWindow.cpp.o
+
+src/app/AudioMidiControlWindow.i: src/app/AudioMidiControlWindow.cpp.i
+.PHONY : src/app/AudioMidiControlWindow.i
+
+# target to preprocess a source file
+src/app/AudioMidiControlWindow.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.i
+.PHONY : src/app/AudioMidiControlWindow.cpp.i
+
+src/app/AudioMidiControlWindow.s: src/app/AudioMidiControlWindow.cpp.s
+.PHONY : src/app/AudioMidiControlWindow.s
+
+# target to generate assembly for a file
+src/app/AudioMidiControlWindow.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.s
+.PHONY : src/app/AudioMidiControlWindow.cpp.s
+
 src/app/CapsLockDetector.o: src/app/CapsLockDetector.mm.o
 .PHONY : src/app/CapsLockDetector.o
 
@@ -464,6 +488,9 @@ help:
 	@echo "... midi_monitor"
 	@echo "... src/app/App.o"
 	@echo "... src/app/AudioAnalyzer.o"
+	@echo "... src/app/AudioMidiControlWindow.o"
+	@echo "... src/app/AudioMidiControlWindow.i"
+	@echo "... src/app/AudioMidiControlWindow.s"
 	@echo "... src/app/CapsLockDetector.o"
 	@echo "... src/app/ControlWindow.o"
 	@echo "... src/app/ControlWindow.i"

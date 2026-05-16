@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/lif_lova.dir/src/app/App.mm.o.d"
   "CMakeFiles/lif_lova.dir/src/app/AudioAnalyzer.mm.o"
   "CMakeFiles/lif_lova.dir/src/app/AudioAnalyzer.mm.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o"
+  "CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o.d"
   "CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o"
   "CMakeFiles/lif_lova.dir/src/app/CapsLockDetector.mm.o.d"
   "CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o"

@@ -4,6 +4,7 @@
 #include "MidiRouter.h"
 #include "MetalCompositor.h"
 #include "ControlWindow.h"
+#include "AudioMidiControlWindow.h"
 #include "PressureControlWindow.h"
 #include "PerformanceWindow.h"
 #include "MediaPickerWindow.h"
@@ -138,6 +139,7 @@ private:
     AudioAnalyzer     audio_;
     LIFToneSynth      lifToneSynth_;
     ControlWindow     controlWin_;
+    AudioMidiControlWindow audioMidiWin_;
     PressureControlWindow pressureWin_;
     PerformanceWindow perfWin_;
     MediaPickerWindow mediaPickerWin_;

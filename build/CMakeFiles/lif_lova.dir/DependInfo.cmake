@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/Users/jaakkop/Documents/koodii/lif_lova/src/app/AudioMidiControlWindow.cpp" "CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o" "gcc" "CMakeFiles/lif_lova.dir/src/app/AudioMidiControlWindow.cpp.o.d"
   "/Users/jaakkop/Documents/koodii/lif_lova/src/app/ControlWindow.cpp" "CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o" "gcc" "CMakeFiles/lif_lova.dir/src/app/ControlWindow.cpp.o.d"
   "/Users/jaakkop/Documents/koodii/lif_lova/src/app/FxPatch.cpp" "CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o" "gcc" "CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o.d"
   "/Users/jaakkop/Documents/koodii/lif_lova/src/app/LIFToneSynth.cpp" "CMakeFiles/lif_lova.dir/src/app/LIFToneSynth.cpp.o" "gcc" "CMakeFiles/lif_lova.dir/src/app/LIFToneSynth.cpp.o.d"
