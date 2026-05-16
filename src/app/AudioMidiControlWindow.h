@@ -39,6 +39,7 @@ public:
 
     // Update the LIF modal scale label.
     void setLifMidiMode(const std::string& modeName);
+    void setLifMidiModeToggleState(bool hasScene, bool autoMode);
     void setLifMidiModeEditor(const std::string& statusText, bool editable);
 
     // Update LIF MIDI key and note range labels.
@@ -59,6 +60,7 @@ public:
     std::function<void()> onLIFMidiToggle;
     std::function<void()> onLIFMidiStyleCycle;
     std::function<void()> onLIFMidiModeCycle;
+    std::function<void()> onLIFMidiModeToggle;
     std::function<void(int delta)> onLIFMidiKeyNudge;
     std::function<void(int delta)> onLIFMidiTonalRootNudge;
     std::function<void(int delta)> onLIFMidiRangeMinNudge;
@@ -94,6 +96,7 @@ private:
     tgui::Label::Ptr lifMidiStatusLabel_;
     tgui::Button::Ptr lifMidiStyleBtn_;
     tgui::Button::Ptr lifMidiModeBtn_;
+    tgui::Button::Ptr lifMidiModeToggleBtn_;
     tgui::Label::Ptr lifMidiModeEditLabel_;
     tgui::Button::Ptr lifMidiModeDegDownBtn_;
     tgui::Button::Ptr lifMidiModeDegUpBtn_;

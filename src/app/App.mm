@@ -365,6 +365,8 @@ const char* App::lifMidiTonalRootName() const {
 void App::refreshLifMidiUi() {
     audioMidiWin_.setLifMidiStyle(lifMidiStyleName());
     audioMidiWin_.setLifMidiMode(lifMidiModalScaleName());
+    audioMidiWin_.setLifMidiModeToggleState(currentScene_ >= 0,
+                                            currentScene_ >= 0 ? (lifMidiModeUserSet_[currentScene_] == 0) : true);
     audioMidiWin_.setLifMidiKey(lifMidiKeyName());
     audioMidiWin_.setLifMidiTonalRoot(lifMidiTonalRootName());
     audioMidiWin_.setLifMidiRange(lifMidiRangeMin_, lifMidiRangeMax_);
@@ -499,6 +501,45 @@ void App::cycleLifMidiModalScale() {
     lifMidiModeUserSet_[currentScene_] = 1;
     refreshLifMidiUi();
     std::cout << "[LIF MIDI] modal scale=" << lifMidiModalScaleName() << std::endl;
+    saveState();
+}
+
+void App::toggleLifMidiModeSource() {
+    if (currentScene_ < 0) return;
+    resetLifMidiState();
+
+    if (lifMidiModeUserSet_[currentScene_]) {
+        // Manual -> Auto: derive from tonal root + scene key on demand.
+        lifMidiModeUserSet_[currentScene_] = 0;
+    } else {
+        // Auto -> Manual: capture the current auto mapping into a scene mode.
+        const int rel = (sceneKeySemitone(currentScene_) - lifMidiTonalRootSemitone_ + 12) % 12;
+        ModalScale target = ModalScale::Ionian;
+        bool custom = false;
+        switch (rel) {
+            case 0:  target = ModalScale::Ionian; break;
+            case 2:  target = ModalScale::Dorian; break;
+            case 4:  target = ModalScale::Phrygian; break;
+            case 5:  target = ModalScale::Lydian; break;
+            case 7:  target = ModalScale::Mixolydian; break;
+            case 9:  target = ModalScale::Aeolian; break;
+            case 11: target = ModalScale::Locrian; break;
+            default:
+                target = ModalScale::IonianPlus4;
+                custom = true;
+                break;
+        }
+
+        scenes_[currentScene_].modalScale = target;
+        if (custom) {
+            const int slot = customModeSlot(target);
+            if (slot >= 0)
+                g_customModeIntervals[static_cast<size_t>(slot)] = autoModalIntervalsForScene(currentScene_);
+        }
+        lifMidiModeUserSet_[currentScene_] = 1;
+    }
+
+    refreshLifMidiUi();
     saveState();
 }
 
@@ -1079,6 +1120,7 @@ void App::wireCallbacks() {
     audioMidiWin_.onLIFMidiToggle = [this]() { toggleLifMidi(); };
     audioMidiWin_.onLIFMidiStyleCycle = [this]() { cycleLifMidiStyle(); };
     audioMidiWin_.onLIFMidiModeCycle = [this]() { cycleLifMidiModalScale(); };
+    audioMidiWin_.onLIFMidiModeToggle = [this]() { toggleLifMidiModeSource(); };
     audioMidiWin_.onLIFMidiModeEditDegreeNudge = [this](int delta) { nudgeLifMidiModeEditDegree(delta); };
     audioMidiWin_.onLIFMidiModeEditSemitoneNudge = [this](int delta) { nudgeLifMidiModeEditSemitone(delta); };
     audioMidiWin_.onLIFMidiModeEditReset = [this]() { resetLifMidiModeEdits(); };

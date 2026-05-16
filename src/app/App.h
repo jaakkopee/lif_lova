@@ -128,6 +128,7 @@ private:
         std::array<uint8_t, NUM_SCENES> lifMidiModeUserSet_ = {};
         void cycleLifMidiStyle();
         void cycleLifMidiModalScale();
+        void toggleLifMidiModeSource();
         void nudgeLifMidiModeEditDegree(int delta);
         void nudgeLifMidiModeEditSemitone(int delta);
         void resetLifMidiModeEdits();
