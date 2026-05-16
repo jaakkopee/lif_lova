@@ -260,16 +260,26 @@ static bool loadGematriaContextsFromJson(const std::filesystem::path& path) {
     if (parsed.empty()) return false;
 
     g_gematriaContexts = std::move(parsed);
+    std::string logPath = path.string();
+    logPath.erase(std::remove(logPath.begin(), logPath.end(), '\n'), logPath.end());
+    logPath.erase(std::remove(logPath.begin(), logPath.end(), '\r'), logPath.end());
+    if (logPath.size() > 180)
+        logPath = logPath.substr(0, 177) + "...";
     std::cout << "[LIF MIDI] Loaded " << g_gematriaContexts.size()
-              << " gematria context(s) from " << path << std::endl;
+              << " gematria context(s) from " << logPath << std::endl;
     return true;
 }
 
 static void loadGematriaContexts() {
     std::vector<std::filesystem::path> candidates;
     if (const char* envPath = std::getenv("LIF_LOVA_GEMATRIA_CONTEXTS")) {
-        if (*envPath)
-            candidates.emplace_back(envPath);
+        if (*envPath) {
+            const std::string raw(envPath);
+            if (raw.find("..") == std::string::npos)
+                candidates.emplace_back(raw);
+            else
+                std::cerr << "[LIF MIDI] Ignoring unsafe LIF_LOVA_GEMATRIA_CONTEXTS path\n";
+        }
     }
 
     candidates.emplace_back(std::filesystem::current_path() / "gematria_tonal_contexts.json");
@@ -837,7 +847,7 @@ App::HarmonicFunction App::classifyLifFunction(int bin,
     const auto& context = gematriaContextAt(lifMidiContextIndex_);
     const float rel = (maxEnergy > 0.001f) ? std::clamp(energy / maxEnergy, 0.0f, 1.0f) : 0.0f;
     const float contour = energy - prevEnergy;
-    // 17-step modulo centered at zero -> deterministic bias in [-0.08, +0.08].
+    // 17-step modulo centered at zero, scaled by 0.01f -> deterministic bias in [-0.08, +0.08].
     const float gematriaBias = (static_cast<float>((context.gematriaCode % 17) - 8)) * 0.01f;
     const float contextBias = context.brightness * 0.10f;
     const float totalBias = gematriaBias + contextBias;

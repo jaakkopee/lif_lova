@@ -63,11 +63,11 @@ def gematria_value(text: str) -> int:
 
 
 def calculate_many(items: Iterable[str]) -> list[GematriaResult]:
-    rows: list[GematriaResult] = []
+    results: list[GematriaResult] = []
     for item in items:
         normalized = normalize_letters(item)
-        rows.append(GematriaResult(item, normalized, gematria_value(item)))
-    return rows
+        results.append(GematriaResult(item, normalized, gematria_value(item)))
+    return results
 
 
 def default_contexts() -> list[TonalContext]:
@@ -166,11 +166,11 @@ def run_calc(args: argparse.Namespace) -> int:
         print("No input provided. Pass items or --file.")
         return 1
 
-    rows = calculate_many(items)
-    width = max(len(r.text) for r in rows)
+    results = calculate_many(items)
+    width = max(len(r.text) for r in results)
     print(f"{'Text'.ljust(width)} | Normalized | EnglishExtended")
     print(f"{'-' * width}-+------------+----------------")
-    for r in rows:
+    for r in results:
         print(f"{r.text.ljust(width)} | {r.normalized:<10} | {r.value}")
     return 0
 
