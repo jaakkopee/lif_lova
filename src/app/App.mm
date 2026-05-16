@@ -177,6 +177,51 @@ static std::array<std::array<int, 7>, 3> defaultCustomModeIntervals() {
 
 static std::array<std::array<int, 7>, 3> g_customModeIntervals = defaultCustomModeIntervals();
 
+static std::array<int, 7> autoIntervalsFromRootOffset(int semitoneOffset) {
+    static constexpr std::array<int, 7> kIonian = {0, 2, 4, 5, 7, 9, 11};
+    std::array<int, 7> out = {};
+    std::vector<int> rel;
+    rel.reserve(8);
+
+    const int off = ((semitoneOffset % 12) + 12) % 12;
+    for (int d : kIonian)
+        rel.push_back((d - off + 12) % 12);
+
+    std::sort(rel.begin(), rel.end());
+    if (std::find(rel.begin(), rel.end(), 0) == rel.end()) {
+        rel.insert(rel.begin(), 0);
+        if (rel.size() > 7)
+            rel.pop_back();
+    }
+
+    if (rel.size() < 7) {
+        while (rel.size() < 7)
+            rel.push_back(rel.empty() ? 0 : rel.back());
+    }
+
+    for (int i = 0; i < 7; ++i)
+        out[static_cast<size_t>(i)] = rel[static_cast<size_t>(i)];
+    return out;
+}
+
+static const char* autoModeNameFromRootOffset(int semitoneOffset) {
+    switch (((semitoneOffset % 12) + 12) % 12) {
+        case 0:  return "Ionian";
+        case 2:  return "Dorian";
+        case 4:  return "Phrygian";
+        case 5:  return "Lydian";
+        case 7:  return "Mixolydian";
+        case 9:  return "Aeolian";
+        case 11: return "Locrian";
+        case 1:  return "Auto +1";
+        case 3:  return "Auto +3";
+        case 6:  return "Auto +6";
+        case 8:  return "Auto +8";
+        case 10: return "Auto +10";
+        default: return "Auto";
+    }
+}
+
 static int modalScaleOrderIndex(ModalScale scale) {
     const auto& modes = allModalScales();
     for (int i = 0; i < static_cast<int>(modes.size()); ++i)
@@ -310,10 +355,18 @@ const char* App::lifMidiKeyName() const {
     return kNames[std::clamp(lifMidiKeySemitone_, 0, 11)];
 }
 
+const char* App::lifMidiTonalRootName() const {
+    static constexpr const char* kNames[12] = {
+        "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"
+    };
+    return kNames[std::clamp(lifMidiTonalRootSemitone_, 0, 11)];
+}
+
 void App::refreshLifMidiUi() {
     audioMidiWin_.setLifMidiStyle(lifMidiStyleName());
     audioMidiWin_.setLifMidiMode(lifMidiModalScaleName());
     audioMidiWin_.setLifMidiKey(lifMidiKeyName());
+    audioMidiWin_.setLifMidiTonalRoot(lifMidiTonalRootName());
     audioMidiWin_.setLifMidiRange(lifMidiRangeMin_, lifMidiRangeMax_);
     audioMidiWin_.setLifMidiStatus(lifMidiEnabled_,
                                    (lifMidiStyle_ == LifMidiStyle::Percussion) ? 10 : 1,
@@ -324,6 +377,10 @@ void App::refreshLifMidiUi() {
 void App::refreshLifMidiModeEditorUi() {
     if (currentScene_ < 0) {
         audioMidiWin_.setLifMidiModeEditor("Mode Edit: no scene", false);
+        return;
+    }
+    if (!lifMidiModeUserSet_[currentScene_]) {
+        audioMidiWin_.setLifMidiModeEditor("Mode Edit: auto (tonal root)", false);
         return;
     }
     const ModalScale scale = scenes_[currentScene_].modalScale;
@@ -348,6 +405,10 @@ const char* App::lifMidiModalScaleName() const {
 
 const char* App::lifMidiModalScaleNameForScene(int sceneIdx) const {
     if (sceneIdx < 0 || sceneIdx >= NUM_SCENES) return "Dorian";
+    if (!lifMidiModeUserSet_[sceneIdx]) {
+        const int rel = (sceneKeySemitone(sceneIdx) - lifMidiTonalRootSemitone_ + 12) % 12;
+        return autoModeNameFromRootOffset(rel);
+    }
     ModalScale scale = scenes_[sceneIdx].modalScale;
     switch (scale) {
         case ModalScale::Ionian:     return "Ionian";
@@ -364,6 +425,17 @@ const char* App::lifMidiModalScaleNameForScene(int sceneIdx) const {
     }
 }
 
+int App::sceneKeySemitone(int sceneIdx) const {
+    if (sceneIdx < 0 || sceneIdx >= NUM_SCENES) return 0;
+    const int midiNote = NOTE_SCENE_BASE + sceneIdx;
+    return ((midiNote % 12) + 12) % 12;
+}
+
+std::array<int, 7> App::autoModalIntervalsForScene(int sceneIdx) const {
+    const int rel = (sceneKeySemitone(sceneIdx) - lifMidiTonalRootSemitone_ + 12) % 12;
+    return autoIntervalsFromRootOffset(rel);
+}
+
 void App::nudgeLifMidiKey(int delta) {
     if (delta == 0) return;
     resetLifMidiState();
@@ -372,6 +444,17 @@ void App::nudgeLifMidiKey(int delta) {
         lifMidiKeySemitone_ += 12;
     refreshLifMidiUi();
     std::cout << "[LIF MIDI] key=" << lifMidiKeyName() << std::endl;
+}
+
+void App::nudgeLifMidiTonalRoot(int delta) {
+    if (delta == 0) return;
+    resetLifMidiState();
+    lifMidiTonalRootSemitone_ = (lifMidiTonalRootSemitone_ + delta) % 12;
+    if (lifMidiTonalRootSemitone_ < 0)
+        lifMidiTonalRootSemitone_ += 12;
+    refreshLifMidiUi();
+    saveState();
+    std::cout << "[LIF MIDI] tonal root=" << lifMidiTonalRootName() << std::endl;
 }
 
 void App::nudgeLifMidiRangeMin(int delta) {
@@ -522,9 +605,13 @@ std::vector<int> App::lifMidiNotesForFunction(HarmonicFunction function,
         }
     }
 
-    const ModalScale scale = (currentScene_ >= 0 && currentScene_ < NUM_SCENES)
-        ? scenes_[currentScene_].modalScale : ModalScale::Dorian;
-    const std::array<int, 7> intervals = modalIntervals(scale);
+    std::array<int, 7> intervals = {0, 2, 3, 5, 7, 9, 10};
+    if (currentScene_ >= 0 && currentScene_ < NUM_SCENES) {
+        if (lifMidiModeUserSet_[currentScene_])
+            intervals = modalIntervals(scenes_[currentScene_].modalScale);
+        else
+            intervals = autoModalIntervalsForScene(currentScene_);
+    }
     auto noteFromDegree = [&](int rootDegree, int thirdStackOffset) {
         const int totalDegree = rootDegree + thirdStackOffset;
         const int scaleDegree = ((totalDegree % 7) + 7) % 7;
@@ -996,6 +1083,7 @@ void App::wireCallbacks() {
     audioMidiWin_.onLIFMidiModeEditSemitoneNudge = [this](int delta) { nudgeLifMidiModeEditSemitone(delta); };
     audioMidiWin_.onLIFMidiModeEditReset = [this]() { resetLifMidiModeEdits(); };
     audioMidiWin_.onLIFMidiKeyNudge = [this](int delta) { nudgeLifMidiKey(delta); };
+    audioMidiWin_.onLIFMidiTonalRootNudge = [this](int delta) { nudgeLifMidiTonalRoot(delta); };
     audioMidiWin_.onLIFMidiRangeMinNudge = [this](int delta) { nudgeLifMidiRangeMin(delta); };
     audioMidiWin_.onLIFMidiRangeMaxNudge = [this](int delta) { nudgeLifMidiRangeMax(delta); };
 }
@@ -1738,27 +1826,13 @@ void App::onSceneSelect(int sceneIdx) {
     if (sceneIdx < 0 || sceneIdx >= NUM_SCENES) return;
 
     const int prevScene = currentScene_;
-    const int prevKeySemitone = lifMidiKeySemitone_;
-    const ModalScale prevScale =
-        (prevScene >= 0 && prevScene < NUM_SCENES) ? scenes_[prevScene].modalScale : scenes_[sceneIdx].modalScale;
 
     // Set LIF MIDI key to match the root note of the triggering scene pad.
     // Scene pads are mapped to MIDI notes starting at C2 (36), each pad is a semitone.
     // 0 = C, 1 = C#, ..., 11 = B
-    int midiNote = NOTE_SCENE_BASE + sceneIdx;
-    lifMidiKeySemitone_ = ((midiNote % 12) + 12) % 12;
+    lifMidiKeySemitone_ = sceneKeySemitone(sceneIdx);
 
     currentScene_ = sceneIdx;
-
-    // Auto mode transport is the default: keep the pitch-class collection
-    // as consistent as possible when the scene root note changes.
-    if (!lifMidiModeUserSet_[sceneIdx]) {
-        scenes_[sceneIdx].modalScale = resolveTransportedModalScale(
-            prevKeySemitone,
-            prevScale,
-            lifMidiKeySemitone_,
-            scenes_[sceneIdx].modalScale);
-    }
 
     refreshLifMidiUi();
     resetLifMidiState();
@@ -2049,7 +2123,7 @@ void App::saveState() const {
         if (!f) { std::cerr << "[App] Could not open temp state file for writing\n"; return; }
         // Write magic + version for future-proofing
         const uint32_t magic = 0x56414345; // 'VACE'
-        const uint32_t ver   = 16;
+        const uint32_t ver   = 17;
         f.write(reinterpret_cast<const char*>(&magic), 4);
         f.write(reinterpret_cast<const char*>(&ver),   4);
         // Write all scene states (knobs + image paths)
@@ -2074,6 +2148,8 @@ void App::saveState() const {
             // Write per-scene modal scale
             int modalScale = static_cast<int>(s.modalScale);
             f.write(reinterpret_cast<const char*>(&modalScale), sizeof(int));
+            const uint8_t modeUserSet = lifMidiModeUserSet_[si] ? 1u : 0u;
+            f.write(reinterpret_cast<const char*>(&modeUserSet), sizeof(uint8_t));
             const auto& ps = pressureSceneState_[si];
             for (uint8_t e : ps.enabled)
                 f.write(reinterpret_cast<const char*>(&e), sizeof(uint8_t));
@@ -2083,6 +2159,7 @@ void App::saveState() const {
         for (const auto& mode : g_customModeIntervals)
             for (int v : mode)
                 f.write(reinterpret_cast<const char*>(&v), sizeof(int));
+        f.write(reinterpret_cast<const char*>(&lifMidiTonalRootSemitone_), sizeof(int));
         f.write(reinterpret_cast<const char*>(&currentScene_), sizeof(int));
         if (!f) { std::cerr << "[App] State write error — temp file may be incomplete\n"; return; }
     } // ofstream closes + flushes here
@@ -2134,6 +2211,7 @@ void App::loadState() {
     // v14: per-scene modal scale in scene payload
     // v15: custom modal scales (extended ModalScale enum)
     // v16: persists editable custom mode intervals
+    // v17: persists per-scene mode auto/manual flag + tonal root
     const bool isV3 = (ver == 3);
     const bool isV4 = (ver == 4);
     const bool isV5 = (ver == 5);
@@ -2146,6 +2224,7 @@ void App::loadState() {
     const bool isV12 = (ver == 12);
     const bool isV13 = (ver == 13);
     const bool isV16Plus = (ver >= 16);
+    const bool isV17Plus = (ver >= 17);
     const bool isV14Plus = (ver >= 14);
     if (!isV3 && !isV4 && !isV5 && !isV6 && !isV7 && !isV8 && !isV9 && !isV10 && !isV11 && !isV12 && !isV13 && !isV14Plus) {
         std::cerr << "[App] Ignoring incompatible state file\n";
@@ -2189,7 +2268,15 @@ void App::loadState() {
                                     static_cast<int>(ModalScale::Ionian),
                                     static_cast<int>(ModalScale::AeolianPlus7));
             s.modalScale = static_cast<ModalScale>(modalScale);
-            lifMidiModeUserSet_[si] = 1;
+            if (isV17Plus) {
+                uint8_t modeUserSet = 0;
+                if (!f.read(reinterpret_cast<char*>(&modeUserSet), sizeof(uint8_t))) return;
+                lifMidiModeUserSet_[si] = modeUserSet ? 1 : 0;
+            } else {
+                // Pre-v17 did not store explicit ownership of modal scale edits.
+                // Preserve custom edited modes, otherwise default to tonal-root auto mapping.
+                lifMidiModeUserSet_[si] = isCustomModalScale(s.modalScale) ? 1 : 0;
+            }
         }
         if (isV11 || isV12 || isV13) {
             const int savedPressureTargets = isV11 ? 21 : NUM_PRESSURE_TARGETS;
@@ -2233,6 +2320,11 @@ void App::loadState() {
             for (int i = 1; i < 7; ++i)
                 mode[static_cast<size_t>(i)] = std::max(mode[static_cast<size_t>(i)], mode[static_cast<size_t>(i - 1)]);
         }
+    }
+
+    if (isV17Plus) {
+        if (!f.read(reinterpret_cast<char*>(&lifMidiTonalRootSemitone_), sizeof(int))) return;
+        lifMidiTonalRootSemitone_ = ((lifMidiTonalRootSemitone_ % 12) + 12) % 12;
     }
 
     int savedScene = -1;

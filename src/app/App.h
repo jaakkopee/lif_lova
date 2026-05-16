@@ -121,6 +121,7 @@ private:
         LifMidiStyle lifMidiStyle_ = LifMidiStyle::Pop;
         // ModalScale lifMidiModalScale_ = ModalScale::Dorian; // Now per-scene
         int lifMidiKeySemitone_ = 0;   // 0=C, 1=C#, ... 11=B
+        int lifMidiTonalRootSemitone_ = 0; // global tonal reference root
         int lifMidiRangeMin_ = 36;
         int lifMidiRangeMax_ = 96;
         int lifMidiModeEditDegree_ = 0;
@@ -134,10 +135,14 @@ private:
         const char* lifMidiStyleName() const;
         const char* lifMidiModalScaleName() const;
         const char* lifMidiModalScaleNameForScene(int sceneIdx) const;
+        const char* lifMidiTonalRootName() const;
         const char* lifMidiKeyName() const;
         void nudgeLifMidiKey(int delta);
+        void nudgeLifMidiTonalRoot(int delta);
         void nudgeLifMidiRangeMin(int delta);
         void nudgeLifMidiRangeMax(int delta);
+        std::array<int, 7> autoModalIntervalsForScene(int sceneIdx) const;
+        int sceneKeySemitone(int sceneIdx) const;
         void refreshLifMidiUi();
         HarmonicFunction classifyLifFunction(int bin, float energy, float prevEnergy, float maxEnergy, bool feedforward) const;
         std::vector<int> lifMidiNotesForFunction(HarmonicFunction function, int bin, int baseNote, float driveNorm) const;

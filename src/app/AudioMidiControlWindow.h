@@ -43,6 +43,7 @@ public:
 
     // Update LIF MIDI key and note range labels.
     void setLifMidiKey(const std::string& keyName);
+    void setLifMidiTonalRoot(const std::string& keyName);
     void setLifMidiRange(int minNote, int maxNote);
 
     // Update the LIF tone volume label.
@@ -59,6 +60,7 @@ public:
     std::function<void()> onLIFMidiStyleCycle;
     std::function<void()> onLIFMidiModeCycle;
     std::function<void(int delta)> onLIFMidiKeyNudge;
+    std::function<void(int delta)> onLIFMidiTonalRootNudge;
     std::function<void(int delta)> onLIFMidiRangeMinNudge;
     std::function<void(int delta)> onLIFMidiRangeMaxNudge;
     std::function<void(int delta)> onLIFMidiModeEditDegreeNudge;
@@ -101,6 +103,9 @@ private:
     tgui::Label::Ptr lifMidiKeyLabel_;
     tgui::Button::Ptr lifMidiKeyDownBtn_;
     tgui::Button::Ptr lifMidiKeyUpBtn_;
+    tgui::Label::Ptr lifMidiTonalRootLabel_;
+    tgui::Button::Ptr lifMidiTonalRootDownBtn_;
+    tgui::Button::Ptr lifMidiTonalRootUpBtn_;
     tgui::Label::Ptr lifMidiRangeLabel_;
     tgui::Button::Ptr lifMidiRangeMinDownBtn_;
     tgui::Button::Ptr lifMidiRangeMinUpBtn_;

@@ -270,14 +270,38 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     });
     midiSettingsPanel_->add(lifMidiKeyUpBtn_);
 
+    lifMidiTonalRootLabel_ = tgui::Label::create("Tonal Root: C");
+    lifMidiTonalRootLabel_->setPosition(6, 140);
+    lifMidiTonalRootLabel_->setTextSize(11);
+    lifMidiTonalRootLabel_->getRenderer()->setTextColor(TEXT_DIM);
+    midiSettingsPanel_->add(lifMidiTonalRootLabel_);
+
+    lifMidiTonalRootDownBtn_ = tgui::Button::create("Root-");
+    lifMidiTonalRootDownBtn_->setPosition(6, 160);
+    lifMidiTonalRootDownBtn_->setSize(56, 22);
+    lifMidiTonalRootDownBtn_->onPress([this] {
+        if (onLIFMidiTonalRootNudge)
+            onLIFMidiTonalRootNudge(-1);
+    });
+    midiSettingsPanel_->add(lifMidiTonalRootDownBtn_);
+
+    lifMidiTonalRootUpBtn_ = tgui::Button::create("Root+");
+    lifMidiTonalRootUpBtn_->setPosition(66, 160);
+    lifMidiTonalRootUpBtn_->setSize(56, 22);
+    lifMidiTonalRootUpBtn_->onPress([this] {
+        if (onLIFMidiTonalRootNudge)
+            onLIFMidiTonalRootNudge(1);
+    });
+    midiSettingsPanel_->add(lifMidiTonalRootUpBtn_);
+
     lifMidiRangeLabel_ = tgui::Label::create("Range: 36-96");
-    lifMidiRangeLabel_->setPosition(6, 140);
+    lifMidiRangeLabel_->setPosition(6, 188);
     lifMidiRangeLabel_->setTextSize(11);
     lifMidiRangeLabel_->getRenderer()->setTextColor(TEXT_DIM);
     midiSettingsPanel_->add(lifMidiRangeLabel_);
 
     lifMidiRangeMinDownBtn_ = tgui::Button::create("Lo-");
-    lifMidiRangeMinDownBtn_->setPosition(6, 160);
+    lifMidiRangeMinDownBtn_->setPosition(6, 208);
     lifMidiRangeMinDownBtn_->setSize(32, 22);
     lifMidiRangeMinDownBtn_->onPress([this] {
         if (onLIFMidiRangeMinNudge)
@@ -286,7 +310,7 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     midiSettingsPanel_->add(lifMidiRangeMinDownBtn_);
 
     lifMidiRangeMinUpBtn_ = tgui::Button::create("Lo+");
-    lifMidiRangeMinUpBtn_->setPosition(42, 160);
+    lifMidiRangeMinUpBtn_->setPosition(42, 208);
     lifMidiRangeMinUpBtn_->setSize(32, 22);
     lifMidiRangeMinUpBtn_->onPress([this] {
         if (onLIFMidiRangeMinNudge)
@@ -295,7 +319,7 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     midiSettingsPanel_->add(lifMidiRangeMinUpBtn_);
 
     lifMidiRangeMaxDownBtn_ = tgui::Button::create("Hi-");
-    lifMidiRangeMaxDownBtn_->setPosition(78, 160);
+    lifMidiRangeMaxDownBtn_->setPosition(78, 208);
     lifMidiRangeMaxDownBtn_->setSize(32, 22);
     lifMidiRangeMaxDownBtn_->onPress([this] {
         if (onLIFMidiRangeMaxNudge)
@@ -304,7 +328,7 @@ void AudioMidiControlWindow::buildGui(int width, int height) {
     midiSettingsPanel_->add(lifMidiRangeMaxDownBtn_);
 
     lifMidiRangeMaxUpBtn_ = tgui::Button::create("Hi+");
-    lifMidiRangeMaxUpBtn_->setPosition(114, 160);
+    lifMidiRangeMaxUpBtn_->setPosition(114, 208);
     lifMidiRangeMaxUpBtn_->setSize(32, 22);
     lifMidiRangeMaxUpBtn_->onPress([this] {
         if (onLIFMidiRangeMaxNudge)
@@ -405,6 +429,10 @@ void AudioMidiControlWindow::setLifMidiModeEditor(const std::string& statusText,
 
 void AudioMidiControlWindow::setLifMidiKey(const std::string& keyName) {
     lifMidiKeyLabel_->setText("Key: " + keyName);
+}
+
+void AudioMidiControlWindow::setLifMidiTonalRoot(const std::string& keyName) {
+    lifMidiTonalRootLabel_->setText("Tonal Root: " + keyName);
 }
 
 void AudioMidiControlWindow::setLifMidiRange(int minNote, int maxNote) {
