@@ -1,6 +1,6 @@
 # Keyboard Actions
 
-This document lists the keyboard actions currently used by the control window in `vjay_ace`.
+This document lists the keyboard actions currently used by the control window in `lif_lova`.
 
 ## Modifier Modes
 

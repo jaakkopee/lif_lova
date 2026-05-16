@@ -21,7 +21,7 @@ Each frame (`App::processFrame`):
 Primary code:
 - `src/app/App.mm` (frame loop, mixing, MIDI)
 - `src/app/RhythmTransientDriver.cpp` (rhythm excitation)
-- `src/app/LIFNetwork.mm` and `src/app/shaders/vjay_shaders.metal` (LIF simulation)
+- `src/app/LIFNetwork.mm` and `src/app/shaders/lif_lova_shaders.metal` (LIF simulation)
 
 ## 2) How one LIF neuron works in this project
 
@@ -231,4 +231,4 @@ If you want to verify end-to-end behavior in performance:
 - LIF CPU-side parameterization:
   - `src/app/LIFNetwork.mm`
 - LIF GPU update kernels:
-  - `src/app/shaders/vjay_shaders.metal`
+  - `src/app/shaders/lif_lova_shaders.metal`

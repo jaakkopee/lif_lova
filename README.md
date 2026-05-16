@@ -118,7 +118,7 @@ From the build directory:
 The build copies the Metal shader file next to the executable as:
 
 ```text
-build/vjay_shaders.metal
+build/lif_lova_shaders.metal
 ```
 
 The app expects that file to exist at runtime.
@@ -423,7 +423,7 @@ src/app/ControlWindow.cpp           control UI and keyboard handling
 src/app/PerformanceWindow.cpp       performance output window
 src/app/MediaPickerWindow.mm        media browser and slot assignment UI
 src/app/Constants.h                 scene list, FX IDs, MIDI constants
-src/app/shaders/vjay_shaders.metal  all Metal kernels
+src/app/shaders/lif_lova_shaders.metal  all Metal kernels
 src/midi_monitor/                   standalone MIDI monitor tool
 ```
 
@@ -441,7 +441,7 @@ src/midi_monitor/                   standalone MIDI monitor tool
 Check that:
 
 - Metal is available on the machine
-- `build/vjay_shaders.metal` exists
+- `build/lif_lova_shaders.metal` exists
 - the shader file compiled successfully during build
 
 ### No audio reaction
