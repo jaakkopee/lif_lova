@@ -1,0 +1,185 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.4cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\title{LIF Networks in \textit{lif\_lova}:\\
+\large A Musicological Description of Action, Form, and Harmonic Function}
+\author{lif\_lova Documentation}
+\date{\today}
+
+\begin{document}
+\maketitle
+\onehalfspacing
+
+\section*{Purpose and Scope}
+
+This text is written for musicologists. Its aim is not to explain implementation details as
+software engineering, but to describe how \textit{lif\_lova} transforms neural activity into
+musical action, and how recognizable concepts from tonal and modal theory are applied in that
+process.
+
+In \textit{lif\_lova}, leaky integrate-and-fire (LIF) networks are not used as abstract visual
+effects only. They function as an intermediary musical agent: they listen to audio-derived energy,
+develop internal dynamic states, and externalize those states as tone and MIDI behavior.
+
+\section*{General Musical Idea}
+
+The system can be heard as a three-stage musical process:
+\begin{enumerate}[label=\arabic*.]
+    \item \textbf{Excitation}: incoming audio energy excites the network.
+    \item \textbf{Organization}: network topology shapes how energy propagates, accumulates,
+    and discharges.
+    \item \textbf{Articulation}: the resulting activity is mapped to pitch, voicing,
+    velocity, and temporal triggering.
+\end{enumerate}
+
+This resembles a historical distinction between \emph{material}, \emph{process}, and
+\emph{surface}: signal material enters, form-generating process transforms it, and sounding surface
+emerges as notes and timbre.
+
+\section*{How LIF Action Becomes Musical Gesture}
+
+The network continuously produces a distributed field of activation. A moving read position
+(``scan phase'') samples a vertical slice of that field, yielding 16 ordered activity bins.
+These bins serve as the immediate musical substrate.
+
+From a musicological point of view, each bin acts like a voice region with two simultaneous roles:
+\begin{itemize}
+    \item \textbf{Spectral role}: in tone synthesis, bin intensity controls the contribution of a
+    corresponding sine partial/oscillator.
+    \item \textbf{Harmonic-role trigger}: in MIDI output, bin intensity and contour inform whether notes
+    are activated, sustained, or released.
+\end{itemize}
+
+Thus, one and the same neural state is ``read'' in two idioms:
+\begin{itemize}
+    \item as \emph{continuous} amplitude in audio synthesis,
+    \item and as \emph{discrete} event logic in MIDI harmony.
+\end{itemize}
+
+\section*{Application of Musical Theory Concepts}
+
+\subsection*{1. Functional Harmony: Tonic, Subdominant, Dominant}
+
+The system explicitly classifies activity into three functional categories:
+\textbf{Tonic (T)}, \textbf{Subdominant (S)}, and \textbf{Dominant (D)}.
+
+This is not a static chord lookup; it is a dynamic assignment influenced by:
+\begin{itemize}
+    \item bin position (register-like stratification),
+    \item local energy prominence,
+    \item contour (change relative to neighboring activity),
+    \item and, in feedforward mode, an additional bias toward directed motion.
+\end{itemize}
+
+Musically, this means function is performed as behavior, not merely labeled as symbol.
+The network can move from stability (T) toward preparation (S) and tension (D)
+according to emergent activity patterns.
+
+\subsection*{2. Modal Organization}
+
+Pitch material is constrained by modal scales selected per scene:
+Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, and Locrian.
+
+This creates a stable pitch grammar while preserving variability in voicing and rhythm.
+In other words, the modal set defines permissible interval content, while the network defines
+when and how that content is voiced.
+
+\subsection*{3. Key and Register Framing}
+
+The MIDI engine applies a transposition frame (key center by semitone) and a configurable
+note-range window. Chord tones are octave-adjusted into this range.
+
+This corresponds to two familiar compositional operations:
+\begin{itemize}
+    \item \textbf{Transpositional identity}: the same harmonic behavior in different keys.
+    \item \textbf{Register orchestration}: keeping output in a chosen tessitura.
+\end{itemize}
+
+\subsection*{4. Style-Dependent Voicing Grammar}
+
+Voicing strategy is style-selectable (Pop, Rock, Jazz, Blues, Percussion).
+Each style modifies chord density and extension behavior while preserving
+the underlying functional decision (T/S/D).
+
+Seen musicologically, this is a layer of stylistic syntax over shared harmonic function:
+\begin{itemize}
+    \item \textbf{Pop}: compact consonant stacks with optional color extension.
+    \item \textbf{Rock}: power-interval emphasis and stronger root-fifth profile.
+    \item \textbf{Jazz}: denser tertian extension behavior.
+    \item \textbf{Blues}: dominant color and blue-note inflection.
+    \item \textbf{Percussion}: functional harmony suspended in favor of drum-note mapping.
+\end{itemize}
+
+\subsection*{5. Dynamics and Articulation}
+
+Velocity is energy-shaped rather than fixed. Stronger and more prominent neural events yield
+higher velocities, while weaker events remain softer. This creates phrasing that tracks
+network intensity.
+
+Two articulation regimes appear:
+\begin{itemize}
+    \item \textbf{Threshold sustain/release} (non-feedforward): activity crossing adaptive thresholds
+    opens or closes note gates, producing held harmonic fields.
+    \item \textbf{Pulse-gated triggering} (feedforward): short gate lengths plus cooldown intervals
+    produce rhythmic, pointillistic behavior.
+\end{itemize}
+
+These regimes can be interpreted as contrasting temporal archetypes:
+\emph{continuity} versus \emph{impulse sequence}.
+
+\section*{Topology as Musical Form-Agent}
+
+Network topology is musically consequential. It acts as a latent form model:
+\begin{itemize}
+    \item \textbf{Ring}: cyclical recurrence; periodic return and local continuity.
+    \item \textbf{Fully connected}: high coupling; dense collective behavior and blended activity fields.
+    \item \textbf{Feedforward}: directed flow; clearer attack chains and rhythmic propagation.
+    \item \textbf{Sparse random}: punctuated, irregular link events; discontinuous accent structure.
+    \item \textbf{Small-world}: local coherence with occasional long-range jumps;
+    balance of stability and surprise.
+\end{itemize}
+
+For analysis, topology can be treated analogously to a formal constraint system:
+it governs how quickly local events become global and how predictable recurrence is.
+
+\section*{Dual Output: Sonification and Harmonic Agent}
+
+The same LIF state produces two tightly related musical outputs:
+\begin{enumerate}[label=\arabic*.]
+    \item \textbf{Tone sonification}: 16-bin energy is rendered as an additive oscillator texture
+    across a logarithmic frequency span.
+    \item \textbf{MIDI harmony engine}: 16-bin energy drives functional classification,
+    style-conditioned note selection, and event articulation.
+\end{enumerate}
+
+This duality is central: the listener may perceive the tone layer as a ``continuous shadow'' of
+the same process that appears discretely in MIDI notes.
+
+\section*{Interpretive Summary}
+
+In \textit{lif\_lova}, LIF networks do not merely ``generate notes.''
+They mediate between signal energy and music-theoretical organization.
+Their action can be summarized as follows:
+\begin{itemize}
+    \item they convert audio excitation into structured dynamical behavior,
+    \item they map that behavior into functional-harmonic categories,
+    \item they realize those categories through modal, stylistic, and registral constraints,
+    \item and they articulate the result through velocity and topology-dependent timing.
+\end{itemize}
+
+From a musicological perspective, this is a hybrid system where
+computational dynamics and tonal-functional reasoning are co-compositional.
+
+\section*{Keywords}
+
+LIF network; computational musicology; functional harmony; modality; voicing;
+algorithmic articulation; topology and form; sonification; MIDI harmony.
+
+\end{document}
