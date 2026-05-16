@@ -472,6 +472,7 @@ Useful files while changing behavior:
 
 - [key_modifiers.md](key_modifiers.md): keyboard control reference
 - [FX_BrainStorm.md](FX_BrainStorm.md): effect ideas and notes
+- [LIF_RHYTHM_MIDI_GUIDE.md](LIF_RHYTHM_MIDI_GUIDE.md): step-by-step LIF, rhythm transient, and MIDI mapping guide
 
 Useful build command:
 
