@@ -106,20 +106,13 @@ private:
         std::array<bool, 16> lifMidiNoteOn_ = {};
         std::array<std::vector<int>, 16> lifMidiActiveNotes_;
         std::array<int, 16> lifMidiActiveChannel_ = {};
-        enum class LifMidiStyle {
-            Pop = 0,
-            Rock,
-            Jazz,
-            Blues,
-            Percussion,
-        };
         enum class HarmonicFunction {
             Tonic = 0,
             Subdominant,
             Dominant,
         };
         // ModalScale enum is now defined globally above SceneState
-        LifMidiStyle lifMidiStyle_ = LifMidiStyle::Pop;
+        int lifMidiContextIndex_ = 0;
         // ModalScale lifMidiModalScale_ = ModalScale::Dorian; // Now per-scene
         int lifMidiKeySemitone_ = 0;   // 0=C, 1=C#, ... 11=B
         int lifMidiTonalRootSemitone_ = 0; // global tonal reference root
@@ -127,14 +120,14 @@ private:
         int lifMidiRangeMax_ = 96;
         int lifMidiModeEditDegree_ = 0;
         std::array<uint8_t, NUM_SCENES> lifMidiModeUserSet_ = {};
-        void cycleLifMidiStyle();
+        void cycleLifMidiContext();
         void cycleLifMidiModalScale();
         void toggleLifMidiModeSource();
         void nudgeLifMidiModeEditDegree(int delta);
         void nudgeLifMidiModeEditSemitone(int delta);
         void resetLifMidiModeEdits();
         void refreshLifMidiModeEditorUi();
-        const char* lifMidiStyleName() const;
+        const char* lifMidiContextName() const;
         const char* lifMidiModalScaleName() const;
         const char* lifMidiModalScaleNameForScene(int sceneIdx) const;
         const char* lifMidiTonalRootName() const;

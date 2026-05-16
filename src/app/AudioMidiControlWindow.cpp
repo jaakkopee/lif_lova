@@ -229,11 +229,11 @@ void AudioMidiControlWindow::buildGui(int width) {
     gui_.add(lifMidiStatusLabel_);
     y += 20 + ELEM_GAP;
 
-    lifMidiStyleBtn_ = tgui::Button::create("LIF MIDI Style: Orpheus Black Moon");
-    lifMidiStyleBtn_->setPosition(PAD, y);
-    lifMidiStyleBtn_->setSize(colW, 28);
-    lifMidiStyleBtn_->onPress([this] { if (onLIFMidiStyleCycle) onLIFMidiStyleCycle(); });
-    gui_.add(lifMidiStyleBtn_);
+    lifMidiContextBtn_ = tgui::Button::create("LIF MIDI Context: Orphic Black Moon");
+    lifMidiContextBtn_->setPosition(PAD, y);
+    lifMidiContextBtn_->setSize(colW, 28);
+    lifMidiContextBtn_->onPress([this] { if (onLIFMidiContextCycle) onLIFMidiContextCycle(); });
+    gui_.add(lifMidiContextBtn_);
     y += 28 + ELEM_GAP;
 
     lifMidiModeBtn_ = tgui::Button::create("LIF MIDI Mode: Dorian");
@@ -590,8 +590,8 @@ void AudioMidiControlWindow::setLifMidiStatus(bool enabled, int channel, int bas
     lifMidiToggleBtn_->setText(enabled ? "Disable LIF MIDI (M)" : "Enable LIF MIDI (M)");
 }
 
-void AudioMidiControlWindow::setLifMidiStyle(const std::string& styleName) {
-    lifMidiStyleBtn_->setText("LIF MIDI Style: " + styleName);
+void AudioMidiControlWindow::setLifMidiContext(const std::string& contextName) {
+    lifMidiContextBtn_->setText("LIF MIDI Context: " + contextName);
 }
 
 void AudioMidiControlWindow::setLifMidiMode(const std::string& modeName) {

@@ -113,6 +113,8 @@ target_compile_options(lif_lova PRIVATE
 # Copy Metal shader next to the executable whenever it changes
 set(METAL_SRC ${CMAKE_SOURCE_DIR}/src/app/shaders/lif_lova_shaders.metal)
 set(METAL_DST ${CMAKE_BINARY_DIR}/lif_lova_shaders.metal)
+set(GEMATRIA_CONTEXTS_SRC ${CMAKE_SOURCE_DIR}/gematria_tonal_contexts.json)
+set(GEMATRIA_CONTEXTS_DST ${CMAKE_BINARY_DIR}/gematria_tonal_contexts.json)
 add_custom_command(
     OUTPUT  ${METAL_DST}
     COMMAND ${CMAKE_COMMAND} -E copy ${METAL_SRC} ${METAL_DST}
@@ -121,3 +123,12 @@ add_custom_command(
 )
 add_custom_target(copy_metal_shader ALL DEPENDS ${METAL_DST})
 add_dependencies(lif_lova copy_metal_shader)
+
+add_custom_command(
+    OUTPUT  ${GEMATRIA_CONTEXTS_DST}
+    COMMAND ${CMAKE_COMMAND} -E copy ${GEMATRIA_CONTEXTS_SRC} ${GEMATRIA_CONTEXTS_DST}
+    DEPENDS ${GEMATRIA_CONTEXTS_SRC}
+    COMMENT "Copying gematria_tonal_contexts.json to build dir"
+)
+add_custom_target(copy_gematria_contexts ALL DEPENDS ${GEMATRIA_CONTEXTS_DST})
+add_dependencies(lif_lova copy_gematria_contexts)
