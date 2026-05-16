@@ -275,10 +275,9 @@ static void loadGematriaContexts() {
     if (const char* envPath = std::getenv("LIF_LOVA_GEMATRIA_CONTEXTS")) {
         if (*envPath) {
             const std::string raw(envPath);
-            if (raw.find("..") == std::string::npos)
-                candidates.emplace_back(raw);
-            else
-                std::cerr << "[LIF MIDI] Ignoring unsafe LIF_LOVA_GEMATRIA_CONTEXTS path\n";
+            std::error_code ec;
+            const std::filesystem::path canonical = std::filesystem::weakly_canonical(raw, ec);
+            candidates.emplace_back(ec ? std::filesystem::path(raw) : canonical);
         }
     }
 
@@ -847,7 +846,7 @@ App::HarmonicFunction App::classifyLifFunction(int bin,
     const auto& context = gematriaContextAt(lifMidiContextIndex_);
     const float rel = (maxEnergy > 0.001f) ? std::clamp(energy / maxEnergy, 0.0f, 1.0f) : 0.0f;
     const float contour = energy - prevEnergy;
-    // 17-step modulo centered at zero, scaled by 0.01f -> deterministic bias in [-0.08, +0.08].
+    // Gematria component only: 17-step modulo centered at zero and scaled by 0.01f -> [-0.08, +0.08].
     const float gematriaBias = (static_cast<float>((context.gematriaCode % 17) - 8)) * 0.01f;
     const float contextBias = context.brightness * 0.10f;
     const float totalBias = gematriaBias + contextBias;
@@ -1080,6 +1079,8 @@ bool App::init() {
     scenePressureNorm_.fill(0.0f);
     for (auto& ps : pressureSceneState_) ps.reset();
     loadGematriaContexts();
+    if (g_gematriaContexts.empty())
+        g_gematriaContexts = defaultGematriaContexts();
     lifMidiContextIndex_ = std::clamp(lifMidiContextIndex_, 0, static_cast<int>(g_gematriaContexts.size()) - 1);
 
     wireCallbacks();
@@ -2701,6 +2702,8 @@ void App::loadState() {
     }
 
     // Per-scene modal scale is now loaded with each scene (see above)
+    if (g_gematriaContexts.empty())
+        g_gematriaContexts = defaultGematriaContexts();
     lifMidiContextIndex_ = std::clamp(lifMidiContextIndex_, 0,
                                       static_cast<int>(g_gematriaContexts.size()) - 1);
 

@@ -111,13 +111,20 @@ def clamp_context(context: TonalContext) -> TonalContext:
 def read_existing_contexts(path: Path) -> list[TonalContext]:
     if not path.exists():
         return []
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        print(f"Warning: invalid JSON in {path}; ignoring existing contexts.")
+        return []
     items = payload.get("contexts", payload if isinstance(payload, list) else [])
     contexts: list[TonalContext] = []
     for item in items:
         if not isinstance(item, dict):
             continue
-        contexts.append(clamp_context(TonalContext(**item)))
+        try:
+            contexts.append(clamp_context(TonalContext(**item)))
+        except TypeError:
+            print(f"Warning: skipping malformed context entry in {path}.")
     return contexts
 
 
