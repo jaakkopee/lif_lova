@@ -110,7 +110,7 @@ def digital_root(n: int) -> int:
 
     The decimal-system numerological tree has nine roots (1–9).  This
     function implements the closed-form equivalent of iterating digit sums.
-    Examples: 123 → 6, 999 → 27 → 9, 506 → 11 → 2, 0.026 (×1000→26) → 8.
+    Examples: 123 → 6, 999 → 27 → 9, 506 → 11 → 2.
     Zero and negative inputs return 0.
     """
     if n <= 0:
@@ -198,7 +198,10 @@ _DEGREE_TSD: dict[int, tuple[float, float, float]] = {
     6: (0.5, 0.5, 0.0),   # scale degree 6 – submediant (shared T/S)
     7: (0.0, 0.0, 1.0),   # scale degree 7 – leading tone (dominant family)
     8: (1.0, 0.0, 0.0),   # scale degree 8 = octave of 1 (tonic)
-    9: (0.6, 0.2, 0.2),   # ninefold completion – mostly tonic, some ambiguity
+    9: (0.6, 0.2, 0.2),   # root 9 = digit-sum completion; 9 is not a standard
+                           # diatonic degree so (0.6, 0.2, 0.2) treats it as
+                           # predominantly tonic (the "whole" resolves to rest)
+                           # with small equal S/D shares for ambiguity.
 }
 
 
@@ -252,11 +255,13 @@ def _resize_spectrum(spec: list[float], n: int) -> list[float]:
     """Linearly interpolate *spec* to exactly *n* bins."""
     if not spec:
         return [0.0] * n
+    if n == 1:
+        return [sum(spec) / len(spec)]
     if len(spec) == n:
         return list(spec)
     result: list[float] = []
     for i in range(n):
-        t_pos = i * (len(spec) - 1) / max(n - 1, 1)
+        t_pos = i * (len(spec) - 1) / (n - 1)
         lo = int(t_pos)
         hi = min(lo + 1, len(spec) - 1)
         frac = t_pos - lo
@@ -369,11 +374,11 @@ def derive_context_params(phrase: str) -> dict[str, float | int]:
         syl_strs.extend(_simple_syllabify(w))
     syl_vals = [gematria_value(s) for s in syl_strs if gematria_value(s) > 0]
     syl_dr_tsd = tsd_from_text(" ".join(syl_strs))
-    syl_fft_tsd = spectral_tsd(syl_vals) if syl_vals else word_fft_tsd
+    syl_fft_tsd = spectral_tsd(syl_vals)  # spectral_tsd returns equal thirds for empty input
 
     # ── Level 3: individual letters ───────────────────────────────────────
     letter_vals = [ENGLISH_EXTENDED_VALUES[ch] for ch in normalize_letters(phrase)]
-    letter_dr_tsd = tsd_from_text(phrase)   # same letters as phrase
+    letter_dr_tsd = word_dr_tsd  # same set of letters; reuse to avoid duplicate tsd_from_text call
     letter_fft_tsd = spectral_tsd(letter_vals)
 
     # ── Blend: FFT and digital-root averaged within each level ───────────
@@ -629,7 +634,7 @@ def run_analyze_phrase(args: argparse.Namespace) -> int:
                   f"dr-TSD={_format_tsd(*dr_tsd)}  fft-TSD={_format_tsd(*fft_tsd)}")
             if v > 0:
                 syl_vals.append(v)
-    syl_fft_tsd = spectral_tsd(syl_vals) if syl_vals else (1 / 3, 1 / 3, 1 / 3)
+    syl_fft_tsd = spectral_tsd(syl_vals)  # spectral_tsd returns equal thirds for empty input
     print(f"  {'[syllable-sequence FFT]':25s}  {'':5s}                  "
           f"fft-TSD={_format_tsd(*syl_fft_tsd)}")
 
