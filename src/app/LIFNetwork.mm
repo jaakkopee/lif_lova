@@ -186,6 +186,7 @@ id<MTLComputePipelineState> LIFNetwork::makePSO(NSString* kernelName) const {
 void LIFNetwork::step(id<MTLCommandBuffer> cmdBuffer,
                       id<MTLTexture> sourceTex,
                       const std::array<float, 8>& bands,
+                      const std::array<float, NUM_TONE_BINS>& transientBins,
                       float rms,
                       float influence,
                       float dt,
@@ -199,9 +200,12 @@ void LIFNetwork::step(id<MTLCommandBuffer> cmdBuffer,
     for (int i = 0; i < neuronCount_; ++i) {
         int group = (i * static_cast<int>(bands.size())) / std::max(neuronCount_, 1);
         group = std::clamp(group, 0, static_cast<int>(bands.size()) - 1);
+        int transientGroup = (i * static_cast<int>(transientBins.size())) / std::max(neuronCount_, 1);
+        transientGroup = std::clamp(transientGroup, 0, static_cast<int>(transientBins.size()) - 1);
         float bandDrive = bands[group] * (0.30f + rms * 1.70f);
         float cross = bands[(group + 3) % static_cast<int>(bands.size())] * 0.15f;
-        input[i] = (bandDrive + cross) * influenceDrive;
+        float transientDrive = transientBins[transientGroup] * (0.55f + influence * 1.20f);
+        input[i] = (bandDrive + cross + transientDrive) * influenceDrive;
     }
 
     LIFSimParams sim;

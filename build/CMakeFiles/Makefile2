@@ -91,7 +91,7 @@ clean: CMakeFiles/copy_metal_shader.dir/clean
 CMakeFiles/midi_monitor.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/midi_monitor.dir/build.make CMakeFiles/midi_monitor.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/midi_monitor.dir/build.make CMakeFiles/midi_monitor.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=19,20,21 "Built target midi_monitor"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=20,21,22 "Built target midi_monitor"
 .PHONY : CMakeFiles/midi_monitor.dir/all
 
 # Build rule for subdir invocation for target.
@@ -108,7 +108,7 @@ midi_monitor: CMakeFiles/midi_monitor.dir/rule
 # codegen rule for target.
 CMakeFiles/midi_monitor.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/midi_monitor.dir/build.make CMakeFiles/midi_monitor.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=19,20,21 "Finished codegen for target midi_monitor"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=20,21,22 "Finished codegen for target midi_monitor"
 .PHONY : CMakeFiles/midi_monitor.dir/codegen
 
 # clean rule for target.
@@ -123,12 +123,12 @@ CMakeFiles/midi_monitor.dir/clean:
 CMakeFiles/lif_lova.dir/all: CMakeFiles/copy_metal_shader.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18 "Built target lif_lova"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19 "Built target lif_lova"
 .PHONY : CMakeFiles/lif_lova.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/lif_lova.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles 18
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles 19
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/lif_lova.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles 0
 .PHONY : CMakeFiles/lif_lova.dir/rule
@@ -140,7 +140,7 @@ lif_lova: CMakeFiles/lif_lova.dir/rule
 # codegen rule for target.
 CMakeFiles/lif_lova.dir/codegen: CMakeFiles/copy_metal_shader.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18 "Finished codegen for target lif_lova"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jaakkop/Documents/koodii/lif_lova/build/CMakeFiles --progress-num=2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19 "Finished codegen for target lif_lova"
 .PHONY : CMakeFiles/lif_lova.dir/codegen
 
 # clean rule for target.

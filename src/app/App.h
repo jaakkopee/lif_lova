@@ -10,6 +10,7 @@
 #include "MediaPickerWindow.h"
 #include "AudioAnalyzer.h"
 #include "LIFToneSynth.h"
+#include "RhythmTransientEngine.h"
 #include <vector>
 #include <memory>
 #include <cstdint>
@@ -153,6 +154,7 @@ private:
     MetalCompositor   compositor_;
     AudioAnalyzer     audio_;
     LIFToneSynth      lifToneSynth_;
+    RhythmTransientEngine rhythmTransient_;
     ControlWindow     controlWin_;
     AudioMidiControlWindow audioMidiWin_;
     PressureControlWindow pressureWin_;
@@ -260,6 +262,7 @@ private:
     float                lifToneScanTempo_ = 0.22f;
     float                lifToneMinFreqHz_ = 80.0f;
     float                lifToneMaxFreqHz_ = 1600.0f;
+    bool                 rhythmTransientAudible_ = false;
     bool sceneUsesLIF(int sceneIdx) const;
     void resetLifMidiState();
 

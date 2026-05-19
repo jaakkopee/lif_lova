@@ -65,6 +65,7 @@ public:
     // Set audio band magnitudes (0.0-1.0 each).  Call each frame from the main thread.
     // Bands are packed into float_params[8..15] of every FX ShaderParams dispatch.
     void setAudioBands(const float* bands, int count, float rms);
+    void setTransientBins(const std::array<float, LIFNetwork::NUM_TONE_BINS>& bins);
 
     // Set per-FX audio gain multiplier (applied to bands+RMS before shader injection).
     void setAudioGain(int fxSlot, float gain);
@@ -179,6 +180,7 @@ private:
     // Audio bands (8 bands + RMS) passed to FX kernels each frame
     std::array<float, 8> audioBands_ = {};
     float audioRms_ = 0.0f;
+    std::array<float, LIFNetwork::NUM_TONE_BINS> transientBins_ = {};
     std::array<float, NUM_FX_LAYERS> audioGain_ = {1.0f, 1.0f, 1.0f};
     std::array<LIFDriver, NUM_FX_LAYERS> lifDrivers_ = {};
     int lifDriverCount_ = 0;

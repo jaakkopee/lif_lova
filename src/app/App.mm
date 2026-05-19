@@ -730,8 +730,8 @@ bool App::init() {
     controlWin_.open(ctrl.x, ctrl.y, ctrlS.x, ctrlS.y);
 
     // ── Audio & MIDI Control window — positioned next to main control ────
-    const int audioMidiW = 280;
-    const int audioMidiH = 650;
+    const int audioMidiW = 520;
+    const int audioMidiH = std::min(ctrlS.y - 24, 1240);
     const int audioMidiX = ctrl.x + std::max(10, ctrlS.x - audioMidiW - 16);
     const int audioMidiY = ctrl.y + 10;
     audioMidiWin_.open(audioMidiX, audioMidiY, audioMidiW, audioMidiH);
@@ -854,6 +854,16 @@ bool App::init() {
     controlWin_.setKnobMode(knobMode_);
     refreshLifMidiUi();
     audioMidiWin_.setLifToneVolume(lifToneVolume_);
+    audioMidiWin_.setRhythmPatternSpecs(rhythmTransient_.divisiveSpec(),
+                                        rhythmTransient_.additiveSpec(),
+                                        rhythmTransient_.weightSpec(),
+                                        rhythmTransient_.lengthSpec());
+    audioMidiWin_.setRhythmUiState(rhythmTransient_.enabled(),
+                                   rhythmTransient_.strategyName(),
+                                   rhythmTransient_.bpm(),
+                                   rhythmTransient_.gain(),
+                                   rhythmTransientAudible_,
+                                   "ready");
     refreshKnobDisplay();
     if (currentScene_ >= 0) refreshKnobParamNames();
     if (currentScene_ >= 0) {
@@ -1128,6 +1138,73 @@ void App::wireCallbacks() {
     audioMidiWin_.onLIFMidiTonalRootNudge = [this](int delta) { nudgeLifMidiTonalRoot(delta); };
     audioMidiWin_.onLIFMidiRangeMinNudge = [this](int delta) { nudgeLifMidiRangeMin(delta); };
     audioMidiWin_.onLIFMidiRangeMaxNudge = [this](int delta) { nudgeLifMidiRangeMax(delta); };
+
+    audioMidiWin_.onRhythmToggle = [this]() {
+        rhythmTransient_.toggleEnabled();
+        audioMidiWin_.setRhythmUiState(rhythmTransient_.enabled(),
+                                       rhythmTransient_.strategyName(),
+                                       rhythmTransient_.bpm(),
+                                       rhythmTransient_.gain(),
+                                       rhythmTransientAudible_,
+                                       rhythmTransient_.enabled() ? "running" : "stopped");
+    };
+    audioMidiWin_.onRhythmStrategyCycle = [this]() {
+        rhythmTransient_.cycleStrategy();
+        audioMidiWin_.setRhythmUiState(rhythmTransient_.enabled(),
+                                       rhythmTransient_.strategyName(),
+                                       rhythmTransient_.bpm(),
+                                       rhythmTransient_.gain(),
+                                       rhythmTransientAudible_,
+                                       "strategy updated");
+    };
+    audioMidiWin_.onRhythmBpmNudge = [this](float delta) {
+        rhythmTransient_.nudgeBpm(delta);
+        audioMidiWin_.setRhythmUiState(rhythmTransient_.enabled(),
+                                       rhythmTransient_.strategyName(),
+                                       rhythmTransient_.bpm(),
+                                       rhythmTransient_.gain(),
+                                       rhythmTransientAudible_,
+                                       "tempo updated");
+    };
+    audioMidiWin_.onRhythmGainNudge = [this](float delta) {
+        rhythmTransient_.nudgeGain(delta);
+        audioMidiWin_.setRhythmUiState(rhythmTransient_.enabled(),
+                                       rhythmTransient_.strategyName(),
+                                       rhythmTransient_.bpm(),
+                                       rhythmTransient_.gain(),
+                                       rhythmTransientAudible_,
+                                       "gain updated");
+    };
+    audioMidiWin_.onRhythmAudibleToggle = [this]() {
+        rhythmTransientAudible_ = !rhythmTransientAudible_;
+        audioMidiWin_.setRhythmUiState(rhythmTransient_.enabled(),
+                                       rhythmTransient_.strategyName(),
+                                       rhythmTransient_.bpm(),
+                                       rhythmTransient_.gain(),
+                                       rhythmTransientAudible_,
+                                       rhythmTransientAudible_ ? "transients audible" : "transients muted");
+    };
+    audioMidiWin_.onRhythmPatternApply = [this](const std::string& divisive,
+                                                const std::string& additive,
+                                                const std::string& weights,
+                                                const std::string& lengths) {
+        std::string error;
+        if (rhythmTransient_.applyPatternSpecs(divisive, additive, weights, lengths, error)) {
+            audioMidiWin_.setRhythmUiState(rhythmTransient_.enabled(),
+                                           rhythmTransient_.strategyName(),
+                                           rhythmTransient_.bpm(),
+                                           rhythmTransient_.gain(),
+                                           rhythmTransientAudible_,
+                                           "pattern applied");
+        } else {
+            audioMidiWin_.setRhythmUiState(rhythmTransient_.enabled(),
+                                           rhythmTransient_.strategyName(),
+                                           rhythmTransient_.bpm(),
+                                           rhythmTransient_.gain(),
+                                           rhythmTransientAudible_,
+                                           error.empty() ? "invalid pattern" : error);
+        }
+    };
 }
 
 // ── Engine helper: apply one knob value to the right engine target ────────────
@@ -2427,13 +2504,19 @@ void App::syncCompositorState() {
 }
 
 void App::processFrame() {
+    static constexpr float kFrameDt = 1.0f / 60.0f;
     midi_.poll();
-    layers_.update(1.0f / 60.0f);
+    layers_.update(kFrameDt);
     uploadLayers();
     syncCompositorState();
     
     // Update pan/zoom animation (60 FPS = ~0.0167s per frame)
-    updatePanZoomAnimation(1.0f / 60.0f);
+    updatePanZoomAnimation(kFrameDt);
+
+    const auto transientBins = rhythmTransient_.advance(kFrameDt);
+    compositor_.setTransientBins(transientBins);
+
+    std::array<float, 16> networkAudioBins = {};
 
     // Smooth rough pressure data (low-pass + slew limit + deadband), then apply mappings.
     if (currentScene_ >= 0) {
@@ -2459,11 +2542,16 @@ void App::processFrame() {
         float rms  = audio_.rms();
         compositor_.setAudioBands(bands.data(), static_cast<int>(bands.size()), rms);
         audioMidiWin_.setAudioBands(bands.data(), static_cast<int>(bands.size()), rms);
+        for (int i = 0; i < 16; ++i) {
+            const int idx = std::clamp(i / 2, 0, 7);
+            networkAudioBins[i] = bands[static_cast<std::size_t>(idx)];
+        }
     } else {
         const float zeros[8] = {};
         compositor_.setAudioBands(zeros, 8, 0.0f);
         audioMidiWin_.setAudioBands(zeros, 8, 0.0f);
     }
+    audioMidiWin_.setNetworkBins(networkAudioBins, transientBins);
 
     // Drive LIF simulation from all active scene LIF patch params.
     if (currentScene_ >= 0) {
@@ -2497,8 +2585,17 @@ void App::processFrame() {
         if (lifSceneActive) {
             lifBins = compositor_.sampleLIFColumn(lifToneScanPhase_);
         }
-        if (lifToneEnabled_ && !audioBypassed_ && lifSceneActive) {
-            lifToneSynth_.setColumnEnergies(lifBins);
+        std::array<float, 16> toneBins = {};
+        if (lifSceneActive)
+            toneBins = lifBins;
+
+        if (rhythmTransientAudible_) {
+            for (int i = 0; i < 16; ++i)
+                toneBins[i] = std::clamp(toneBins[i] + transientBins[i] * 0.9f, 0.0f, 1.0f);
+        }
+
+        if (lifToneEnabled_ && !audioBypassed_ && (lifSceneActive || rhythmTransientAudible_)) {
+            lifToneSynth_.setColumnEnergies(toneBins);
         } else {
             lifToneSynth_.setColumnEnergies({});
         }

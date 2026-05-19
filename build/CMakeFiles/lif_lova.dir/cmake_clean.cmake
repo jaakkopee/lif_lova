@@ -27,6 +27,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/lif_lova.dir/src/app/PerformanceWindow.cpp.o.d"
   "CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o"
   "CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.o.d"
+  "CMakeFiles/lif_lova.dir/src/app/RhythmTransientEngine.cpp.o"
+  "CMakeFiles/lif_lova.dir/src/app/RhythmTransientEngine.cpp.o.d"
   "CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o"
   "CMakeFiles/lif_lova.dir/src/app/VideoDecoder.cpp.o.d"
   "CMakeFiles/lif_lova.dir/src/app/main.mm.o"

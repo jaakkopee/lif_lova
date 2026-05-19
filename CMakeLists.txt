@@ -95,6 +95,7 @@ add_executable(lif_lova
     src/app/PerformanceWindow.cpp
     src/app/MediaPickerWindow.mm
     src/app/FxPatch.cpp
+    src/app/RhythmTransientEngine.cpp
 )
 
 target_include_directories(lif_lova PRIVATE ${VJAY_INCLUDE_DIRS})

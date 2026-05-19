@@ -395,6 +395,30 @@ src/app/PressureControlWindow.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/PressureControlWindow.cpp.s
 .PHONY : src/app/PressureControlWindow.cpp.s
 
+src/app/RhythmTransientEngine.o: src/app/RhythmTransientEngine.cpp.o
+.PHONY : src/app/RhythmTransientEngine.o
+
+# target to build an object file
+src/app/RhythmTransientEngine.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/RhythmTransientEngine.cpp.o
+.PHONY : src/app/RhythmTransientEngine.cpp.o
+
+src/app/RhythmTransientEngine.i: src/app/RhythmTransientEngine.cpp.i
+.PHONY : src/app/RhythmTransientEngine.i
+
+# target to preprocess a source file
+src/app/RhythmTransientEngine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/RhythmTransientEngine.cpp.i
+.PHONY : src/app/RhythmTransientEngine.cpp.i
+
+src/app/RhythmTransientEngine.s: src/app/RhythmTransientEngine.cpp.s
+.PHONY : src/app/RhythmTransientEngine.s
+
+# target to generate assembly for a file
+src/app/RhythmTransientEngine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lif_lova.dir/build.make CMakeFiles/lif_lova.dir/src/app/RhythmTransientEngine.cpp.s
+.PHONY : src/app/RhythmTransientEngine.cpp.s
+
 src/app/VideoDecoder.o: src/app/VideoDecoder.cpp.o
 .PHONY : src/app/VideoDecoder.o
 
@@ -516,6 +540,9 @@ help:
 	@echo "... src/app/PressureControlWindow.o"
 	@echo "... src/app/PressureControlWindow.i"
 	@echo "... src/app/PressureControlWindow.s"
+	@echo "... src/app/RhythmTransientEngine.o"
+	@echo "... src/app/RhythmTransientEngine.i"
+	@echo "... src/app/RhythmTransientEngine.s"
 	@echo "... src/app/VideoDecoder.o"
 	@echo "... src/app/VideoDecoder.i"
 	@echo "... src/app/VideoDecoder.s"

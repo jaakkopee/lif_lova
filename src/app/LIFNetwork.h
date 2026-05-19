@@ -27,6 +27,7 @@ public:
     void step(id<MTLCommandBuffer> cmdBuffer,
               id<MTLTexture> sourceTex,
               const std::array<float, 8>& bands,
+              const std::array<float, NUM_TONE_BINS>& transientBins,
               float rms,
               float influence,
               float dt,

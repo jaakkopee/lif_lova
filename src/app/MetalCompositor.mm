@@ -246,6 +246,10 @@ void MetalCompositor::setAudioBands(const float* bands, int count, float rms) {
     audioRms_ = rms;
 }
 
+void MetalCompositor::setTransientBins(const std::array<float, LIFNetwork::NUM_TONE_BINS>& bins) {
+    transientBins_ = bins;
+}
+
 void MetalCompositor::setAudioGain(int fxSlot, float gain) {
     if (fxSlot >= 0 && fxSlot < NUM_FX_LAYERS)
         audioGain_[fxSlot] = gain;
@@ -605,7 +609,7 @@ bool MetalCompositor::composite(std::vector<uint8_t>& outRGBA) {
             const auto& driver = lifDrivers_[i];
             lifNetwork_->setTopology(topologyFromParam(driver.topologyNorm));
             const int srcLayer = std::clamp(driver.srcSlot, 0, NUM_SRC_LAYERS - 1) * 2;
-            lifNetwork_->step(cmd, layerTex_[srcLayer], audioBands_, audioRms_, driver.influenceNorm, dt, now);
+            lifNetwork_->step(cmd, layerTex_[srcLayer], audioBands_, transientBins_, audioRms_, driver.influenceNorm, dt, now);
         }
     }
 
