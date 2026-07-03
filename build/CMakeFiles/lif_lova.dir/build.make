@@ -352,7 +352,7 @@ lif_lova: CMakeFiles/lif_lova.dir/src/app/FxPatch.cpp.o
 lif_lova: CMakeFiles/lif_lova.dir/src/app/RhythmTransientEngine.cpp.o
 lif_lova: CMakeFiles/lif_lova.dir/build.make
 lif_lova: /opt/homebrew/opt/sfml/lib/libsfml-audio.3.0.2.dylib
-lif_lova: /opt/homebrew/opt/tgui/lib/libtgui.1.12.0.dylib
+lif_lova: /opt/homebrew/opt/tgui/lib/libtgui.1.13.0.dylib
 lif_lova: /opt/homebrew/opt/opencv/lib/libopencv_gapi.4.13.0.dylib
 lif_lova: /opt/homebrew/opt/opencv/lib/libopencv_stitching.4.13.0.dylib
 lif_lova: /opt/homebrew/opt/opencv/lib/libopencv_alphamat.4.13.0.dylib

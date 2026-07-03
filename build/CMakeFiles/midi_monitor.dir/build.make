@@ -111,7 +111,7 @@ midi_monitor_EXTERNAL_OBJECTS =
 midi_monitor: CMakeFiles/midi_monitor.dir/src/midi_monitor/main.cpp.o
 midi_monitor: CMakeFiles/midi_monitor.dir/src/midi_monitor/MidiMonitor.cpp.o
 midi_monitor: CMakeFiles/midi_monitor.dir/build.make
-midi_monitor: /opt/homebrew/opt/tgui/lib/libtgui.1.12.0.dylib
+midi_monitor: /opt/homebrew/opt/tgui/lib/libtgui.1.13.0.dylib
 midi_monitor: /opt/homebrew/opt/sfml/lib/libsfml-graphics.3.0.2.dylib
 midi_monitor: /opt/homebrew/opt/sfml/lib/libsfml-window.3.0.2.dylib
 midi_monitor: /opt/homebrew/opt/sfml/lib/libsfml-system.3.0.2.dylib

@@ -227,7 +227,7 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 CMAKE_STRIP:FILEPATH=/usr/bin/strip
 
 //Path to a program.
-CMAKE_TAPI:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/tapi
+CMAKE_TAPI:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/tapi
 
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
@@ -279,15 +279,6 @@ pkgcfg_lib_RTMIDI_rtmidi:FILEPATH=/opt/homebrew/Cellar/rtmidi/6.0.0/lib/librtmid
 
 //Path to a library.
 pkgcfg_lib_SWSCALE_swscale:FILEPATH=/opt/homebrew/Cellar/ffmpeg/8.1/lib/libswscale.dylib
-
-//Value Computed by CMake
-vjay_ace_BINARY_DIR:STATIC=/Users/jaakkop/Documents/koodii/lif_lova/build
-
-//Value Computed by CMake
-vjay_ace_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-vjay_ace_SOURCE_DIR:STATIC=/Users/jaakkop/Documents/koodii/lif_lova
 
 
 ########################
